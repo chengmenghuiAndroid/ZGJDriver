@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+android {
+    signingConfigs {
+        release {
+            keyAlias 'zgj'
+            keyPassword '123456789'
+            storeFile file('E:/workspace_zgjdriver/ZGJDriver/zgj_driver.jks')
+            storePassword '123456789'
+        }
+    }
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    defaultConfig {
+        applicationId "com.lty.zgj.driver"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    implementation project(':library')
+
+    compile rootProject.ext.dependencies["multidex"]
+    //Android屏幕适配方案，直接填写设计图上的像素尺寸即可完成适配。
+    compile rootProject.ext.dependencies["autolayout"]
+
+    compile rootProject.ext.dependencies["FlycoTabLayout_Lib"]
+    //图片压缩
+    compile rootProject.ext.dependencies["tiny"]
+    //获取动态权限
+    compile rootProject.ext.dependencies["rxpermissions"]
+}
