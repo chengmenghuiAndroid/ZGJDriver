@@ -36,46 +36,6 @@ public class LoginActivity extends BaseXActivity {
         return R.layout.activity_driver_login;
     }
 
-    private void init() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mSocketClient = new WebSocketClient(new URI("ws://10.27.0.197:2017/"), new Draft_10()) {
-                        @Override
-                        public void onOpen(ServerHandshake handshakedata) {
-                            Log.d("picher_log", "打开通道" + handshakedata.getHttpStatus());
-                            handler.obtainMessage(0, handshakedata).sendToTarget();
-
-                        }
-
-                        @Override
-                        public void onMessage(String message) {
-                            Log.d("picher_log", "接收消息" + message);
-                            handler.obtainMessage(0, message).sendToTarget();
-                        }
-
-                        @Override
-                        public void onClose(int code, String reason, boolean remote) {
-                            Log.d("picher_log", "通道关闭");
-                            handler.obtainMessage(0, reason).sendToTarget();
-                        }
-
-                        @Override
-                        public void onError(Exception ex) {
-                            Log.d("picher_log", "链接错误");
-                        }
-                    };
-                    mSocketClient.connect();
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-    }
-
 
     @SuppressLint("HandlerLeak") Handler handler = new Handler() {
         @Override
