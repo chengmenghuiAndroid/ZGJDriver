@@ -4,22 +4,61 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:tl="http://schemas.android.com/apk/res-auto"
-    tools:context="com.lty.zgj.driver.MainActivity"
+    tools:context="com.lty.zgj.driver.ui.activity.MainActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical">
 
 
-    <com.flyco.tablayout.SlidingTabLayout
-        android:id="@+id/tl_1"
+    <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="88px"
-        android:background="@color/eline_main_color"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"
-        tl:tl_indicator_gravity="TOP"
-        tl:tl_textBold="SELECT"
-        tl:tl_underline_color="#1A000000"
-        tl:tl_underline_gravity="TOP"
-        tl:tl_underline_height="1dp"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/eline_main_color">
+
+
+        <TextView
+            android:id="@+id/tv_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设置"
+            android:textColor="@color/white"
+            android:textSize="35px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"/>
+
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="消息"
+            android:textColor="@color/white"
+            android:textSize="35px"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30px"/>
+
+        <com.flyco.tablayout.SlidingTabLayout
+            android:id="@+id/tl_1"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            tl:tl_textAllCaps="true"
+            tl:tl_textBold="BOTH"
+            tl:tl_textsize="14sp"
+            tl:tl_tab_space_equal="true"
+            android:layout_toRightOf="@id/tv_set"
+            android:layout_toLeftOf="@id/tv_msg"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"/>
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+    <com.lty.zgj.driver.weight.CustomViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+
 
 </com.zhy.autolayout.AutoLinearLayout>

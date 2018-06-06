@@ -3,7 +3,6 @@ package com.lty.zgj.driver.ui.activity;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.lty.zgj.driver.MainActivity;
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.base.BaseXActivity;
 

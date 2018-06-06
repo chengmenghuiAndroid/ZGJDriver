@@ -2,7 +2,8 @@ package cn.droidlover.xdroid.base;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Toast;
+
+import cn.droidlover.xdroid.dialog.ShowDialogRelative;
 
 /**
  * Created by wanglei on 2016/12/1.
@@ -52,12 +53,12 @@ public class UiDelegateBase implements UiDelegate {
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        ShowDialogRelative.toastDialog(context,msg);
     }
 
     @Override
     public void toastLong(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        ShowDialogRelative.toastDialog(context,msg);
     }
 
 }
