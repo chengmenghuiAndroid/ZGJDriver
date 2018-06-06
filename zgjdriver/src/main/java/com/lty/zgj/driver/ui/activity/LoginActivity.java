@@ -46,6 +46,7 @@ public class LoginActivity extends BaseXActivity {
                         public void onOpen(ServerHandshake handshakedata) {
                             Log.d("picher_log", "打开通道" + handshakedata.getHttpStatus());
                             handler.obtainMessage(0, handshakedata).sendToTarget();
+
                         }
 
                         @Override
