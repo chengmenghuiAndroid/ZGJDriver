@@ -26,7 +26,7 @@ public class LoginActivity extends BaseXActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-
+        //ToDo
     }
 
 
