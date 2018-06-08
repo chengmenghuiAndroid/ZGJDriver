@@ -1,5 +1,6 @@
 package com.lty.zgj.driver.WebSocket.UI;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import butterknife.Unbinder;
+import cn.droidlover.xdroid.kit.KnifeKit;
 
 
 /**
@@ -18,11 +22,16 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     protected final String TAG = this.getClass().getSimpleName();
 
     private RoundProgressDialog roundProgressDialog;
-
+    private Unbinder unbinder;
+    protected Activity context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResId());
+        this.context = this;
+        if (getLayoutResId() > 0) {
+            setContentView(getLayoutResId());
+            unbinder = KnifeKit.bind(this);
+        }
         roundProgressDialog = new RoundProgressDialog(this);
         initBind();
         initView();

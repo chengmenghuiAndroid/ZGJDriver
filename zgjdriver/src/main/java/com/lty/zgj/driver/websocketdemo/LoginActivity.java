@@ -63,11 +63,11 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
      */
     @Override
     protected void onCommonResponse(CommonResponse<String> response) {
-        if (response != null && !TextUtils.isEmpty(response.getPath()) && TextUtils.equals(LOGIN_PATH, response.getPath())) {
-            //我们需要通过 path 判断是不是登陆接口返回的数据，因为也有可能是其他接口返回的
-            closeRoundProgressDialog();//关闭加载对话框
-            showToastMessage("登陆成功");
-        }
+//        if (response != null && !TextUtils.isEmpty(response.getPat) && TextUtils.equals(LOGIN_PATH, response.getPath())) {
+//            //我们需要通过 path 判断是不是登陆接口返回的数据，因为也有可能是其他接口返回的
+//            closeRoundProgressDialog();//关闭加载对话框
+//            showToastMessage("登陆成功");
+//        }
     }
 
     /**

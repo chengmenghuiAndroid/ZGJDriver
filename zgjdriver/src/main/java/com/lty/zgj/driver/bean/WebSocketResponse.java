@@ -1,16 +1,20 @@
 package com.lty.zgj.driver.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by cheng on 2018/6/7.
  */
 
-public class WebSorketResponse {
-
+public class WebSocketResponse implements Serializable{
 
     /**
-     * header : {"msgSn":121,"msgId":257,"msgVn":1.01}
+     *
+     *  # {header : {"msgSn":121,"msgId":257,"msgVn":1.01}
      * lappendBody : {"token":"asbxbasnxjaj","devSn":"adb-samk-sasa","devType":0}
-     * body : {}
+     * body : {}} 515645265415151
+     *
+     *检验码字符串长度是16位
      */
 
     private HeaderBean header;
@@ -41,16 +45,17 @@ public class WebSorketResponse {
         this.body = body;
     }
 
-    public static class HeaderBean {
+    public static class HeaderBean implements Serializable{
         /**
          * msgSn : 121
          * msgId : 257
          * msgVn : 1.01
          */
 
-        private int msgSn;
-        private int msgId;
-        private double msgVn;
+        private int msgSn; //报文序列号 时间戳字符串 后面 8位
+        private int msgId; //业务消息类型
+        private String msgVn; //协议版本号 0x101
+        private String appVn; //app版本号
 
         public int getMsgSn() {
             return msgSn;
@@ -68,12 +73,20 @@ public class WebSorketResponse {
             this.msgId = msgId;
         }
 
-        public double getMsgVn() {
+        public String getMsgVn() {
             return msgVn;
         }
 
-        public void setMsgVn(double msgVn) {
+        public void setMsgVn(String msgVn) {
             this.msgVn = msgVn;
+        }
+
+        public String getAppVn() {
+            return appVn;
+        }
+
+        public void setAppVn(String appVn) {
+            this.appVn = appVn;
         }
     }
 
@@ -84,9 +97,9 @@ public class WebSorketResponse {
          * devType : 0
          */
 
-        private String token;
-        private String devSn;
-        private int devType;
+        private String token; //司机用户token
+        private String devSn; //设备唯一 ID
+        private int devType;  // 0 Android 1 ios
 
         public String getToken() {
             return token;
@@ -114,5 +127,6 @@ public class WebSorketResponse {
     }
 
     public static class BodyBean {
+
     }
 }

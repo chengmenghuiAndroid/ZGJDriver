@@ -4,18 +4,24 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+import android.view.View;
 
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.base.BaseXActivity;
+import com.lty.zgj.driver.bean.WebSocketManager;
+import com.lty.zgj.driver.bean.WebSocketRequst;
 import com.lty.zgj.driver.ui.fragment.DepartFragment;
 import com.lty.zgj.driver.ui.fragment.WaitGoingOutFragment;
 import com.lty.zgj.driver.weight.CustomViewPager;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseXActivity implements OnTabSelectListener {
     @BindView(R.id.viewpager)
@@ -71,6 +77,29 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener {
         @Override
         public Fragment getItem(int position) {
             return mFragments.get(position);
+        }
+    }
+
+
+    @OnClick({
+            R.id.tv_set,
+            R.id.tv_msg
+    })
+
+    public void onClickEvent(View view) {
+        switch (view.getId()) {
+            case R.id.tv_set:
+                Map<String,Object> params = WebSocketRequst.getInstance(context).gpsUpload(111, 222,1.22222, 1.3333,"11",11);
+//                String webSorkcetRequestJson = WebSocketManager.getInstance(context).webSocketRequest(context,0x101, "102", params);
+
+                String webSocketJson = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x101, "102", params);
+//                Log.e("MainActivity", "webSorkcetRequestJson---"+webSorkcetRequestJson);
+//                String md5 = MD5Util.getMD5(webSorkcetRequestJson);
+
+                Log.e("MainActivity", "webSorkcetRequestJson---"+webSocketJson);
+                break;
+            case R.id.tv_msg:
+                break;
         }
     }
 }

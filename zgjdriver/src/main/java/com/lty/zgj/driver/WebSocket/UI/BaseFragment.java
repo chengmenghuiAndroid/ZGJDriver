@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import butterknife.Unbinder;
+import cn.droidlover.xdroid.kit.KnifeKit;
+
 /**
  * Fragment基类
  * <p>
@@ -36,11 +39,8 @@ public abstract class BaseFragment extends Fragment implements IBaseActivity {
     private RoundProgressDialog roundProgressDialog;
     protected Activity mActivity;
     protected View rootView;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
+    private Unbinder unbinder;
+    protected Activity context;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,16 +67,26 @@ public abstract class BaseFragment extends Fragment implements IBaseActivity {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mActivity = getActivity();
         roundProgressDialog = new RoundProgressDialog(mActivity);
-        rootView = inflater.inflate(getFragmentLayoutId(), container, false);
+        if (rootView == null) {
+            rootView = inflater.inflate(getFragmentLayoutId(), container,false);
+            unbinder = KnifeKit.bind(this, rootView);
+        } else {
+            ViewGroup viewGroup = (ViewGroup) rootView.getParent();
+            if (viewGroup != null) {
+                viewGroup.removeView(rootView);
+            }
+        }
         initBind();
-        initView();
+        initView(savedInstanceState);
         return rootView;
     }
 
     /**
      * 绑定服务注册 ButterKnife 等等
      */
-    protected void initBind() {}
+    protected void initBind() {
+
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -140,7 +150,7 @@ public abstract class BaseFragment extends Fragment implements IBaseActivity {
      */
     protected abstract int getFragmentLayoutId();
 
-    protected abstract void initView();
+    protected abstract void initView(Bundle savedInstanceState);
 
     @Override
     public void showToastMessage(final String msg) {
@@ -196,5 +206,20 @@ public abstract class BaseFragment extends Fragment implements IBaseActivity {
                     roundProgressDialog.closeProgressDialog();
             }
         });
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) {
+            this.context = (Activity) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        context = null;
     }
 }

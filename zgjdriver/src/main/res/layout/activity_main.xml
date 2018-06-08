@@ -24,7 +24,8 @@
             android:textColor="@color/white"
             android:textSize="35px"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"/>
+            android:layout_marginLeft="30px"
+            android:padding="20px"/>
 
         <TextView
             android:id="@+id/tv_msg"
@@ -35,7 +36,8 @@
             android:textSize="35px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30px"/>
+            android:layout_marginRight="30px"
+            android:padding="20px"/>
 
         <com.flyco.tablayout.SlidingTabLayout
             android:id="@+id/tl_1"

@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -20,7 +21,12 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.base.BaseXFragment;
+import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketFragment;
+import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
+import com.lty.zgj.driver.WebSocket.CommonResponse;
+import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
+import com.lty.zgj.driver.bean.WebSocketResponse;
+import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.BindView;
@@ -31,7 +37,7 @@ import rx.functions.Action1;
  * 发车
  */
 
-public class DepartFragment extends BaseXFragment implements LocationSource,
+public class DepartFragment extends AbsBaseWebSocketFragment implements LocationSource,
         AMapLocationListener{
 
     @BindView(R.id.map)
@@ -54,7 +60,7 @@ public class DepartFragment extends BaseXFragment implements LocationSource,
     Projection projection;
     private MyLocationStyle myLocationStyle;
 
-    @Override
+
     public void initData(Bundle savedInstanceState) {
         mapView.onCreate(savedInstanceState);// 此方法必须重写
 
@@ -153,6 +159,25 @@ public class DepartFragment extends BaseXFragment implements LocationSource,
         mapView.onResume();
     }
 
+    @Override
+    protected void onCommonResponse(CommonResponse<String> response) {
+        if (response != null) {
+            //我们需要通过 path 判断是不是登陆接口返回的数据，因为也有可能是其他接口返回的
+            closeRoundProgressDialog();//关闭加载对话框
+            showToastMessage("登陆成功");
+        }
+    }
+
+    @Override
+    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
+        showToastMessage(String.format("登陆失败：%s", response));
+    }
+
+    @Override
+    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
+        return WebSocketService.class;
+    }
+
     /**
      * 方法必须重写
      */
@@ -180,28 +205,6 @@ public class DepartFragment extends BaseXFragment implements LocationSource,
         mapView.onDestroy();
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.depart_fragment;
-    }
-
-    /**
-     * 当视图初始化并且对用户可见的时候去真正的加载数据
-     */
-    @Override
-    protected void lazyLoad() {
-
-    }
-
-    /**
-     * 当视图已经对用户不可见并且加载过数据，如果需要在切换到其他页面时停止加载数据，可以调用此方法
-     */
-    @Override
-    protected void stopLoad() {
-
-    }
-
-
     /**
      * 定位成功后回调函数
      */
@@ -223,6 +226,8 @@ public class DepartFragment extends BaseXFragment implements LocationSource,
                     }
                     StringBuffer buffer = new StringBuffer();
                     buffer.append(amapLocation.getCountry() + "" + amapLocation.getProvince() + "" + amapLocation.getCity() + "" + amapLocation.getProvince() + "" + amapLocation.getDistrict() + "" + amapLocation.getStreet() + "" + amapLocation.getStreetNum());
+//                    sendText(buffer.toString());//调用 WebSocket 发送数据
+                    sendData();
                 } else {
                     String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation .getErrorInfo();
                     Log.e("定位AmapErr", errText);
@@ -231,7 +236,13 @@ public class DepartFragment extends BaseXFragment implements LocationSource,
         }
     }
 
+    private void sendData() {
+        JSONObject param = new JSONObject();
+        WebSocketResponse webSorketResponse = new WebSocketResponse();
+        WebSocketResponse.BodyBean body = webSorketResponse.getBody();
 
+
+    }
 
 
     /**
@@ -271,5 +282,21 @@ public class DepartFragment extends BaseXFragment implements LocationSource,
         }
         mlocationClient = null;
     }
+
+    /**
+     * 返回Fragment layout资源ID
+     *
+     * @return
+     */
+    @Override
+    protected int getFragmentLayoutId() {
+       return R.layout.depart_fragment;
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        initData(savedInstanceState);
+    }
+
 
 }
