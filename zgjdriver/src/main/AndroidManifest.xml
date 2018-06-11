@@ -49,7 +49,7 @@
                   android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.SplashActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeSplash">
@@ -63,6 +63,12 @@
                   android:launchMode="singleTask"
                   android:windowSoftInputMode="adjustPan"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.SetActivity"/>
+        <activity android:name=".ui.activity.AboutActivity"/>
+        <activity android:name=".ui.activity.TermsOfServiceActivity"/>
+        <activity android:name=".ui.activity.VersionIntroductionActivity"/>
+        <activity android:name=".ui.activity.PersonalHelpActivity"/>
+        <activity android:name=".ui.activity.PersonalInformationActivity"/>
 
 
         <meta-data

@@ -1,6 +1,6 @@
 package com.lty.zgj.driver.ui.activity;
 
-import android.os.Bundle;
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,11 +10,15 @@ import android.view.View;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.base.BaseXActivity;
+import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
+import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
+import com.lty.zgj.driver.WebSocket.CommonResponse;
+import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.bean.WebSocketManager;
 import com.lty.zgj.driver.bean.WebSocketRequst;
 import com.lty.zgj.driver.ui.fragment.DepartFragment;
 import com.lty.zgj.driver.ui.fragment.WaitGoingOutFragment;
+import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.lty.zgj.driver.weight.CustomViewPager;
 
 import java.util.ArrayList;
@@ -22,8 +26,9 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.droidlover.xdroidbase.router.Router;
 
-public class MainActivity extends BaseXActivity implements OnTabSelectListener {
+public class MainActivity extends AbsBaseWebSocketActivity implements OnTabSelectListener {
     @BindView(R.id.viewpager)
     CustomViewPager vp;
     @BindView(R.id.tl_1)
@@ -33,8 +38,14 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener {
     private final String[] mTitles = {"发车", "待出行"};
     private MyPagerAdapter mAdapter;
 
+
     @Override
-    public void initData(Bundle savedInstanceState) {
+    protected void initView() {
+        initData();
+    }
+
+
+    public void initData() {
         mAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mFragments.clear();
         mFragments.add(new DepartFragment());
@@ -45,11 +56,6 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener {
         vp.setPagingEnabled(false);
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_main;
-    }
-
 
     @Override
     public void onTabSelect(int position) {
@@ -57,6 +63,27 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener {
 
     @Override
     public void onTabReselect(int position) {
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_main;
+    }
+
+
+    @Override
+    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
+        return WebSocketService.class;
+    }
+
+    @Override
+    protected void onCommonResponse(CommonResponse<String> response) {
+
+    }
+
+    @Override
+    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
+
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
@@ -95,11 +122,19 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener {
                 String webSocketJson = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x101, "102", params);
 //                Log.e("MainActivity", "webSorkcetRequestJson---"+webSorkcetRequestJson);
 //                String md5 = MD5Util.getMD5(webSorkcetRequestJson);
-
                 Log.e("MainActivity", "webSorkcetRequestJson---"+webSocketJson);
+
+                SetActivity.launch(context);
+
                 break;
             case R.id.tv_msg:
                 break;
         }
+    }
+
+    public static void launch(Activity activity) {
+        Router.newIntent(activity)
+                .to(MainActivity.class)
+                .launch();
     }
 }

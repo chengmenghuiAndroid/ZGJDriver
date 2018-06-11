@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <include layout="@layout/custom_layout"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_item"
+        android:layout_marginTop="10dp"/>
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/ar_travel_history"
+        android:layout_width="match_parent"
+        android:layout_height="88px">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的历史出行"
+            android:textSize="32px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_item"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true"/>
+
+
+        <ImageView
+            style="@style/person_center_next_style"
+            android:src="@drawable/btn_order_jump"
+            android:layout_centerVertical="true"
+            />
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_item"
+            android:layout_marginTop="10dp"/>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:id="@+id/personal_information"
+            android:layout_width="match_parent"
+            android:layout_height="88px">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个人信息"
+                android:textSize="32px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"/>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line_item"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentBottom="true"/>
+
+
+            <ImageView
+                style="@style/person_center_next_style"
+                android:src="@drawable/btn_order_jump"
+                android:layout_centerVertical="true"
+                />
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:id="@+id/ar_personal_help"
+            android:layout_width="match_parent"
+            android:layout_height="88px">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="帮助"
+                android:textSize="32px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"/>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line_item"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentBottom="true"/>
+
+
+            <ImageView
+                style="@style/person_center_next_style"
+                android:src="@drawable/btn_order_jump"
+                android:layout_centerVertical="true"
+                />
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:id="@+id/personal_about_zgj"
+            android:layout_width="match_parent"
+            android:layout_height="88px">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="关于坐公交"
+                android:textSize="32px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"/>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line_item"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentBottom="true"/>
+
+
+            <ImageView
+                style="@style/person_center_next_style"
+                android:src="@drawable/btn_order_jump"
+                android:layout_centerVertical="true"
+                />
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/ar_login_btn"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_btn_circular"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="退出登录"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"/>
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

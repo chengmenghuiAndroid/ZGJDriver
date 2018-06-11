@@ -1,7 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.zhy.autolayout.AutoLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
 
-</LinearLayout>
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/shape_rectangle_circular_bead"
+        android:layout_marginTop="100dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="坐公交"
+            android:textColor="@color/white"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_item_circular"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp">
+
+
+        <com.lty.zgj.driver.weight.ClearEditText
+            android:id="@+id/et_phone_number"
+            android:textColor="@color/editText_input"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:textColorHint="#999999"
+            android:textSize="15sp"
+            android:singleLine="true"
+            android:hint="手机号"
+            android:textCursorDrawable="@drawable/editext_cursor_bg"
+            android:cursorVisible="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="30dp"
+            android:layout_toLeftOf="@id/tv_send_code"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_send_code"
+            style="@style/send_code"
+            />
+
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_item_circular"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp">
+
+        <com.lty.zgj.driver.weight.ClearEditText
+            android:textColor="@color/editText_input"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:textColorHint="#999999"
+            android:textSize="15sp"
+            android:singleLine="true"
+            android:hint="验证码"
+            android:textCursorDrawable="@drawable/editext_cursor_bg"
+            android:cursorVisible="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="30dp"
+            android:layout_toLeftOf="@id/tv_send_code"
+            />
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/ar_login_btn"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_btn_circular"
+        android:layout_marginTop="30dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登录"
+            android:textColor="@color/white"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+</com.zhy.autolayout.AutoLinearLayout>

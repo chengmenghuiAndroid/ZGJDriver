@@ -6,7 +6,6 @@ import android.util.Log;
 import com.alibaba.fastjson.JSONObject;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.AppUtils;
-import com.lty.zgj.driver.core.tool.MD5Util;
 import com.lty.zgj.driver.core.tool.UUIDUtils;
 
 import java.util.HashMap;
@@ -37,10 +36,7 @@ public class WebSocketManager {
 
 
     /**
-     *
-     * @param appVn app版本号
      * @param msgId 业务消息类型  司机用户密码登录 0x101
-     * @param msgVn 协议版本号
      * @param token 司机用户token
      * @param bodyParamsMap  需要传递的 body 数据map 集合
      * @return
@@ -90,6 +86,8 @@ public class WebSocketManager {
 
     public String sendWebSocketJson (Context context, int msgId, String token, Map<String, Object> bodyParamsMap){
         String socketRequest = "854151515#48484#";
+
+
 
         String socketRequestStr = socketRequest.replace("#", "$$");
 

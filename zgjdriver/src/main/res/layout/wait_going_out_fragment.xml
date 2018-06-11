@@ -5,4 +5,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="请提前确定好车辆位置，按时间出发到达~"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <cn.droidlover.xrecyclerview.XRecyclerContentLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </cn.droidlover.xrecyclerview.XRecyclerContentLayout>
+
+
 </com.zhy.autolayout.AutoLinearLayout>

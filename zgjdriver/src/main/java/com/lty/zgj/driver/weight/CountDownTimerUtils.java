@@ -37,7 +37,7 @@ public class CountDownTimerUtils extends CountDownTimer {
     public void onTick(long millisUntilFinished) {
         mTextView.setClickable(false); //设置不可点击
         mTextView.setText(millisUntilFinished / 1000+"s后重发");  //设置倒计时时间
-        mTextView.setTextSize(24);
+        mTextView.setTextSize(12);
         mTextView.setTextColor(Color.parseColor("#FFFFFF"));
         mTextView.setBackgroundResource(R.drawable.bg_identify_code_press); //设置按钮为灰色，这时是不能点击的
 

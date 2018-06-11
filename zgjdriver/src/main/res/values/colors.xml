@@ -8,4 +8,10 @@
     <color name="kprogresshud_default_color">#b1000000</color>
     <color name="fadegray">#DCE6F0</color>
     <color name="eline_main_color">#2BCFD9</color>
+    <color name="item_color_bg">#CFCFCF</color>
+    <color name="item_btn_bg">#008B8B</color>
+    <color name="cursor">#2AB650</color>
+    <color name="editText_input">#333333</color>
+    <color name="line_item">#DDDDDD</color>
+
 </resources>

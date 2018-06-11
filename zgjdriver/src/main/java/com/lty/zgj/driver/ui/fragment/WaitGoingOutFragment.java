@@ -3,38 +3,86 @@ package com.lty.zgj.driver.ui.fragment;
 import android.os.Bundle;
 
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.base.BaseXFragment;
+import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketFragment;
+import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
+import com.lty.zgj.driver.WebSocket.CommonResponse;
+import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
+import com.lty.zgj.driver.adapter.WaitGoingOutAdapter;
+import com.lty.zgj.driver.websocketdemo.WebSocketService;
+
+import butterknife.BindView;
+import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
+import cn.droidlover.xrecyclerview.XRecyclerView;
 
 /**
  * Created by Administrator on 2018/6/6.
  * 待发车
  */
 
-public class WaitGoingOutFragment extends BaseXFragment {
+public class WaitGoingOutFragment extends AbsBaseWebSocketFragment {
 
+    @BindView(R.id.contentLayout)
+    XRecyclerContentLayout contentLayout;
+
+    private WaitGoingOutAdapter waitGoingOutAdapter;
+
+
+    /**
+     * 返回Fragment layout资源ID
+     *
+     * @return
+     */
     @Override
-    public void initData(Bundle savedInstanceState) {
-
-    }
-
-    @Override
-    public int getLayoutId() {
+    protected int getFragmentLayoutId() {
         return R.layout.wait_going_out_fragment;
     }
 
-    /**
-     * 当视图初始化并且对用户可见的时候去真正的加载数据
-     */
     @Override
-    protected void lazyLoad() {
+    protected void initView(Bundle savedInstanceState) {
+        setLayoutManager(contentLayout.getRecyclerView());
+        contentLayout.getRecyclerView().setAdapter(getAdapter());
+        contentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+
+            @Override
+            public void onLoadMore(int page) {
+
+            }
+        });
+
+        contentLayout.getRecyclerView().useDefLoadMoreView();
+    }
+
+    private WaitGoingOutAdapter getAdapter() {
+        if(waitGoingOutAdapter == null){
+            waitGoingOutAdapter = new WaitGoingOutAdapter(context);
+        }else {
+            waitGoingOutAdapter.notifyDataSetChanged();
+        }
+
+        return waitGoingOutAdapter;
 
     }
 
-    /**
-     * 当视图已经对用户不可见并且加载过数据，如果需要在切换到其他页面时停止加载数据，可以调用此方法
-     */
     @Override
-    protected void stopLoad() {
+    protected void onCommonResponse(CommonResponse<String> response) {
 
+    }
+
+    @Override
+    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
+
+    }
+
+    @Override
+    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
+        return WebSocketService.class;
+    }
+
+    public void setLayoutManager(XRecyclerView recyclerView) {
+        recyclerView.verticalLayoutManager(context);
     }
 }

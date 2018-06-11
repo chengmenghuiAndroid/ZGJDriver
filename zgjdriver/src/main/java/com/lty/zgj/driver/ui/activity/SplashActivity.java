@@ -16,7 +16,7 @@ public class SplashActivity extends BaseXActivity{
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                launch(MainActivity.class);
+                launch(LoginActivity.class);
                 finish();
             }
         }, 1500);

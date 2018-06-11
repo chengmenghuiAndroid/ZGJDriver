@@ -68,5 +68,6 @@ dependencies {
 
     implementation 'com.neovisionaries:nv-websocket-client:2.3'
     compile rootProject.ext.dependencies["eventbus"]
-    compile 'com.alibaba:fastjson:1.2.33'
+    compile 'com.alibaba:fastjson:1.2.44'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 }
