@@ -1,6 +1,7 @@
 package com.lty.zgj.driver.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketFragment;
@@ -39,6 +40,7 @@ public class WaitGoingOutFragment extends AbsBaseWebSocketFragment {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        contentLayout.getRecyclerView().setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false));
         setLayoutManager(contentLayout.getRecyclerView());
         contentLayout.getRecyclerView().setAdapter(getAdapter());
         contentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {

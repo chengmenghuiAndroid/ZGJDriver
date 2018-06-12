@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
@@ -25,11 +26,18 @@ import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketFragment;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
+import com.lty.zgj.driver.adapter.DepartAdapter;
 import com.lty.zgj.driver.bean.WebSocketResponse;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
+import butterknife.OnClick;
+import cn.droidlover.xdroid.dialog.ShowDialogRelative;
+import cn.droidlover.xrecyclerview.XRecyclerView;
 import rx.functions.Action1;
 
 /**
@@ -42,6 +50,11 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
     @BindView(R.id.map)
     MapView mapView;
+    @BindView(R.id.xrecyclerview)
+    XRecyclerView xrecyclerview;
+
+    List<String> list = new ArrayList<>();
+    List<String> list2 = new ArrayList<>();
 
     private AMap aMap;
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
@@ -59,13 +72,43 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     //坐标和经纬度转换工具
     Projection projection;
     private MyLocationStyle myLocationStyle;
+    private DepartAdapter departAdapter;
+
+
 
 
     public void initData(Bundle savedInstanceState) {
         mapView.onCreate(savedInstanceState);// 此方法必须重写
+        list.add("A");
+        list.add("B");
+        list.add("C");
+        list.add("D");
 
+        getAdapter().setData(list);
         checkPermissionsLocation();
         init();
+        initRv();
+
+    }
+
+    private void initRv() {
+        setLayoutManager(xrecyclerview);
+        xrecyclerview.setAdapter(getAdapter());
+    }
+
+    public DepartAdapter getAdapter() {
+        if(departAdapter == null){
+            departAdapter = new DepartAdapter(context);
+
+        }else {
+            departAdapter.notifyDataSetChanged();
+        }
+        return departAdapter;
+
+    }
+
+    public void setLayoutManager(XRecyclerView recyclerView) {
+        recyclerView.verticalLayoutManager(context);
     }
 
 
@@ -299,5 +342,25 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     }
 
 
+
+    @OnClick({
+            R.id.tv_unfoldRv
+    })
+
+    public void unfoldRvOnClickEvent(View view){
+        switch (view.getId()){
+            case R.id.tv_unfoldRv:
+                ShowDialogRelative.toastDialog(context, "点击了");
+                list.add("C");
+                list.add("D");
+                list.add("D");
+                list.add("D");
+                list.add("D");
+                list.add("D");
+
+                getAdapter().setData(list);
+                break;
+        }
+    }
 
 }

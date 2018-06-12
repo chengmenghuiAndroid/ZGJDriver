@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/line_item"-->
+        <!--/>-->
+    <!--<TextView-->
+        <!--android:id="@+id/surplus"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="今日剩余行程行程 1 趟"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_marginLeft="30dp"/>-->
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/line_item"-->
+        <!--android:layout_marginTop="10dp"/>-->
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="xxx车牌号"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"/>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:id="@+id/surplus_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7:10"/>
+
+            <ImageView
+                android:id="@+id/icon_oval"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:src="@drawable/shape_oval_green"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/surplus_1"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/surplus_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="光谷广场(公交站)"
+                android:layout_toRightOf="@id/icon_oval"
+                android:layout_marginLeft="10dp"/>
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:id="@+id/surplus_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7:20"/>
+
+            <ImageView
+                android:id="@+id/icon_oval_3"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:src="@drawable/shape_oval_green"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/surplus_3"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/surplus_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="光谷步行街"
+                android:layout_toRightOf="@id/icon_oval_3"
+                android:layout_marginLeft="10dp"/>
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/surplus_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8:00"/>
+
+            <ImageView
+                android:id="@+id/icon_oval_5"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:src="@drawable/shape_oval_red"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/surplus_5"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/surplus_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="金融港"
+                android:layout_toRightOf="@id/icon_oval_5"
+                android:layout_marginLeft="10dp"/>
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:id="@+id/surplus_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8:10"/>
+
+            <ImageView
+                android:id="@+id/icon_oval_7"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:src="@drawable/shape_oval_red"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/surplus_7"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/surplus_8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工程大学流芳校区东门"
+                android:layout_toRightOf="@id/icon_oval_7"
+                android:layout_marginLeft="10dp"/>
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_item"
+            android:layout_marginTop="10dp"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+</com.zhy.autolayout.AutoLinearLayout>

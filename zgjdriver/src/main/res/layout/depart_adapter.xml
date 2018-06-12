@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:orientation="horizontal">
+
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp">
+
+        <View
+            android:id="@+id/view_1"
+            android:layout_width="15dp"
+            android:layout_height="1.5dp"
+            android:background="#696969"
+            android:layout_marginTop="15dp"/>
+
+        <View
+            android:id="@+id/view_2"
+            android:layout_width="1.5dp"
+            android:layout_height="10dp"
+            android:background="#696969"
+            android:layout_below="@id/view_1"
+            android:layout_alignParentBottom="true"/>
+
+        <View
+            android:id="@+id/view_3"
+            android:layout_width="1.5dp"
+            android:layout_height="17dp"
+            android:background="#696969"
+            android:layout_above="@id/view_2"/>
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="15dp">
+
+        <ImageView
+            android:id="@+id/icon_oval"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@drawable/shape_oval_green"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/view_1"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/tv_depart_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shape_oval_green"
+            android:text="7:00"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/icon_oval"
+            android:layout_centerVertical="true"
+            android:textSize="18dp"/>
+
+
+        <TextView
+            android:id="@+id/tv_station"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shape_oval_green"
+            android:text="光谷广场(公交站)"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@id/tv_depart_time"
+            android:layout_centerVertical="true"
+            android:textSize="18dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shape_oval_green"
+            android:text="29人"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@id/tv_station"
+            android:layout_centerVertical="true"
+            android:textSize="18dp"
+            android:textColor="#4876FF"/>
+
+
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+
+
+
+</com.zhy.autolayout.AutoLinearLayout>
