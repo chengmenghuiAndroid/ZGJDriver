@@ -43,12 +43,11 @@ public class RetrofitServiceManager {
 //                本地证书的密码);
 
 
-//        // 添加公共参数拦截器
-//        HttpCommonInterceptor commonInterceptor = new HttpCommonInterceptor.Builder()
-//                .addHeaderParams("appId", "eline1.0")
-//                .addHeaderParams("appSecret", "eline879984894988")
-//                .build();
-//        okHttpClient.addInterceptor(commonInterceptor);
+        // 添加公共参数拦截器
+        HttpCommonInterceptor commonInterceptor = new HttpCommonInterceptor.Builder()
+                .addHeaderParams("Content-Type", "text/json")
+                .build();
+        okHttpClient.addInterceptor(commonInterceptor);
         OkHttpUtils.initClient(okHttpClient.build());
         // 创建Retrofit
         mRetrofit = new Retrofit.Builder()

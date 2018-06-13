@@ -6,13 +6,13 @@ package com.lty.zgj.driver.net;
 
 public class Api extends ObjectLoader{
 
-    private static LanTaiYuanService lantaiyuanservice;
+    private static ZGJDService lantaiyuanservice;
 
-    public static LanTaiYuanService getGankService() {
+    public static ZGJDService getGankService() {
         if (lantaiyuanservice == null) {
             synchronized (Api.class) {
                 if (lantaiyuanservice == null) {
-                    lantaiyuanservice = RetrofitServiceManager.getInstance().create(LanTaiYuanService.class);
+                    lantaiyuanservice = RetrofitServiceManager.getInstance().create(ZGJDService.class);
                 }
             }
         }

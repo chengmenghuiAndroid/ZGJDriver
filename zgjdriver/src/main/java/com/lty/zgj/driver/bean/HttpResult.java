@@ -6,41 +6,38 @@ package com.lty.zgj.driver.bean;
  */
 public class HttpResult<T> {
 
-    private int resultCode;//	1001
-    private String resultMsg;//	API服务正常
-    private String errMsg;//	用户名或者密码错误
+    private int returntCode;//	1001
+
+    // private String resultMsg;//	API服务正常
+
+    private String msg;//	用户名或者密码错误
     //用来模仿Data
-    private T model;
+    private T data;
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
 
     public int getResultCode() {
-        return resultCode;
+        return returntCode;
     }
 
     public void setResultCode(int resultCode) {
-        this.resultCode = resultCode;
+        this.returntCode = resultCode;
     }
 
-    public String getResultMsg() {return resultMsg;}
-
-    public void setResultMsg(String resultMsg) {
-        this.resultMsg = resultMsg;
-    }
-
-    public T getModel() {
-        return model;
-    }
-
-    public void setModel(T model) {
-        this.model = model;
-    }
-
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
 
     /**
      * API是否请求失败

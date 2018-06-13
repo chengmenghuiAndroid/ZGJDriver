@@ -68,6 +68,7 @@
         android:layout_marginLeft="30dp">
 
         <com.lty.zgj.driver.weight.ClearEditText
+            android:id="@+id/et_pws"
             android:textColor="@color/editText_input"
             android:inputType="text"
             android:layout_width="match_parent"

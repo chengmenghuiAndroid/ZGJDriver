@@ -9,7 +9,9 @@ import com.zhy.autolayout.utils.AutoUtils;
 
 import butterknife.BindView;
 import cn.droidlover.xdroid.base.SimpleRecAdapter;
+import cn.droidlover.xdroid.dialog.ShowDialogRelative;
 import cn.droidlover.xdroid.kit.KnifeKit;
+import cn.droidlover.xdroidbase.cache.SharedPref;
 
 /**
  * Created by Administrator on 2018/6/12.
@@ -21,6 +23,7 @@ public class DepartAdapter extends SimpleRecAdapter<String , DepartAdapter.ViewH
 
     public DepartAdapter(Context context) {
         super(context);
+        ShowDialogRelative.toastDialog(context,"DepartAdapter");
     }
 
     @Override
@@ -37,19 +40,26 @@ public class DepartAdapter extends SimpleRecAdapter<String , DepartAdapter.ViewH
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         String s = data.get(position);
+        int pos = SharedPref.getInstance(context).getInt("position", 0);
+
+        if(pos > 0){
+            if(position == pos - 1){
+                setVisible(holder.view2);
+            }
+        }
 
         if(position == 0){
-            holder.view3.setVisibility(View.GONE);
+            setGone(holder.view3);
+        }else if(position == data.size() -1){
+            setGone(holder.view2);
         }
 
-        if(position == data.size() -1){
-            holder.view2.setVisibility(View.GONE);
+        if(data.size() == 1){
+            setGone(holder.view3);
+            setGone(holder.view2);
         }
-    }
 
-    @Override
-    public int getItemCount() {
-        return data.size();
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

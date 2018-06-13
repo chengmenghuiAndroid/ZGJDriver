@@ -45,7 +45,7 @@ class CustomGsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
         if (httpResult.isCodeInvalid()) {
             value.close();
             //抛出一个RuntimeException, 这里抛出的异常会到Subscriber的onError()方法中统一处理
-            throw new ApiException(resultCode,httpResult.getErrMsg());
+            throw new ApiException(resultCode,httpResult.getMsg());
         }
         MediaType contentType = value.contentType();
         Charset charset = contentType != null ? contentType.charset(UTF_8) : UTF_8;

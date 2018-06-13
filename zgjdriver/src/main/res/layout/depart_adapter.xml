@@ -24,7 +24,8 @@
             android:layout_height="10dp"
             android:background="#696969"
             android:layout_below="@id/view_1"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            />
 
         <View
             android:id="@+id/view_3"

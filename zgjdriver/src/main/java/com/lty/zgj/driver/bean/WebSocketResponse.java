@@ -18,7 +18,7 @@ public class WebSocketResponse implements Serializable{
      */
 
     private HeaderBean header;
-    private LappendBodyBean lappendBody;
+    private LappendBodyBean appendBody;
     private BodyBean body;
 
     public HeaderBean getHeader() {
@@ -30,11 +30,11 @@ public class WebSocketResponse implements Serializable{
     }
 
     public LappendBodyBean getLappendBody() {
-        return lappendBody;
+        return appendBody;
     }
 
-    public void setLappendBody(LappendBodyBean lappendBody) {
-        this.lappendBody = lappendBody;
+    public void setLappendBody(LappendBodyBean appendBody) {
+        this.appendBody = appendBody;
     }
 
     public BodyBean getBody() {
@@ -52,16 +52,15 @@ public class WebSocketResponse implements Serializable{
          * msgVn : 1.01
          */
 
-        private int msgSn; //报文序列号 时间戳字符串 后面 8位
+        private String msgSn; //报文序列号 时间戳字符串 后面 8位
         private int msgId; //业务消息类型
         private String msgVn; //协议版本号 0x101
-        private String appVn; //app版本号
 
-        public int getMsgSn() {
+        public String getMsgSn() {
             return msgSn;
         }
 
-        public void setMsgSn(int msgSn) {
+        public void setMsgSn(String msgSn) {
             this.msgSn = msgSn;
         }
 
@@ -81,13 +80,6 @@ public class WebSocketResponse implements Serializable{
             this.msgVn = msgVn;
         }
 
-        public String getAppVn() {
-            return appVn;
-        }
-
-        public void setAppVn(String appVn) {
-            this.appVn = appVn;
-        }
     }
 
     public static class LappendBodyBean {
@@ -100,6 +92,7 @@ public class WebSocketResponse implements Serializable{
         private String token; //司机用户token
         private String devSn; //设备唯一 ID
         private int devType;  // 0 Android 1 ios
+        private String appVn; //app版本号
 
         public String getToken() {
             return token;
@@ -123,6 +116,14 @@ public class WebSocketResponse implements Serializable{
 
         public void setDevType(int devType) {
             this.devType = devType;
+        }
+
+        public String getAppVn() {
+            return appVn;
+        }
+
+        public void setAppVn(String appVn) {
+            this.appVn = appVn;
         }
     }
 

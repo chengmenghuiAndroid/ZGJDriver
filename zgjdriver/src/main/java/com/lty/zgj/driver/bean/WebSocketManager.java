@@ -6,6 +6,7 @@ import android.util.Log;
 import com.alibaba.fastjson.JSONObject;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.AppUtils;
+import com.lty.zgj.driver.core.tool.MD5Util;
 import com.lty.zgj.driver.core.tool.UUIDUtils;
 
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class WebSocketManager {
 
 
     private static final String THIS_FILE = "WebSocketManager";
+    private String socketRequestStrMd5Json;
 
 
     /**
@@ -44,25 +46,28 @@ public class WebSocketManager {
     public String webSocketRequest(Context context, int msgId, String token, Map<String, Object> bodyParamsMap){
 
         WebSocketResponse.HeaderBean header = new WebSocketResponse.HeaderBean();
-        WebSocketResponse.LappendBodyBean lappendBody = new WebSocketResponse.LappendBodyBean();
+        WebSocketResponse.LappendBodyBean appendBody = new WebSocketResponse.LappendBodyBean();
 
         //设置请求头参数
-        header.setAppVn(AppUtils.getVersionName(context)); //设置app版本号
         header.setMsgId(msgId); //设置 业务消息类型
-        header.setMsgSn(timestamp());
+        header.setMsgSn(String.valueOf(timestamp()));
+//        header.setMsgSn("123");
         Log.e(THIS_FILE, "timestamp-----"+timestamp());
         header.setMsgVn(Constant.MSG_VN);//协议版本号
         //设置lappendBody参数
-        lappendBody.setDevSn(UUIDUtils.getUniquePsuedoID()); //设备唯一ID
+        appendBody.setDevSn(UUIDUtils.getUniquePsuedoID()); //设备唯一ID
+//        appendBody.setDevSn("aaaaaaaaaa"); //设备唯一ID
         Log.e(THIS_FILE, "UUID-----"+UUIDUtils.getUniquePsuedoID());
-        lappendBody.setToken(token);
-        lappendBody.setDevType(0);//0:安卓。1:ios
+        appendBody.setToken(token);
+        appendBody.setDevType(0);//0:安卓。1:ios
+        appendBody.setAppVn(AppUtils.getVersionName(context)); //设置app版本号
+//        appendBody.setAppVn("1.5"); //设置app版本号
 
         //设置数据
         Map<String, Object> params = new HashMap<>();
         params.put("header", header);
         params.put("body", bodyParamsMap);
-        params.put("lappendBody", lappendBody);
+        params.put("appendBody", appendBody);
 
         JSONObject jsonObject = new JSONObject(params);
         String jsonString = jsonObject.toJSONString();
@@ -85,14 +90,18 @@ public class WebSocketManager {
 
 
     public String sendWebSocketJson (Context context, int msgId, String token, Map<String, Object> bodyParamsMap){
-        String socketRequest = "854151515#48484#";
 
+        String socketRequestStr = webSocketRequest(context, msgId, token, bodyParamsMap);
 
+        String md5 = MD5Util.getMD5_16(socketRequestStr.length()+"");//md5加密字符串
 
-        String socketRequestStr = socketRequest.replace("#", "$$");
+        String socketRequestStrMd5 = socketRequestStr + md5;
 
-
-        return socketRequestStr;
+        if(socketRequestStrMd5.contains("#")){
+            socketRequestStrMd5Json = "$$" + socketRequestStrMd5;
+        }else {
+            socketRequestStrMd5Json = "#" + socketRequestStrMd5;
+        }
+        return socketRequestStrMd5Json;
     }
-
 }

@@ -1,5 +1,7 @@
 package com.lty.zgj.driver.websocketdemo;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
@@ -17,15 +19,20 @@ public class WebSocketService extends AbsBaseWebSocketService {
 
     @Override
     protected String getConnectUrl() {
-        return "ws://118.25.40.163:8088";
+        return "ws://10.1.254.172:18089/diverSocket";
     }
 
     @Override
     protected void dispatchResponse(String textResponse) {
         //处理数据
         try {
-            CommonResponse<String> response = JSON.parseObject(textResponse, new TypeReference<CommonResponse<String>>() {
-            });
+
+            Log.e("WebSocketService", "textResponse-----"+textResponse);
+            String substring = textResponse.substring(1, textResponse.length() - 16);
+            Log.e("WebSocketService", "substring-----"+substring);
+            CommonResponse<String> response = JSON.parseObject(substring, new TypeReference<CommonResponse<String>>() {});
+
+
             if (response == null) {
                 EventBus.getDefault().post(new WebSocketSendDataErrorEvent("", textResponse, "响应数据为空"));
                 return;

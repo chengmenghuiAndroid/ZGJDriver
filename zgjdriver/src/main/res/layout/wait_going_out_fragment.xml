@@ -15,7 +15,9 @@
     <cn.droidlover.xrecyclerview.XRecyclerContentLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        android:focusable="true">
 
     </cn.droidlover.xrecyclerview.XRecyclerContentLayout>
 

@@ -2,8 +2,10 @@ package com.lty.zgj.driver.net;
 
 import android.util.Log;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.lty.zgj.driver.bean.HttpResult;
+import com.lty.zgj.driver.bean.LoginModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,8 +66,16 @@ public class ObjectLoader {
 
         @Override
         public T call(HttpResult<T> httpResult) {
-            Log.e(THIS_FILE, "---------" + new Gson().toJson(httpResult.getModel()));
-            return httpResult.getModel();
+            Log.e(THIS_FILE, "---------" + new Gson().toJson(httpResult.getData()));
+            return httpResult.getData();
         }
+    }
+
+
+    public void getLoginData(Subscriber<LoginModel> logResult, JSONObject param) {
+
+        Observable observable = Api.getGankService().login(param)
+                .map(new HttpResultFunc<LoginModel>());
+        toSubscribe(observable, logResult);
     }
 }
