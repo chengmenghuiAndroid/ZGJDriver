@@ -31,7 +31,7 @@ public class CommonResponse<T> {
         this.headerPacket = headerPacket;
     }
 
-    public static class BodyBean<T> {
+    public static class BodyBean {
         /**
          * code : 104
          * message : token 过期
@@ -39,7 +39,7 @@ public class CommonResponse<T> {
 
         private int code;
         private String message;
-        private T data;     //请求返回的数据
+        private String data;     //请求返回的数据
 
         public int getCode() {
             return code;
@@ -57,11 +57,11 @@ public class CommonResponse<T> {
             this.message = message;
         }
 
-        public T getData() {
+        public String getData() {
             return data;
         }
 
-        public void setData(T data) {
+        public void setData(String data) {
             this.data = data;
         }
     }

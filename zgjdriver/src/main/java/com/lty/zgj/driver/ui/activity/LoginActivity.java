@@ -12,9 +12,11 @@ import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.bean.LoginModel;
+import com.lty.zgj.driver.bean.LoginWebWebSocketModel;
 import com.lty.zgj.driver.bean.WebSocketManager;
 import com.lty.zgj.driver.bean.WebSocketRequst;
 import com.lty.zgj.driver.core.config.Constant;
+import com.lty.zgj.driver.core.tool.GsonUtils;
 import com.lty.zgj.driver.core.tool.MD5Util;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
@@ -30,6 +32,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.droidlover.xdroid.dialog.ShowDialogRelative;
 import cn.droidlover.xdroidbase.cache.SharedPref;
 
 /**
@@ -76,7 +79,22 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
 
             //我们需要通过 path 判断是不是登陆接口返回的数据，因为也有可能是其他接口返回的
             closeRoundProgressDialog();//关闭加载对话框
-            showToastMessage("登陆成功");
+
+            CommonResponse.BodyBean body = response.getBody();
+            int code = body.getCode();
+
+            if(code == 104){
+                ShowDialogRelative.toastDialog(context, body.getMessage());
+                return;
+            }
+            ShowDialogRelative.toastDialog(context, body.getMessage());
+            String data = body.getData();
+            LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
+            String token = loginModel.getToken();
+            SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, token);
+            MainActivity.launch(context);
+
+            Log.e(THIS_FILE, "token----"+token);
         }
     }
 
@@ -101,7 +119,6 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
                 param.put("pwd", MD5Util.getMD5("12345"));
                 fetchLoginData(param);
                 Log.e(THIS_FILE, "param----"+param);
-//                MainActivity.launch(context);
                 break;
                 case R.id.tv_send_code:
                     countDownTimerUtils.start();
