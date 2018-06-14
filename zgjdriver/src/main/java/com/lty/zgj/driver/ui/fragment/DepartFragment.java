@@ -372,6 +372,12 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         initData(savedInstanceState);
     }
 
+    @Override
+    protected void initView() {
+
+    }
+
+
 
     @OnClick({
             R.id.tv_unfoldRv_down,

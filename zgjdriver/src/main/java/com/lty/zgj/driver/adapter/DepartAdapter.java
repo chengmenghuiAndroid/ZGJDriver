@@ -9,7 +9,6 @@ import com.zhy.autolayout.utils.AutoUtils;
 
 import butterknife.BindView;
 import cn.droidlover.xdroid.base.SimpleRecAdapter;
-import cn.droidlover.xdroid.dialog.ShowDialogRelative;
 import cn.droidlover.xdroid.kit.KnifeKit;
 import cn.droidlover.xdroidbase.cache.SharedPref;
 
@@ -23,7 +22,6 @@ public class DepartAdapter extends SimpleRecAdapter<String , DepartAdapter.ViewH
 
     public DepartAdapter(Context context) {
         super(context);
-        ShowDialogRelative.toastDialog(context,"DepartAdapter");
     }
 
     @Override

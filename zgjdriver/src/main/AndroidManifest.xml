@@ -26,12 +26,11 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
 
     <application
@@ -43,32 +42,58 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.activity.MainActivity"
-                  android:launchMode="singleTask"
-                  android:windowSoftInputMode="adjustPan"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ui.activity.SplashActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeSplash">
+            android:theme="@style/ThemeSplash"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.LoginActivity"
-                  android:launchMode="singleTask"
-                  android:windowSoftInputMode="adjustPan"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.SetActivity"/>
-        <activity android:name=".ui.activity.AboutActivity"/>
-        <activity android:name=".ui.activity.TermsOfServiceActivity"/>
-        <activity android:name=".ui.activity.VersionIntroductionActivity"/>
-        <activity android:name=".ui.activity.PersonalHelpActivity"/>
-        <activity android:name=".ui.activity.PersonalInformationActivity"/>
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.activity.SetActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+
+            <intent-filter>
+                <action android:name="action_main" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.activity.TermsOfServiceActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.activity.VersionIntroductionActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.activity.PersonalHelpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.activity.PersonalInformationActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ui.activity.MessageActivity"/>
 
 
         <meta-data
@@ -76,7 +101,7 @@
             android:value="97a8e9500e8602533584c90c9951c154"/>
 
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
-        <service android:name="com.amap.api.location.APSService" >
+        <service android:name="com.amap.api.location.APSService">
         </service>
 
         <meta-data

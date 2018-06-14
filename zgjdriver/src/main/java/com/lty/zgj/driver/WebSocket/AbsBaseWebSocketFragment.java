@@ -80,7 +80,7 @@ public abstract class AbsBaseWebSocketFragment extends BaseFragment {
     protected void initBind() {
         super.initBind();
         networkErrorTips = "网络错误";
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         bindWebSocketService();
     }
 
@@ -138,6 +138,7 @@ public abstract class AbsBaseWebSocketFragment extends BaseFragment {
      */
     protected void onServiceBindSuccess() {
         Log.i(TAG, "onServiceBindSuccess()");
+        initView();
     }
 
     /**

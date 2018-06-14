@@ -28,6 +28,11 @@ public class WaitGoingOutFragment extends AbsBaseWebSocketFragment {
     private WaitGoingOutAdapter waitGoingOutAdapter;
 
 
+    @Override
+    protected void initView() {
+
+    }
+
     /**
      * 返回Fragment layout资源ID
      *

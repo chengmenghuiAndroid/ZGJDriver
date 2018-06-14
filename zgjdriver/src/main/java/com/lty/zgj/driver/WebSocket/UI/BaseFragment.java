@@ -88,6 +88,8 @@ public abstract class BaseFragment extends Fragment implements IBaseActivity {
 
     }
 
+    protected abstract void initView();
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

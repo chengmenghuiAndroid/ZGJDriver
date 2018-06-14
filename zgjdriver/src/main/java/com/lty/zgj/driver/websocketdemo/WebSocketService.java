@@ -8,7 +8,6 @@ import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 
-
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -31,7 +30,6 @@ public class WebSocketService extends AbsBaseWebSocketService {
             String substring = textResponse.substring(1, textResponse.length() - 16);
             Log.e("WebSocketService", "substring-----"+substring);
             CommonResponse<String> response = JSON.parseObject(substring, new TypeReference<CommonResponse<String>>() {});
-
 
             if (response == null) {
                 EventBus.getDefault().post(new WebSocketSendDataErrorEvent("", textResponse, "响应数据为空"));

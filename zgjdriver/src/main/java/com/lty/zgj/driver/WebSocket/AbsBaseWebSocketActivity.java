@@ -8,7 +8,6 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import com.lty.zgj.driver.WebSocket.UI.BaseAppCompatActivity;
 import com.lty.zgj.driver.WebSocket.event.WebSocketConnectedEvent;
 import com.lty.zgj.driver.WebSocket.event.WebSocketConnectionErrorEvent;
@@ -64,7 +63,7 @@ public abstract class AbsBaseWebSocketActivity extends BaseAppCompatActivity {
                     Log.i(TAG, "onServiceConnected()->mWebSocketService.getConnectStatus() == 0; mWebSocketService.restartThread()");
                     mWebSocketService.reconnect();
                 }
-                showRoundProgressDialog();
+//                showRoundProgressDialog();
             }
         }
 
@@ -82,7 +81,7 @@ public abstract class AbsBaseWebSocketActivity extends BaseAppCompatActivity {
     protected void initBind() {
         super.initBind();
         networkErrorTips = "网络错误";
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         bindWebSocketService();
     }
 
@@ -143,26 +142,30 @@ public abstract class AbsBaseWebSocketActivity extends BaseAppCompatActivity {
      */
     protected void onServiceBindSuccess() {
         Log.i(TAG, "onServiceBindSuccess()");
+        initView();
     }
 
     /**
      * 发送数据
      */
     protected void sendText(String text) {
-        if (mWebSocketService.getConnectStatus() == 2) {
-            Log.i(TAG, "sendText()->已连接，直接发送数据");
-            //已连接，直接发送数据
-            mWebSocketService.sendText(text);
-        } else {
-            //未连接，先连接，再发送数据
-            Log.i(TAG, "sendText()->未连接");
-            connectType = 2;
-            needSendText = text;
-            if (mWebSocketService.getConnectStatus() == 0) {
-                Log.i(TAG, "sendText()->建立连接");
-                mWebSocketService.reconnect();
+        if(mWebSocketService != null){
+            if (mWebSocketService.getConnectStatus() == 2) {
+                Log.i(TAG, "sendText()->已连接，直接发送数据");
+                //已连接，直接发送数据
+                mWebSocketService.sendText(text);
+            } else {
+                //未连接，先连接，再发送数据
+                Log.i(TAG, "sendText()->未连接");
+                connectType = 2;
+                needSendText = text;
+                if (mWebSocketService.getConnectStatus() == 0) {
+                    Log.i(TAG, "sendText()->建立连接");
+                    mWebSocketService.reconnect();
+                }
             }
         }
+
     }
 
     /**
@@ -217,4 +220,6 @@ public abstract class AbsBaseWebSocketActivity extends BaseAppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
+
+
 }
