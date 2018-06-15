@@ -1,4 +1,4 @@
-package com.lty.zgj.driver.bean;
+package com.lty.zgj.driver.WebSocket;
 
 import android.content.Context;
 import android.util.Log;

@@ -16,7 +16,7 @@ import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.bean.LoginWebWebSocketModel;
-import com.lty.zgj.driver.bean.WebSocketManager;
+import com.lty.zgj.driver.WebSocket.WebSocketManager;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.GsonUtils;
 import com.lty.zgj.driver.ui.fragment.DepartFragment;
@@ -111,6 +111,7 @@ public class MainActivity extends AbsBaseWebSocketActivity implements OnTabSelec
             finish();
         } else {
             String data = body.getData();
+            SharedPref.getInstance(context).putString(Constant.USER_INFO, data);
             LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
             String token = loginModel.getToken();//更新token
             SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, token);

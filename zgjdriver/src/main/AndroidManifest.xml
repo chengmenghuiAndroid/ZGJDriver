@@ -93,7 +93,13 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".ui.activity.MessageActivity"/>
+        <activity android:name=".ui.activity.MessageActivity"
+                  android:launchMode="singleTop"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustPan">
+
+        </activity>
+        <activity android:name=".ui.activity.HistoricalJourneyActivity"/>
 
 
         <meta-data
@@ -112,6 +118,18 @@
             android:value="1334"/>
 
         <service android:name="com.lty.zgj.driver.websocketdemo.WebSocketService"/>
+
+        <receiver
+            android:name="com.lty.zgj.driver.broadcast.ToMainActivityBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <!-- 静态注册广播 -->
+            <!-- intent过滤器,指定可以匹配哪些intent, 一般需要定义action 可以是自定义的也可是系统的 -->
+            <intent-filter>
+                <!--action-->
+                <action android:name="com.lty.zgj.drivert" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

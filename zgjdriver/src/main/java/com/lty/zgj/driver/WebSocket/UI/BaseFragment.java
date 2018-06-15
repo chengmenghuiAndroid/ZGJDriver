@@ -78,6 +78,7 @@ public abstract class BaseFragment extends Fragment implements IBaseActivity {
         }
         initBind();
         initView(savedInstanceState);
+        initView();
         return rootView;
     }
 
@@ -89,6 +90,8 @@ public abstract class BaseFragment extends Fragment implements IBaseActivity {
     }
 
     protected abstract void initView();
+
+    protected abstract void initView(Bundle savedInstanceState);
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -151,8 +154,6 @@ public abstract class BaseFragment extends Fragment implements IBaseActivity {
      * @return
      */
     protected abstract int getFragmentLayoutId();
-
-    protected abstract void initView(Bundle savedInstanceState);
 
     @Override
     public void showToastMessage(final String msg) {

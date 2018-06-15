@@ -4,13 +4,13 @@ import android.Manifest;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -34,16 +34,24 @@ import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketFragment;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
+import com.lty.zgj.driver.WebSocket.WebSocketManager;
+import com.lty.zgj.driver.WebSocket.WebSocketRequst;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.adapter.DepartAdapter;
-import com.lty.zgj.driver.bean.WebSocketResponse;
+import com.lty.zgj.driver.bean.LoginWebWebSocketModel;
+import com.lty.zgj.driver.core.config.Constant;
+import com.lty.zgj.driver.core.tool.GsonUtils;
 import com.lty.zgj.driver.core.tool.ScreenUtils;
+import com.lty.zgj.driver.ui.activity.LoginActivity;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoRelativeLayout;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -101,6 +109,10 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private DepartAdapter departAdapter;
     private ViewGroup.LayoutParams layoutParams;
     private String THIS_FILE = "DepartFragment";
+    private double latitude;
+    private double longitude;
+    private String city;
+    private String street;
 
 
     public void initData(Bundle savedInstanceState) {
@@ -117,6 +129,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         layoutParams = auAr.getLayoutParams();
         addPolylineInPlayGround(coords);
 //        startMove();
+
     }
 
     private void initRv() {
@@ -232,10 +245,19 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
     @Override
     protected void onCommonResponse(CommonResponse<String> response) {
-        if (response != null) {
-            //我们需要通过 path 判断是不是登陆接口返回的数据，因为也有可能是其他接口返回的
-            closeRoundProgressDialog();//关闭加载对话框
-            showToastMessage("登陆成功");
+
+        CommonResponse.BodyBean body = response.getBody();
+        int code = body.getCode();
+        //token过期 去登录界面
+        if (code != 101) {
+            LoginActivity.launch(context);
+            context.finish();
+        } else {
+            String data = body.getData();
+            LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
+            String token = loginModel.getToken();//更新token
+            SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, token);
+            Log.e(THIS_FILE, "token-----" + token);
         }
     }
 
@@ -285,9 +307,11 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             if (mListener != null && amapLocation != null) {
                 if (amapLocation != null && amapLocation.getErrorCode() == 0) {
 
+                    latitude = amapLocation.getLatitude();
+                    longitude = amapLocation.getLongitude();
                     if (isFirstLoc) {
                         //将地图移动到定位点
-                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())));
+                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
                         //点击定位按钮 能够将地图的中心移动到定位点
                         mListener.onLocationChanged(amapLocation);
                         //添加图钉
@@ -296,11 +320,16 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                         isFirstLoc = false;
                     }
                     StringBuffer buffer = new StringBuffer();
-                    buffer.append(amapLocation.getCountry() + "" + amapLocation.getProvince() + "" + amapLocation.getCity() + "" + amapLocation.getProvince() + "" + amapLocation.getDistrict() + "" + amapLocation.getStreet() + "" + amapLocation.getStreetNum());
-//                    sendText(buffer.toString());//调用 WebSocket 发送数据
-                    sendData();
+                    city = amapLocation.getCity();
+                    street = amapLocation.getStreet();
 
-                    Log.e(THIS_FILE, "------"+amapLocation.getLatitude()+"....."+amapLocation.getLongitude());
+                    buffer.append(amapLocation.getCountry() + "" + amapLocation.getProvince() + "" + city + "" + amapLocation.getProvince() + "" + amapLocation.getDistrict() + "" + street + "" + amapLocation.getStreetNum());
+//                    sendText(buffer.toString());//调用 WebSocket 发送数据
+
+//                    Log.e(THIS_FILE, "----latitude------"+ latitude +"..longitude......."+ longitude);
+//                    Log.e(THIS_FILE, "------"+ Utils.doubleToString(latitude) +"....."+ Utils.doubleToString(longitude));
+//                    Log.e(THIS_FILE, "buffer.toString------"+buffer.toString());
+//                    Log.e(THIS_FILE, "city------"+ city);
 
                 } else {
                     String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
@@ -310,13 +339,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         }
     }
 
-    private void sendData() {
-        JSONObject param = new JSONObject();
-        WebSocketResponse webSorketResponse = new WebSocketResponse();
-        WebSocketResponse.BodyBean body = webSorketResponse.getBody();
 
-
-    }
 
 
     /**
@@ -369,14 +392,21 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         initData(savedInstanceState);
     }
 
     @Override
     protected void initView() {
+        String data = SharedPref.getInstance(context).getString(Constant.USER_INFO, null);
+        if(!TextUtils.isEmpty(data)){
+            LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
+            int driverId = loginModel.getDriverId();
+            gpsUploadData(driverId); //业务消息类型 msgId: 0x201
+        }
 
+//        travelPathUploadData();//业务消息类型 msgId: 0x202
     }
-
 
 
     @OnClick({
@@ -622,4 +652,41 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         return points;
     }
 
+    @Override
+    protected void onFragmentVisible() {
+        super.onFragmentVisible();
+    }
+
+    /**
+     * Gps信息上传
+     */
+    private void gpsUploadData(int driverId) {
+        String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
+        long gpsTime = System.currentTimeMillis() / 1000;
+
+        Map<String, Object> gpsUpload = WebSocketRequst.getInstance(context)
+                .gpsUpload(22, 33, 114.432468,30.452708, "662", 1, driverId, gpsTime);
+
+        String socketJsonGps = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x201, token, gpsUpload);
+        sendText(socketJsonGps);
+        Log.e(THIS_FILE, "gpsTime------" + gpsTime);
+        Log.e(THIS_FILE, "token---SharedPref----" + token);
+        Log.e(THIS_FILE, "socketJsonGps----" + socketJsonGps);
+
+    }
+
+    /**
+     * 行程轨迹上传
+     */
+    private void travelPathUploadData() {
+        long stationTime = System.currentTimeMillis() / 1000;
+        String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
+        Map<String, Object> travelPathUpload = WebSocketRequst.getInstance(context).travelPathUpload(2,2, 2, 2, "金融港四路",stationTime, stationTime,
+                2);
+        String socketJsonTravelPath = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x202, token, travelPathUpload);
+        sendText(socketJsonTravelPath);
+        Log.e(THIS_FILE, "stationTime----" + stationTime);
+        Log.e(THIS_FILE, "token---SharedPref----" + token);
+        Log.e(THIS_FILE, "socketJsonTravelPath====================" + socketJsonTravelPath);
+    }
 }

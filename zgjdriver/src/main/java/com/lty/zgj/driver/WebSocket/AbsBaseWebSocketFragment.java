@@ -145,20 +145,23 @@ public abstract class AbsBaseWebSocketFragment extends BaseFragment {
      * 发送数据
      */
     protected void sendText(String text) {
-        if (mWebSocketService.getConnectStatus() == 2) {
-            //已连接，直接发送数据
-            Log.i(TAG, "sendText()->已连接，直接发送数据");
-            mWebSocketService.sendText(text);
-        } else {
-            //未连接，先连接，再发送数据
-            Log.i(TAG, "sendText()->未连接");
-            connectType = 2;
-            needSendText = text;
-            if (mWebSocketService.getConnectStatus() == 0) {
-                Log.i(TAG, "sendText()->重新建立连接...");
-                mWebSocketService.reconnect();
+        if(mWebSocketService != null){
+            if (mWebSocketService.getConnectStatus() == 2) {
+                //已连接，直接发送数据
+                Log.i(TAG, "sendText()->已连接，直接发送数据");
+                mWebSocketService.sendText(text);
+            } else {
+                //未连接，先连接，再发送数据
+                Log.i(TAG, "sendText()->未连接");
+                connectType = 2;
+                needSendText = text;
+                if (mWebSocketService.getConnectStatus() == 0) {
+                    Log.i(TAG, "sendText()->重新建立连接...");
+                    mWebSocketService.reconnect();
+                }
             }
         }
+
     }
 
     /**

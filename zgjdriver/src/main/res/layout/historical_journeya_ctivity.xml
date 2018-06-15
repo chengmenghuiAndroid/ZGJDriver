@@ -7,10 +7,12 @@
 
     <include layout="@layout/custom_layout"/>
 
+
     <cn.droidlover.xrecyclerview.XRecyclerContentLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </cn.droidlover.xrecyclerview.XRecyclerContentLayout>
+
 </com.zhy.autolayout.AutoLinearLayout>

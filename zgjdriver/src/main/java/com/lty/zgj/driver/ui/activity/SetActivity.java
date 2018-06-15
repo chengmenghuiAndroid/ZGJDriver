@@ -10,7 +10,7 @@ import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
-import com.lty.zgj.driver.bean.WebSocketManager;
+import com.lty.zgj.driver.WebSocket.WebSocketManager;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.Utils;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
@@ -101,6 +101,7 @@ public class SetActivity extends AbsBaseWebSocketActivity {
     public void onClickEventSet(View v) {
         switch (v.getId()) {
             case R.id.ar_travel_history:
+                HistoricalJourneyActivity.launch(context);
                 break;
             case R.id.personal_information:
                 PersonalInformationActivity.launch(context);
@@ -126,7 +127,7 @@ public class SetActivity extends AbsBaseWebSocketActivity {
         SharedPref.getInstance(context).remove(Constant.DRIVER_CUSTOM_TOKEN);
         sendText(webSocketJson);//登录鉴权
         LoginActivity.launch(context);
-        Utils.sendFinishActivityBroadcast(context);
+        Utils.sendFinishActivityBroadcast(context, Constant.RECEIVER_ACTION_FINISH_MAIN);
         finish();
     }
 
