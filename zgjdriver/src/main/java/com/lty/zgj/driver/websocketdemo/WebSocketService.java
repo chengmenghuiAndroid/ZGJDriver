@@ -20,6 +20,8 @@ import com.lty.zgj.driver.broadcast.ToMainActivityBroadcastReceiver;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
+import retrofit2.http.HEAD;
+
 /**
  * Created by zk721 on 2018/1/28.
  */
@@ -28,12 +30,8 @@ public class WebSocketService extends AbsBaseWebSocketService {
 
     @Override
     protected String getConnectUrl() {
-<<<<<<< HEAD
-        return "ws://123.207.167.163:9010/ajaxchattest";
-=======
         return "ws://10.1.254.172:18089/diverSocket";
 //        return "ws://192.168.2.131:18089/diverSocket";
->>>>>>> 863d2e5299a334808331e7da0224b8f61fc20c2a
     }
 
     @Override
