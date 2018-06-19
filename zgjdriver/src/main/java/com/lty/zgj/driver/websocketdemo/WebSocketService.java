@@ -17,7 +17,7 @@ public class WebSocketService extends AbsBaseWebSocketService {
 
     @Override
     protected String getConnectUrl() {
-        return "ws://118.25.40.163:8088";
+        return "ws://123.207.167.163:9010/ajaxchattest";
     }
 
     @Override

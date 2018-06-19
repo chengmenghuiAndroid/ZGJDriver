@@ -19,7 +19,7 @@ android {
         release {
             keyAlias 'zgj'
             keyPassword '123456789'
-            storeFile file('E:/workspace_zgjdriver/ZGJDriver/zgj_driver.jks')
+            storeFile file('H:/ZGJDriver/zgj_driver.jks')
             storePassword '123456789'
         }
     }
