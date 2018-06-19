@@ -42,7 +42,6 @@ import com.lty.zgj.driver.bean.LoginWebWebSocketModel;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.GsonUtils;
 import com.lty.zgj.driver.core.tool.ScreenUtils;
-import com.lty.zgj.driver.ui.activity.LoginActivity;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoRelativeLayout;
@@ -98,6 +97,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
     private boolean isFirstLoc = true;
+    private String webSocketJson;
 
 
     //自定义定位小蓝点的Marker
@@ -129,8 +129,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         layoutParams = auAr.getLayoutParams();
         addPolylineInPlayGround(coords);
 //        startMove();
-
     }
+
 
     private void initRv() {
         setLayoutManager(xrecyclerview);
@@ -241,29 +241,39 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        closeRoundProgressDialog();
     }
 
     @Override
     protected void onCommonResponse(CommonResponse<String> response) {
-
+        closeRoundProgressDialog();//关闭加载对话框
         CommonResponse.BodyBean body = response.getBody();
         int code = body.getCode();
         //token过期 去登录界面
-        if (code != 101) {
-            LoginActivity.launch(context);
+        if (code == 104) {
             context.finish();
         } else {
             String data = body.getData();
+            SharedPref.getInstance(context).putString(Constant.USER_INFO, data);
             LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
             String token = loginModel.getToken();//更新token
             SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, token);
+            SharedPref.getInstance(context).putInt(Constant.WEBSOCKT_CONT, 1);
             Log.e(THIS_FILE, "token-----" + token);
+            Log.e("token", "token---SharedPref----" + token+"-----"+"传gps断线重连获取token");
+
+
+//            if(!TextUtils.isEmpty(data)){
+//                int driverId = loginModel.getDriverId();
+//                gpsUploadData(driverId); //业务消息类型 msgId: 0x201
+//            }
         }
     }
 
     @Override
     protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
         showToastMessage(String.format("登陆失败：%s", response));
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     @Override
@@ -398,20 +408,25 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
     @Override
     protected void initView() {
-        String data = SharedPref.getInstance(context).getString(Constant.USER_INFO, null);
-        if(!TextUtils.isEmpty(data)){
-            LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
-            int driverId = loginModel.getDriverId();
-            gpsUploadData(driverId); //业务消息类型 msgId: 0x201
-        }
+        webSocketConnectLogin();//webSocket 登录鉴权
 
 //        travelPathUploadData();//业务消息类型 msgId: 0x202
     }
 
 
+
+    private void webSocketConnectLogin() {
+        String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
+        webSocketJson = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x102, token, null);
+        sendText(webSocketJson);//登录鉴权
+        Log.e("token", "token---SharedPref----" + token+"-----"+"登录鉴权传的token");
+    }
+
+
     @OnClick({
             R.id.tv_unfoldRv_down,
-            R.id.tv_unfoldRv_up
+            R.id.tv_unfoldRv_up,
+            R.id.al_btn
     })
 
     public void unfoldRvOnClickEvent(View view) {
@@ -462,6 +477,19 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 tvUnfoldRvDown.setVisibility(View.VISIBLE);
                 tvUnfoldRvUp.setVisibility(View.GONE);
                 break;
+            case R.id.al_btn:
+//                DepartOverActivity.launch(context);
+                sendGps();
+                break;
+        }
+    }
+
+    private void sendGps() {
+        String data = SharedPref.getInstance(context).getString(Constant.USER_INFO, null);
+        if(!TextUtils.isEmpty(data)){
+            LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
+            int driverId = loginModel.getDriverId();
+            gpsUploadData(driverId); //业务消息类型 msgId: 0x201
         }
     }
 
@@ -655,6 +683,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     @Override
     protected void onFragmentVisible() {
         super.onFragmentVisible();
+        ShowDialogRelative.toastDialog(context,"onFragmentVisible");
     }
 
     /**
@@ -662,18 +691,34 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
      */
     private void gpsUploadData(int driverId) {
         String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
+        Log.e("token", "token---SharedPref----" + token+"-----"+"传gps需要的token");
+        int websockt_cont = SharedPref.getInstance(context).getInt(Constant.WEBSOCKT_CONT, 0);
+
         long gpsTime = System.currentTimeMillis() / 1000;
 
         Map<String, Object> gpsUpload = WebSocketRequst.getInstance(context)
                 .gpsUpload(22, 33, 114.432468,30.452708, "662", 1, driverId, gpsTime);
 
         String socketJsonGps = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x201, token, gpsUpload);
-        sendText(socketJsonGps);
+
+        if(websockt_cont == 1){
+            sendText(socketJsonGps);
+        }else {
+            //webSocket 断开后重新鉴权
+            webSocketConnectLogin(token);
+        }
         Log.e(THIS_FILE, "gpsTime------" + gpsTime);
         Log.e(THIS_FILE, "token---SharedPref----" + token);
         Log.e(THIS_FILE, "socketJsonGps----" + socketJsonGps);
 
     }
+
+    private void webSocketConnectLogin(String token) {
+        webSocketJson = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x102, token, null);
+        sendText(webSocketJson);//登录鉴权
+        Log.e(THIS_FILE, "token---SharedPref----" + token);
+    }
+
 
     /**
      * 行程轨迹上传

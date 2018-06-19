@@ -44,12 +44,12 @@ public class TermsOfServiceActivity extends AbsBaseWebSocketActivity {
 
     @Override
     protected void onCommonResponse(CommonResponse<String> response) {
-
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     @Override
     protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     public static void launch(Activity activity) {

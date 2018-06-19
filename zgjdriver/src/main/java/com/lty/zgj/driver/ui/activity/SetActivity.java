@@ -59,6 +59,7 @@ public class SetActivity extends AbsBaseWebSocketActivity {
         title.setText("设置");
         String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
         webSocketConnectLogin(token);
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     private void webSocketConnectLogin(String token) {
@@ -73,12 +74,12 @@ public class SetActivity extends AbsBaseWebSocketActivity {
     @Override
     protected void onCommonResponse(CommonResponse<String> response) {
         CommonResponse.BodyBean body = response.getBody();
-
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     @Override
     protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     public static void launch(Activity activity) {

@@ -9,10 +9,12 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.lty.zgj.driver.BaseApplication;
 import com.lty.zgj.driver.WebSocket.event.DisconnectedEvent;
 import com.lty.zgj.driver.WebSocket.event.WebSocketConnectedEvent;
 import com.lty.zgj.driver.WebSocket.event.WebSocketConnectionErrorEvent;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
+import com.lty.zgj.driver.core.config.Constant;
 import com.neovisionaries.ws.client.HostnameUnverifiedException;
 import com.neovisionaries.ws.client.OpeningHandshakeException;
 import com.neovisionaries.ws.client.ProxySettings;
@@ -23,12 +25,13 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
-
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import cn.droidlover.xdroidbase.cache.SharedPref;
 
 /**
  * 抽象类
@@ -149,8 +152,10 @@ public abstract class AbsBaseWebSocketService extends Service implements IWebSoc
                     EventBus.getDefault().post(new DisconnectedEvent());
                     Log.e(TAG, "onDisconnected()");
                     connectStatus = 0;
+                    SharedPref.getInstance(BaseApplication.getContext()).putInt(Constant.WEBSOCKT_CONT, 0);
                     if (!stop) {
                         //断开之后自动重连
+                        Log.e(TAG, "断开之后自动重连");
                         setupWebSocket();
                     }
                 }

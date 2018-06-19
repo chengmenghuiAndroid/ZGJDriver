@@ -40,6 +40,7 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
     protected void initView() {
         title.setText("消息");
         EventBus.getDefault().register(this);
+        closeRoundProgressDialog();//关闭加载对话框
         XRecyclerView recyclerView = contentLayout.getRecyclerView();
         setLayoutManager(recyclerView);
         recyclerView.setAdapter(getAdapter());
@@ -80,12 +81,12 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
 
     @Override
     protected void onCommonResponse(CommonResponse<String> response) {
-
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     @Override
     protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     public static void launch(Activity activity) {

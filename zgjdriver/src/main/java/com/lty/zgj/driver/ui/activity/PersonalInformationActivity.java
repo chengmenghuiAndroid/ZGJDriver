@@ -1,14 +1,11 @@
 package com.lty.zgj.driver.ui.activity;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
-import com.lty.zgj.driver.WebSocket.CommonResponse;
-import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
-import com.lty.zgj.driver.websocketdemo.WebSocketService;
+import com.lty.zgj.driver.base.BaseXActivity;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidbase.router.Router;
@@ -17,39 +14,24 @@ import cn.droidlover.xdroidbase.router.Router;
  * Created by Administrator on 2018/6/11.
  */
 
-public class PersonalInformationActivity extends AbsBaseWebSocketActivity {
+public class PersonalInformationActivity extends BaseXActivity {
 
     @BindView(R.id.tv_title)
     TextView title;
-
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.activity_personal_information;
-    }
-
-    @Override
-    protected void initView() {
-        title.setText("个人信息");
-    }
-
-    @Override
-    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
-        return WebSocketService.class;
-    }
-
-    @Override
-    protected void onCommonResponse(CommonResponse<String> response) {
-
-    }
-
-    @Override
-    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-
-    }
 
     public static void launch(Activity activity) {
         Router.newIntent(activity)
                 .to(PersonalInformationActivity.class)
                 .launch();
+    }
+
+    @Override
+    public void initData(Bundle savedInstanceState) {
+        title.setText("个人信息");
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_personal_information;
     }
 }

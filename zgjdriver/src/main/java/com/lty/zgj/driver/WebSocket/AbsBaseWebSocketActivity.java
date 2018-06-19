@@ -63,7 +63,7 @@ public abstract class AbsBaseWebSocketActivity extends BaseAppCompatActivity {
                     Log.i(TAG, "onServiceConnected()->mWebSocketService.getConnectStatus() == 0; mWebSocketService.restartThread()");
                     mWebSocketService.reconnect();
                 }
-//                showRoundProgressDialog();
+                showRoundProgressDialog();
             }
         }
 
@@ -105,6 +105,8 @@ public abstract class AbsBaseWebSocketActivity extends BaseAppCompatActivity {
             }
             connectType = 1;
         }
+
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     protected abstract Class<? extends AbsBaseWebSocketService> getWebSocketClass();

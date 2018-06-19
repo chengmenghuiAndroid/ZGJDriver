@@ -14,9 +14,9 @@ import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
+import com.lty.zgj.driver.WebSocket.WebSocketManager;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.bean.LoginWebWebSocketModel;
-import com.lty.zgj.driver.WebSocket.WebSocketManager;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.GsonUtils;
 import com.lty.zgj.driver.ui.fragment.DepartFragment;
@@ -58,7 +58,7 @@ public class MainActivity extends AbsBaseWebSocketActivity implements OnTabSelec
     protected void initView() {
         EventBus.getDefault().register(this);
         initData();
-        webSocketConnectLogin();
+//        webSocketConnectLogin();
     }
 
 
@@ -66,7 +66,7 @@ public class MainActivity extends AbsBaseWebSocketActivity implements OnTabSelec
         String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
         webSocketJson = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x102, token, null);
         sendText(webSocketJson);//登录鉴权
-        Log.e(THIS_FILE, "token---SharedPref----" + token);
+        Log.e(THIS_FILE, "token---SharedPref----" + token+"-----"+"main_webSock");
     }
 
     public void initData() {
@@ -102,11 +102,12 @@ public class MainActivity extends AbsBaseWebSocketActivity implements OnTabSelec
 
     @Override
     protected void onCommonResponse(CommonResponse<String> response) {
+        closeRoundProgressDialog();//关闭加载对话框
         CommonResponse.BodyBean body = response.getBody();
         int code = body.getCode();
 
         //token过期 去登录界面
-        if (code != 101) {
+        if (code == 104) {
             LoginActivity.launch(context);
             finish();
         } else {
@@ -115,13 +116,14 @@ public class MainActivity extends AbsBaseWebSocketActivity implements OnTabSelec
             LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
             String token = loginModel.getToken();//更新token
             SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, token);
-            Log.e(THIS_FILE, "token-----" + token);
+            SharedPref.getInstance(context).putInt(Constant.WEBSOCKT_CONT, 1);
+            Log.e("token", "token-----" + token+"====");
         }
     }
 
     @Override
     protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
@@ -195,4 +197,5 @@ public class MainActivity extends AbsBaseWebSocketActivity implements OnTabSelec
             }
         }
     }
+
 }

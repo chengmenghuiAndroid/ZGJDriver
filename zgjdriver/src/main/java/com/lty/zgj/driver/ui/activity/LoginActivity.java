@@ -2,6 +2,7 @@ package com.lty.zgj.driver.ui.activity;
 
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -9,17 +10,13 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
-import com.lty.zgj.driver.WebSocket.CommonResponse;
-import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
+import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.bean.LoginModel;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.MD5Util;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
-import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.lty.zgj.driver.weight.ClearEditText;
 import com.lty.zgj.driver.weight.CountDownTimerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
@@ -37,7 +34,7 @@ import cn.droidlover.xdroidbase.router.Router;
  * Created by Administrator on 2018/6/5.
  */
 
-public class LoginActivity extends AbsBaseWebSocketActivity {
+public class LoginActivity extends BaseXActivity {
 
     private static final String THIS_FILE = "LoginActivity";
     @BindView(R.id.et_pws)
@@ -56,34 +53,13 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
      */
     private long lastTime;
 
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.activity_driver_login;
-    }
-
-    @Override
     protected void initView() {
-        EventBus.getDefault().register(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         etPhoneNumber.setText("1234567890");
         et_pws.setText("12345");
         initCountDownTimer();
-
-    }
-
-    @Override
-    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
-        return WebSocketService.class;
-    }
-
-    @Override
-    protected void onCommonResponse(CommonResponse<String> response) {
-        if (response != null ) {
-
-        }
-    }
-
-    @Override
-    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
 
     }
 
@@ -137,6 +113,7 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
                     String driver_custom_token = loginModel.getDRIVER_CUSTOM_TOKEN();
                     SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, driver_custom_token);
                     Log.e(THIS_FILE, "driver_custom_token-----"+driver_custom_token);
+                    Log.e("token", "token-----" + driver_custom_token+"-----"+"http获取的token");
                     SharedPref.getInstance(context).putBoolean(Constant.isLoginSuccess, true);
                     MainActivity.launch(context);
                     finish();
@@ -173,4 +150,14 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
 
     }
 
+
+    @Override
+    public void initData(Bundle savedInstanceState) {
+        initView();
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_driver_login;
+    }
 }

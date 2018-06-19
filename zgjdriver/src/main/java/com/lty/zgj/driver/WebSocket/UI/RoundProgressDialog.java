@@ -1,14 +1,15 @@
 package com.lty.zgj.driver.WebSocket.UI;
 
-import android.app.ProgressDialog;
 import android.content.Context;
+
+import com.lty.zgj.driver.progress.kprogresshud.KProgressHUD;
 
 /**
  * Created by 张可 on 2017/5/22.
  */
 
 public class RoundProgressDialog {
-    private ProgressDialog progressDialog;
+    private KProgressHUD progressDialog;
     private Context context;
 
     private RoundProgressDialog(){
@@ -23,11 +24,14 @@ public class RoundProgressDialog {
      */
     public  void showProgressDialog(){
         if(progressDialog==null){
-            progressDialog=new ProgressDialog(context);
-            progressDialog.setMessage("请稍等...");
-            progressDialog.setCanceledOnTouchOutside(false);
+//            progressDialog=new ProgressDialog(context);
+            progressDialog = KProgressHUD.create(context)
+                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                    .setDimAmount(0.5f)
+                    .setSize(50, 50);
+//            progressDialog.setCanceledOnTouchOutside(false);
         }
-        progressDialog.show();
+        progressDialog.show(context);
     }
 
     public boolean isShowing(){
@@ -40,11 +44,15 @@ public class RoundProgressDialog {
      */
     public  void showProgressDialog(String msg){
         if(progressDialog==null){
-            progressDialog=new ProgressDialog(context);
-            progressDialog.setMessage(msg);
-            progressDialog.setCanceledOnTouchOutside(false);
+//            progressDialog=new ProgressDialog(context);
+            progressDialog = KProgressHUD.create(context)
+                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                    .setDimAmount(0.5f)
+                    .setSize(50, 50);
+//            progressDialog.setMessage(msg);
+//            progressDialog.setCanceledOnTouchOutside(false);
         }
-        progressDialog.show();
+        progressDialog.show(context);
     }
 
     /**

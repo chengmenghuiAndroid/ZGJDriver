@@ -1,25 +1,30 @@
 package com.lty.zgj.driver.bean;
 
 
+import com.lty.zgj.driver.core.config.Constant;
+
 /**
  * Created by liukun on 16/3/5.
  */
 public class HttpResult<T> {
 
-    private int returntCode;//	1001
+    private int code;//	101
 
     // private String resultMsg;//	API服务正常
 
-    private String msg;//	用户名或者密码错误
+    private String message;//	用户名或者密码错误
     //用来模仿Data
     private T data;
-    public String getMsg() {
-        return msg;
+
+
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
+
 
     public T getData() {
         return data;
@@ -30,12 +35,12 @@ public class HttpResult<T> {
     }
 
 
-    public int getResultCode() {
-        return returntCode;
+    public int getCode() {
+        return code;
     }
 
-    public void setResultCode(int resultCode) {
-        this.returntCode = resultCode;
+    public void setCode(int resultCode) {
+        this.code = resultCode;
     }
 
 
@@ -45,8 +50,7 @@ public class HttpResult<T> {
      * @return 失败返回true, 成功返回false
      */
     public boolean isCodeInvalid() {
-//        return resultCode != Constants.CODE_SUCCESS_IN_SERVICE;
-        return Boolean.parseBoolean(null);
+        return code != Constant.CODE_SUCCESS_IN_SERVICE;
     }
 
 

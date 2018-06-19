@@ -113,8 +113,8 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
      * 显示圆形加载对话框
      *
      * @param msg 提示消息
-     */
-    @Override
+
+    @Override*/
     public void showRoundProgressDialog(final String msg) {
         runOnUiThread(new Runnable() {
             @Override
@@ -152,6 +152,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     private void registerFinishReciver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constant.RECEIVER_ACTION_FINISH_MAIN);
+        intentFilter.addAction(Constant.RECEIVER_ACTION_FINISH_LOGIN);
         registerReceiver(mRecevier, intentFilter);
     }
 
@@ -160,7 +161,8 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             //根据需求添加自己需要关闭页面的action
-            if (Constant.RECEIVER_ACTION_FINISH_MAIN.equals(intent.getAction())) {
+            if (Constant.RECEIVER_ACTION_FINISH_MAIN.equals(intent.getAction()) ||
+                    Constant.RECEIVER_ACTION_FINISH_LOGIN.equals(intent.getAction())) {
                 finish();
             }
         }
