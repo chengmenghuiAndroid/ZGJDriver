@@ -28,6 +28,11 @@ public class WaitGoingOutFragment extends AbsBaseWebSocketFragment {
     private WaitGoingOutAdapter waitGoingOutAdapter;
 
 
+    @Override
+    protected void initView() {
+
+    }
+
     /**
      * 返回Fragment layout资源ID
      *
@@ -71,12 +76,12 @@ public class WaitGoingOutFragment extends AbsBaseWebSocketFragment {
 
     @Override
     protected void onCommonResponse(CommonResponse<String> response) {
-
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     @Override
     protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-
+        closeRoundProgressDialog();//关闭加载对话框
     }
 
     @Override

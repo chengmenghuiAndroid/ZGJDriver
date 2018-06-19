@@ -1,46 +1,48 @@
 package com.lty.zgj.driver.bean;
 
 
+import com.lty.zgj.driver.core.config.Constant;
+
 /**
  * Created by liukun on 16/3/5.
  */
 public class HttpResult<T> {
 
-    private int resultCode;//	1001
-    private String resultMsg;//	API服务正常
-    private String errMsg;//	用户名或者密码错误
+    private int code;//	101
+
+    // private String resultMsg;//	API服务正常
+
+    private String message;//	用户名或者密码错误
     //用来模仿Data
-    private T model;
+    private T data;
 
-    public int getResultCode() {
-        return resultCode;
+
+    public String getMessage() {
+        return message;
     }
 
-    public void setResultCode(int resultCode) {
-        this.resultCode = resultCode;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getResultMsg() {return resultMsg;}
 
-    public void setResultMsg(String resultMsg) {
-        this.resultMsg = resultMsg;
+    public T getData() {
+        return data;
     }
 
-    public T getModel() {
-        return model;
+    public void setData(T data) {
+        this.data = data;
     }
 
-    public void setModel(T model) {
-        this.model = model;
+
+    public int getCode() {
+        return code;
     }
 
-    public String getErrMsg() {
-        return errMsg;
+    public void setCode(int resultCode) {
+        this.code = resultCode;
     }
 
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
 
     /**
      * API是否请求失败
@@ -48,8 +50,7 @@ public class HttpResult<T> {
      * @return 失败返回true, 成功返回false
      */
     public boolean isCodeInvalid() {
-//        return resultCode != Constants.CODE_SUCCESS_IN_SERVICE;
-        return Boolean.parseBoolean(null);
+        return code != Constant.CODE_SUCCESS_IN_SERVICE;
     }
 
 

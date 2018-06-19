@@ -7,32 +7,99 @@ package com.lty.zgj.driver.WebSocket;
  */
 
 public class CommonResponse<T> {
+    /**
+     * body : {"code":104,"message":"token 过期"}
+     * headerPacket : {"msgId":260,"msgSn":83534313,"msgVn":1.01}
+     */
 
-    private String msg; //提示信息 成功有成功的提示 失败有失败的提示
-    private T data;     //请求返回的数据
-    private String code; //101 成功  102失败
+    private BodyBean body;
+    private HeaderPacketBean headerPacket;
 
-    public String getMsg() {
-        return msg;
+    public BodyBean getBody() {
+        return body;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setBody(BodyBean body) {
+        this.body = body;
     }
 
-    public T getData() {
-        return data;
+    public HeaderPacketBean getHeaderPacket() {
+        return headerPacket;
     }
 
-    public void setData(T data) {
-        this.data = data;
+    public void setHeaderPacket(HeaderPacketBean headerPacket) {
+        this.headerPacket = headerPacket;
     }
 
-    public String getCode() {
-        return code;
+    public static class BodyBean {
+        /**
+         * code : 104
+         * message : token 过期
+         */
+
+        private int code;
+        private String message;
+        private String data;     //请求返回的数据
+
+        public int getCode() {
+            return code;
+        }
+
+        public void setCode(int code) {
+            this.code = code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public static class HeaderPacketBean {
+        /**
+         * msgId : 260
+         * msgSn : 83534313
+         * msgVn : 1.01
+         */
+
+        private int msgId;
+        private int msgSn;
+        private double msgVn;
+
+        public int getMsgId() {
+            return msgId;
+        }
+
+        public void setMsgId(int msgId) {
+            this.msgId = msgId;
+        }
+
+        public int getMsgSn() {
+            return msgSn;
+        }
+
+        public void setMsgSn(int msgSn) {
+            this.msgSn = msgSn;
+        }
+
+        public double getMsgVn() {
+            return msgVn;
+        }
+
+        public void setMsgVn(double msgVn) {
+            this.msgVn = msgVn;
+        }
     }
+
 }

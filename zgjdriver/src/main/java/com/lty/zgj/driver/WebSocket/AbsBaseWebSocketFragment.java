@@ -80,7 +80,7 @@ public abstract class AbsBaseWebSocketFragment extends BaseFragment {
     protected void initBind() {
         super.initBind();
         networkErrorTips = "网络错误";
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         bindWebSocketService();
     }
 
@@ -138,26 +138,30 @@ public abstract class AbsBaseWebSocketFragment extends BaseFragment {
      */
     protected void onServiceBindSuccess() {
         Log.i(TAG, "onServiceBindSuccess()");
+        initView();
     }
 
     /**
      * 发送数据
      */
     protected void sendText(String text) {
-        if (mWebSocketService.getConnectStatus() == 2) {
-            //已连接，直接发送数据
-            Log.i(TAG, "sendText()->已连接，直接发送数据");
-            mWebSocketService.sendText(text);
-        } else {
-            //未连接，先连接，再发送数据
-            Log.i(TAG, "sendText()->未连接");
-            connectType = 2;
-            needSendText = text;
-            if (mWebSocketService.getConnectStatus() == 0) {
-                Log.i(TAG, "sendText()->重新建立连接...");
-                mWebSocketService.reconnect();
+        if(mWebSocketService != null){
+            if (mWebSocketService.getConnectStatus() == 2) {
+                //已连接，直接发送数据
+                Log.i(TAG, "sendText()->已连接，直接发送数据");
+                mWebSocketService.sendText(text);
+            } else {
+                //未连接，先连接，再发送数据
+                Log.i(TAG, "sendText()->未连接");
+                connectType = 2;
+                needSendText = text;
+                if (mWebSocketService.getConnectStatus() == 0) {
+                    Log.i(TAG, "sendText()->重新建立连接...");
+                    mWebSocketService.reconnect();
+                }
             }
         }
+
     }
 
     /**

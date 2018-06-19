@@ -1,16 +1,13 @@
 package com.lty.zgj.driver.ui.activity;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
-import com.lty.zgj.driver.WebSocket.CommonResponse;
-import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
-import com.lty.zgj.driver.websocketdemo.WebSocketService;
+import com.lty.zgj.driver.base.BaseXActivity;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import butterknife.BindView;
@@ -21,7 +18,7 @@ import cn.droidlover.xdroidbase.router.Router;
  * Created by Administrator on 2018/6/11.
  */
 
-public class AboutActivity extends AbsBaseWebSocketActivity {
+public class AboutActivity extends BaseXActivity {
 
     @BindView(R.id.tv_title)
     TextView title;
@@ -33,31 +30,6 @@ public class AboutActivity extends AbsBaseWebSocketActivity {
     AutoRelativeLayout termsOfService;
     @BindView(R.id.version_introduction)
     AutoRelativeLayout versionIntroduction;
-
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.activity_about;
-    }
-
-    @Override
-    protected void initView() {
-        title.setText("关于坐公交");
-    }
-
-    @Override
-    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
-        return WebSocketService.class;
-    }
-
-    @Override
-    protected void onCommonResponse(CommonResponse<String> response) {
-
-    }
-
-    @Override
-    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-
-    }
 
 
     /**
@@ -89,4 +61,13 @@ public class AboutActivity extends AbsBaseWebSocketActivity {
                 .launch();
     }
 
+    @Override
+    public void initData(Bundle savedInstanceState) {
+        title.setText("关于坐公交");
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_about;
+    }
 }

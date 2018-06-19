@@ -1,6 +1,10 @@
 package com.lty.zgj.driver.WebSocket.UI;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.lty.zgj.driver.core.config.Constant;
 
 import butterknife.Unbinder;
 import cn.droidlover.xdroid.kit.KnifeKit;
@@ -24,6 +30,8 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     private RoundProgressDialog roundProgressDialog;
     private Unbinder unbinder;
     protected Activity context;
+
+    private FinishActivityRecevier mRecevier;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +42,11 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
         }
         roundProgressDialog = new RoundProgressDialog(this);
         initBind();
-        initView();
-        initView(savedInstanceState);
+//        initView();
+//        initView(savedInstanceState);
+
+        mRecevier = new FinishActivityRecevier();
+        registerFinishReciver();
     }
 
     protected abstract int getLayoutResId();
@@ -102,8 +113,8 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
      * 显示圆形加载对话框
      *
      * @param msg 提示消息
-     */
-    @Override
+
+    @Override*/
     public void showRoundProgressDialog(final String msg) {
         runOnUiThread(new Runnable() {
             @Override
@@ -134,4 +145,28 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
     }
+
+
+
+
+    private void registerFinishReciver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constant.RECEIVER_ACTION_FINISH_MAIN);
+        intentFilter.addAction(Constant.RECEIVER_ACTION_FINISH_LOGIN);
+        registerReceiver(mRecevier, intentFilter);
+    }
+
+
+    private class FinishActivityRecevier extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //根据需求添加自己需要关闭页面的action
+            if (Constant.RECEIVER_ACTION_FINISH_MAIN.equals(intent.getAction()) ||
+                    Constant.RECEIVER_ACTION_FINISH_LOGIN.equals(intent.getAction())) {
+                finish();
+            }
+        }
+    }
+
+
 }

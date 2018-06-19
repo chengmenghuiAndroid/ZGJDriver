@@ -2,7 +2,10 @@ package com.lty.zgj.driver;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDex;
+
+import com.lty.zgj.driver.websocketdemo.WebSocketService;
 
 
 /**
@@ -39,7 +42,8 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-
+        Intent intent = new Intent(this, WebSocketService.class);
+        startService(intent);
     }
 
 

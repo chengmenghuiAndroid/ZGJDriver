@@ -27,7 +27,6 @@ public class ApiException extends RuntimeException {
         switch (code) {
             default:
                 message = errorMsg;
-
         }
         return message;
     }
