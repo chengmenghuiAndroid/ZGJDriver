@@ -20,6 +20,8 @@ import com.lty.zgj.driver.broadcast.ToMainActivityBroadcastReceiver;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
+import retrofit2.http.HEAD;
+
 /**
  * Created by zk721 on 2018/1/28.
  */
