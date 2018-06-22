@@ -50,6 +50,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     testImplementation 'junit:junit:4.12'
     implementation project(':library')
+    implementation project(':expandablelinearlayout')
 
     compile rootProject.ext.dependencies["multidex"]
     //Android屏幕适配方案，直接填写设计图上的像素尺寸即可完成适配。

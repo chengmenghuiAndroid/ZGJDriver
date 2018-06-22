@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import com.lty.zgj.driver.bean.HistoricalJourneyDetailModel;
+import com.lty.zgj.driver.bean.HistoricalJourneyModel;
 import com.lty.zgj.driver.bean.HttpResult;
 import com.lty.zgj.driver.bean.LoginModel;
 
@@ -72,10 +74,36 @@ public class ObjectLoader {
     }
 
 
+    /**
+     * 用户登录
+     * @param logResult
+     * @param param
+     */
     public void getLoginData(Subscriber<LoginModel> logResult, JSONObject param) {
 
         Observable observable = Api.getGankService().login(param)
                 .map(new HttpResultFunc<LoginModel>());
         toSubscribe(observable, logResult);
     }
+
+
+    /**
+     * 历史行程
+     * @param historicalJourneyModel
+     * @param Id
+     */
+    public void getTripDate(Subscriber<HistoricalJourneyModel> historicalJourneyModel , int Id, int page){
+        Observable<HistoricalJourneyModel> journeyModelObservable = Api.getGankService().getTrip(Id, page)
+                .map(new HttpResultFunc<HistoricalJourneyModel>());
+
+        toSubscribe(journeyModelObservable, historicalJourneyModel);
+    }
+
+    public void getTripDetailData(Subscriber<HistoricalJourneyDetailModel> historicalJourneyDetailModel , int Id, int tripNo, int routeId){
+        Observable<HistoricalJourneyDetailModel> journeyModelObservable = Api.getGankService().getTripDetail(Id, tripNo, routeId)
+                .map(new HttpResultFunc<HistoricalJourneyDetailModel>());
+
+        toSubscribe(journeyModelObservable, historicalJourneyDetailModel);
+    }
+
 }

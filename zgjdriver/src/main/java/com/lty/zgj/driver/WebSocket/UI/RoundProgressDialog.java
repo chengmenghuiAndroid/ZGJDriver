@@ -31,7 +31,7 @@ public class RoundProgressDialog {
                     .setSize(50, 50);
 //            progressDialog.setCanceledOnTouchOutside(false);
         }
-        progressDialog.show(context);
+//        progressDialog.show(context);
     }
 
     public boolean isShowing(){

@@ -1,25 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.autolayout.AutoLinearLayout
+<com.zhy.autolayout.AutoFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="请提前确定好车辆位置，按时间出发到达~"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"/>
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="579px"
+        android:layout_height="66px"
+        android:layout_gravity="center_horizontal"
+        android:background="@mipmap/rectangle"
+        android:layout_marginTop="12px">
+
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_remind"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="请提前确定好车辆位置，按时间出发到达~"
+                android:textColor="#FFFF3E9E"
+                android:textSize="26px"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10px"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
 
     <cn.droidlover.xrecyclerview.XRecyclerContentLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusableInTouchMode="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:layout_marginTop="106px"
+        android:background="#FFEEEEF8">
 
     </cn.droidlover.xrecyclerview.XRecyclerContentLayout>
 
 
-</com.zhy.autolayout.AutoLinearLayout>
+</com.zhy.autolayout.AutoFrameLayout>

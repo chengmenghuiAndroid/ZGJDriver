@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.base.BaseXActivity;
+import com.lty.zgj.driver.weight.StatusBarUtils;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidbase.router.Router;
@@ -27,6 +28,9 @@ public class PersonalInformationActivity extends BaseXActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        StatusBarUtils.with(this)
+                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
+                .init();
         title.setText("个人信息");
     }
 

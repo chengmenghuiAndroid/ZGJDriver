@@ -127,6 +127,7 @@ public abstract class AbsBaseWebSocketService extends Service implements IWebSoc
     private void setupWebSocket() {
         if (connectStatus != 0) return;
         connectStatus = 1;
+        Log.i(TAG, "connectStatus--正在连接--"+connectStatus);
         try {
             webSocket = factory.createSocket(getConnectUrl());
             webSocket.addListener(new WebSocketAdapter() {
@@ -152,6 +153,7 @@ public abstract class AbsBaseWebSocketService extends Service implements IWebSoc
                     EventBus.getDefault().post(new DisconnectedEvent());
                     Log.e(TAG, "onDisconnected()");
                     connectStatus = 0;
+                    Log.i(TAG, "connectStatus--未连接--"+connectStatus);
                     SharedPref.getInstance(BaseApplication.getContext()).putInt(Constant.WEBSOCKT_CONT, 0);
                     if (!stop) {
                         //断开之后自动重连
@@ -166,6 +168,7 @@ public abstract class AbsBaseWebSocketService extends Service implements IWebSoc
                     Log.i(TAG, "onConnected()");
                     connectStatus = 2;
                     EventBus.getDefault().post(new WebSocketConnectedEvent());
+                    Log.i(TAG, "connectStatus----连接成功---"+connectStatus);
                 }
 
                 @Override

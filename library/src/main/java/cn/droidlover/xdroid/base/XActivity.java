@@ -21,6 +21,7 @@ public abstract class XActivity extends AppCompatActivity implements UiCallback{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         this.context = this;
 
         if (getLayoutId() > 0) {

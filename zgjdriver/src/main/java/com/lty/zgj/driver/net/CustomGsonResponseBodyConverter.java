@@ -40,9 +40,9 @@ class CustomGsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
         String response = value.string();
         Log.e("response",response);
         HttpResult httpResult = gson.fromJson(response, HttpResult.class);
-        int resultCode = httpResult.getCode();
+        int resultCode = httpResult.getStateCode();
         SharedPref.getInstance(BaseApplication.getContext()).putInt("resultCode", resultCode);
-        if (httpResult.isCodeInvalid()) {
+        if (httpResult.isCodeInvalid() && httpResult.isHttpCodeInvalid()) {
             value.close();
             //抛出一个RuntimeException, 这里抛出的异常会到Subscriber的onError()方法中统一处理
             throw new ApiException(resultCode,httpResult.getMessage());

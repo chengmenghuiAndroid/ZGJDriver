@@ -161,8 +161,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             //根据需求添加自己需要关闭页面的action
-            if (Constant.RECEIVER_ACTION_FINISH_MAIN.equals(intent.getAction()) ||
-                    Constant.RECEIVER_ACTION_FINISH_LOGIN.equals(intent.getAction())) {
+            if (Constant.RECEIVER_ACTION_FINISH_MAIN.equals(intent.getAction())) {
                 finish();
             }
         }

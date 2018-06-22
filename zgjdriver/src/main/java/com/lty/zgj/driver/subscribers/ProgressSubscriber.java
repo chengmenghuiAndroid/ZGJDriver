@@ -104,9 +104,9 @@ public class ProgressSubscriber<T> extends Subscriber<T> implements ProgressCanc
         }else if (e instanceof ApiException) {
             ShowDialogRelative.toastDialog(BaseApplication.getContext(),e.getMessage());
         }else if (e instanceof ConnectException){
-            ShowDialogRelative.toastDialog(BaseApplication.getContext(), BaseApplication.getContext().getResources().getString(R.string.no_network));
-        }else if(e instanceof SocketException){
             ShowDialogRelative.toastDialog(BaseApplication.getContext(), BaseApplication.getContext().getResources().getString(R.string.connection_fail));
+        }else if(e instanceof SocketException){
+            ShowDialogRelative.toastDialog(BaseApplication.getContext(), "服务器连接异常");
         }
         if (mSubscriberOnNextListener != null) {
             mSubscriberOnNextListener.onError(e);

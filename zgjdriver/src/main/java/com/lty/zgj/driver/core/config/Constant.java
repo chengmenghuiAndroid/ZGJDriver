@@ -10,6 +10,7 @@ public class Constant {
     public static final String MESSAGE_FLAG = "message_flag";
     public static final String USER_INFO = "user_info";
     public static final int CODE_SUCCESS_IN_SERVICE = 101;
+    public static final int CODE_SUCCESS_HTTP = 200;
     public static String isLoginSuccess = "isLoginSuccess";
     public static String RECEIVER_ACTION_FINISH_MAIN = "action_main";
     public static String RECEIVER_ACTION_FINISH_LOGIN = "action_login";

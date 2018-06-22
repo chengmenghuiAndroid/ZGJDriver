@@ -3,26 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="@color/line_item"-->
-        <!--/>-->
-    <!--<TextView-->
-        <!--android:id="@+id/surplus"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="今日剩余行程行程 1 趟"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:layout_marginLeft="30dp"/>-->
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="@color/line_item"-->
-        <!--android:layout_marginTop="10dp"/>-->
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
@@ -32,131 +14,170 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxx车牌号"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"/>
+            android:text="鄂A·X3396"
+            android:layout_marginLeft="30px"
+            android:layout_marginTop="30px"
+            android:textSize="30px"
+            android:textColor="#FF292835"/>
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="5dp">
+            android:layout_marginLeft="30px"
+            android:layout_marginTop="20px">
+
             <TextView
-                android:id="@+id/surplus_1"
+                android:id="@+id/surplus_time_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="7:10"/>
+                android:text="07:10"
+                android:textColor="#FF56556A"
+                android:textSize="26px"
+                android:layout_centerVertical="true"/>
 
             <ImageView
                 android:id="@+id/icon_oval"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:src="@drawable/shape_oval_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/start"
+                android:layout_toRightOf="@id/surplus_time_1"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/surplus_1"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="26px"/>
 
             <TextView
-                android:id="@+id/surplus_2"
+                android:id="@+id/surplus_station_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="光谷广场(公交站)"
                 android:layout_toRightOf="@id/icon_oval"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="16px"
+                android:textSize="26px"
+                android:layout_centerVertical="true"/>
 
         </com.zhy.autolayout.AutoRelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/dashed"
+            android:layout_marginLeft="135px"/>
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="5dp">
+            android:layout_marginLeft="30px">
+
             <TextView
-                android:id="@+id/surplus_3"
+                android:id="@+id/surplus_time_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="7:20"/>
+                android:text="07:10"
+                android:textColor="#FF56556A"
+                android:textSize="26px"
+                android:layout_centerVertical="true"/>
 
             <ImageView
-                android:id="@+id/icon_oval_3"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
+                android:id="@+id/icon_oval_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/shape_oval_green"
+                android:layout_toRightOf="@id/surplus_time_2"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/surplus_3"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="33px"/>
 
             <TextView
-                android:id="@+id/surplus_4"
+                android:id="@+id/surplus_station_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="光谷步行街"
-                android:layout_toRightOf="@id/icon_oval_3"
-                android:layout_marginLeft="10dp"/>
+                android:text="光谷广场(公交站)"
+                android:layout_toRightOf="@id/icon_oval_1"
+                android:layout_marginLeft="16px"
+                android:textSize="26px"
+                android:layout_centerVertical="true"/>
 
         </com.zhy.autolayout.AutoRelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="75px"
+            android:src="@mipmap/dotted_line"
+            android:layout_marginLeft="135px"/>
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="20dp">
+            android:layout_marginLeft="30px">
+
             <TextView
-                android:id="@+id/surplus_5"
+                android:id="@+id/surplus_time_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="8:00"/>
+                android:text="07:10"
+                android:textColor="#FF56556A"
+                android:textSize="26px"
+                android:layout_centerVertical="true"/>
 
             <ImageView
-                android:id="@+id/icon_oval_5"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:src="@drawable/shape_oval_red"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/surplus_5"
-                android:layout_marginLeft="10dp"/>
-
-            <TextView
-                android:id="@+id/surplus_6"
+                android:id="@+id/icon_oval_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="金融港"
-                android:layout_toRightOf="@id/icon_oval_5"
-                android:layout_marginLeft="10dp"/>
+                android:src="@drawable/shape_oval_green"
+                android:layout_toRightOf="@id/surplus_time_3"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="33px"/>
+
+            <TextView
+                android:id="@+id/surplus_station_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="光谷广场(公交站)"
+                android:layout_toRightOf="@id/icon_oval_2"
+                android:layout_marginLeft="16px"
+                android:textSize="26px"
+                android:layout_centerVertical="true"/>
 
         </com.zhy.autolayout.AutoRelativeLayout>
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/dashed"
+            android:layout_marginLeft="135px"/>
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="5dp">
+            android:layout_marginLeft="30px">
+
             <TextView
-                android:id="@+id/surplus_7"
+                android:id="@+id/surplus_time_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="8:10"/>
+                android:text="07:10"
+                android:textColor="#FF56556A"
+                android:textSize="26px"
+                android:layout_centerVertical="true"/>
 
             <ImageView
-                android:id="@+id/icon_oval_7"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:src="@drawable/shape_oval_red"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/surplus_7"
-                android:layout_marginLeft="10dp"/>
-
-            <TextView
-                android:id="@+id/surplus_8"
+                android:id="@+id/icon_oval_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="工程大学流芳校区东门"
-                android:layout_toRightOf="@id/icon_oval_7"
-                android:layout_marginLeft="10dp"/>
+                android:src="@mipmap/over"
+                android:layout_toRightOf="@id/surplus_time_4"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="2px"/>
+
+            <TextView
+                android:id="@+id/surplus_station_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="光谷广场(公交站)"
+                android:layout_toRightOf="@id/icon_oval_4"
+                android:layout_marginLeft="16px"
+                android:textSize="26px"
+                android:layout_centerVertical="true"/>
 
         </com.zhy.autolayout.AutoRelativeLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

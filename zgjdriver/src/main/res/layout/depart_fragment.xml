@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.amap.api.maps.MapView
+    <com.amap.api.maps.TextureMapView
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </com.amap.api.maps.MapView>
+    </com.amap.api.maps.TextureMapView>
 
 
     <com.zhy.autolayout.AutoRelativeLayout
@@ -16,67 +16,84 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <TextView
-            android:id="@+id/tv_car_pai"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:text="xxx车牌号"/>
 
-        <TextView
-            android:id="@+id/tv_station_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_car_pai"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:text="光谷广场（公交站） —— 工程大学（公交站）"/>
-
-
-
-        <com.zhy.autolayout.AutoRelativeLayout
-            android:id="@+id/ar"
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/au_al"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_station_title">
-
-            <cn.droidlover.xrecyclerview.XRecyclerView
-                android:id="@+id/xrecyclerview"
-                android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <TextView
+                android:id="@+id/tv_car_pai"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:text="xxx车牌号"/>
 
-            </cn.droidlover.xrecyclerview.XRecyclerView>
-        </com.zhy.autolayout.AutoRelativeLayout>
+            <TextView
+                android:id="@+id/tv_station_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_car_pai"
+                android:layout_marginTop="10dp"
+                android:text="光谷广场（公交站） —— 工程大学（公交站）"/>
+        </com.zhy.autolayout.AutoLinearLayout>
 
-        <TextView
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/al_autoLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/au_al"
+            android:layout_marginTop="10dp">
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:id="@+id/ar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <cn.droidlover.xrecyclerview.XRecyclerView
+                    android:id="@+id/xrecyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </cn.droidlover.xrecyclerview.XRecyclerView>
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <ImageView
             android:id="@+id/tv_unfoldRv_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ar"
             android:layout_centerHorizontal="true"
+            android:src="@mipmap/icon_arrow_down"
             android:padding="10dp"
-            android:text="下"/>
+            android:layout_below="@id/al_autoLinearLayout"
+            />
 
-        <TextView
+        <ImageView
             android:id="@+id/tv_unfoldRv_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_below="@id/al_autoLinearLayout"
+            android:src="@mipmap/icon_arrow_up"
             android:padding="10dp"
-            android:text="上"
-            android:visibility="gone"
-            android:layout_below="@id/ar"/>
+            android:visibility="gone"/>
 
     </com.zhy.autolayout.AutoRelativeLayout>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:id="@+id/al_btn"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom"
-        android:background="#3CB371">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="30px">
+
+        <include layout="@layout/eline_login_btn"/>
 
     </com.zhy.autolayout.AutoLinearLayout>
 </com.zhy.autolayout.AutoFrameLayout>

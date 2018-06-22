@@ -4,12 +4,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketFragment;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
-import com.lty.zgj.driver.WebSocket.CommonResponse;
-import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.adapter.WaitGoingOutAdapter;
-import com.lty.zgj.driver.websocketdemo.WebSocketService;
+import com.lty.zgj.driver.base.BaseXFragment;
 
 import butterknife.BindView;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
@@ -20,31 +16,32 @@ import cn.droidlover.xrecyclerview.XRecyclerView;
  * 待发车
  */
 
-public class WaitGoingOutFragment extends AbsBaseWebSocketFragment {
+public class WaitGoingOutFragment extends BaseXFragment {
 
     @BindView(R.id.contentLayout)
     XRecyclerContentLayout contentLayout;
 
     private WaitGoingOutAdapter waitGoingOutAdapter;
 
+    private WaitGoingOutAdapter getAdapter() {
+        if(waitGoingOutAdapter == null){
+            waitGoingOutAdapter = new WaitGoingOutAdapter(context);
+        }else {
+            waitGoingOutAdapter.notifyDataSetChanged();
+        }
 
-    @Override
-    protected void initView() {
+        return waitGoingOutAdapter;
 
     }
 
-    /**
-     * 返回Fragment layout资源ID
-     *
-     * @return
-     */
-    @Override
-    protected int getFragmentLayoutId() {
-        return R.layout.wait_going_out_fragment;
+
+
+    public void setLayoutManager(XRecyclerView recyclerView) {
+        recyclerView.verticalLayoutManager(context);
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
+    public void initData(Bundle savedInstanceState) {
         contentLayout.getRecyclerView().setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false));
         setLayoutManager(contentLayout.getRecyclerView());
         contentLayout.getRecyclerView().setAdapter(getAdapter());
@@ -63,33 +60,24 @@ public class WaitGoingOutFragment extends AbsBaseWebSocketFragment {
         contentLayout.getRecyclerView().useDefLoadMoreView();
     }
 
-    private WaitGoingOutAdapter getAdapter() {
-        if(waitGoingOutAdapter == null){
-            waitGoingOutAdapter = new WaitGoingOutAdapter(context);
-        }else {
-            waitGoingOutAdapter.notifyDataSetChanged();
-        }
-
-        return waitGoingOutAdapter;
-
-    }
-
     @Override
-    protected void onCommonResponse(CommonResponse<String> response) {
-        closeRoundProgressDialog();//关闭加载对话框
+    public int getLayoutId() {
+        return R.layout.wait_going_out_fragment;
     }
 
+    /**
+     * 当视图初始化并且对用户可见的时候去真正的加载数据
+     */
     @Override
-    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-        closeRoundProgressDialog();//关闭加载对话框
+    protected void lazyLoad() {
+
     }
 
+    /**
+     * 当视图已经对用户不可见并且加载过数据，如果需要在切换到其他页面时停止加载数据，可以调用此方法
+     */
     @Override
-    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
-        return WebSocketService.class;
-    }
+    protected void stopLoad() {
 
-    public void setLayoutManager(XRecyclerView recyclerView) {
-        recyclerView.verticalLayoutManager(context);
     }
 }

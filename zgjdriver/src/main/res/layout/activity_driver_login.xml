@@ -3,52 +3,62 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@drawable/shape_rectangle_circular_bead"
-        android:layout_marginTop="100dp"
-        android:gravity="center">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="175px"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="坐公交"
-            android:textColor="@color/white"/>
+        <ImageView
+            android:layout_width="150px"
+            android:layout_height="150px"
+            android:src="@mipmap/icon_logo"/>
+
+        <ImageView
+            android:layout_width="96px"
+            android:layout_height="52px"
+            android:layout_marginTop="6px"
+            android:src="@mipmap/icon_logo_shadow"/>
+
 
     </com.zhy.autolayout.AutoLinearLayout>
 
 
     <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/shape_item_circular"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="174px">
 
+        <ImageView
+            android:id="@+id/icon_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="66px"
+            android:src="@mipmap/icon_cell_phone"/>
 
         <com.lty.zgj.driver.weight.ClearEditText
             android:id="@+id/et_phone_number"
-            android:textColor="@color/editText_input"
-            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
             android:layout_centerVertical="true"
-            android:textColorHint="#999999"
-            android:textSize="15sp"
-            android:singleLine="true"
-            android:hint="手机号"
-            android:textCursorDrawable="@drawable/editext_cursor_bg"
+            android:layout_marginLeft="14px"
+            android:layout_toRightOf="@id/icon_phone"
+            android:background="@null"
             android:cursorVisible="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="30dp"
-            android:layout_toLeftOf="@id/tv_send_code"
-            />
+            android:hint="请输入手机号"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/editText_input"
+            android:textColorHint="#FF9897B8"
+            android:textCursorDrawable="@drawable/editext_cursor_bg"
+            android:textSize="15sp"
+            android:layout_marginRight="60px"/>
 
 
         <TextView
@@ -56,52 +66,66 @@
             style="@style/send_code"
             android:visibility="gone"/>
 
-
     </com.zhy.autolayout.AutoRelativeLayout>
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#FFE1E0FB"
+        android:layout_marginTop="14px"
+        android:layout_marginLeft="60px"
+        android:layout_marginRight="60px"/>
 
     <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/shape_item_circular"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60px">
+
+        <ImageView
+            android:id="@+id/icon_verification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="66px"
+            android:src="@mipmap/icon_verification_code"/>
 
         <com.lty.zgj.driver.weight.ClearEditText
             android:id="@+id/et_pws"
-            android:textColor="@color/editText_input"
-            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
             android:layout_centerVertical="true"
-            android:textColorHint="#999999"
-            android:textSize="15sp"
-            android:singleLine="true"
-            android:hint="验证码"
-            android:textCursorDrawable="@drawable/editext_cursor_bg"
+            android:layout_marginLeft="14px"
+            android:layout_toRightOf="@id/icon_verification"
+            android:background="@null"
             android:cursorVisible="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="30dp"
-            android:layout_toLeftOf="@id/tv_send_code"
+            android:hint="请输入密码"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColor="@color/editText_input"
+            android:textColorHint="#FF9897B8"
+            android:textCursorDrawable="@drawable/editext_cursor_bg"
+            android:textSize="15sp"
+            android:layout_marginRight="60px"
             />
 
     </com.zhy.autolayout.AutoRelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#FFE1E0FB"
+        android:layout_marginTop="14px"
+        android:layout_marginLeft="60px"
+        android:layout_marginRight="60px"/>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:id="@+id/ar_login_btn"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
-        android:background="@drawable/shape_btn_circular"
-        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60px"
         android:gravity="center">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="登录"
-            android:textColor="@color/white"/>
+        <include layout="@layout/eline_login_btn"/>
 
     </com.zhy.autolayout.AutoLinearLayout>
 

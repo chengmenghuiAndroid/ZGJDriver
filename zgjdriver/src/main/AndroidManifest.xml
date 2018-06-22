@@ -63,10 +63,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTask">
-
-            <intent-filter>
-                <action android:name="action_login" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.activity.SetActivity"
@@ -107,6 +103,7 @@
         </activity>
         <activity android:name=".ui.activity.HistoricalJourneyActivity"/>
         <activity android:name=".ui.activity.DepartOverActivity"/>
+        <activity android:name=".ui.activity.HistoricalJourneyDetailActivity"/>
 
 
         <meta-data

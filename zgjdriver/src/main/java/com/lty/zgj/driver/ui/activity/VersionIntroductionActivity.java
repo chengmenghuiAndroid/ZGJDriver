@@ -10,6 +10,7 @@ import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
+import com.lty.zgj.driver.weight.StatusBarUtils;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidbase.router.Router;
@@ -33,6 +34,9 @@ public class VersionIntroductionActivity extends AbsBaseWebSocketActivity {
 
     @Override
     protected void initView() {
+        StatusBarUtils.with(this)
+                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
+                .init();
         tvTitle.setText("软件版本介绍");
     }
 

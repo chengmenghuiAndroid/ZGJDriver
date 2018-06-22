@@ -3,20 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line_item"
-        />
     <TextView
         android:id="@+id/surplus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="今日剩余行程行程 1 趟"
+        android:text="今日(05月08日)行程  1趟"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="30dp"/>
+        android:layout_marginLeft="30dp"
+        android:textColor="#FF56556A"
+        android:textSize="28px"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

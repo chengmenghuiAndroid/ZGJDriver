@@ -10,6 +10,7 @@ import com.lty.zgj.driver.WebSocket.CommonResponse;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.adapter.MessageAdapter;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
+import com.lty.zgj.driver.weight.StatusBarUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -38,6 +39,9 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
 
     @Override
     protected void initView() {
+        StatusBarUtils.with(this)
+                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
+                .init();
         title.setText("消息");
         EventBus.getDefault().register(this);
         closeRoundProgressDialog();//关闭加载对话框

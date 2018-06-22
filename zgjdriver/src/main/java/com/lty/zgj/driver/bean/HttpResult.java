@@ -8,7 +8,7 @@ import com.lty.zgj.driver.core.config.Constant;
  */
 public class HttpResult<T> {
 
-    private int code;//	101
+    private int stateCode;//	101
 
     // private String resultMsg;//	API服务正常
 
@@ -34,14 +34,14 @@ public class HttpResult<T> {
         this.data = data;
     }
 
-
-    public int getCode() {
-        return code;
+    public int getStateCode() {
+        return stateCode;
     }
 
-    public void setCode(int resultCode) {
-        this.code = resultCode;
+    public void setStateCode(int stateCode) {
+        this.stateCode = stateCode;
     }
+
 
 
     /**
@@ -50,7 +50,11 @@ public class HttpResult<T> {
      * @return 失败返回true, 成功返回false
      */
     public boolean isCodeInvalid() {
-        return code != Constant.CODE_SUCCESS_IN_SERVICE;
+        return stateCode != Constant.CODE_SUCCESS_IN_SERVICE  ;
+    }
+
+    public boolean isHttpCodeInvalid() {
+        return stateCode != Constant.CODE_SUCCESS_HTTP  ;
     }
 
 

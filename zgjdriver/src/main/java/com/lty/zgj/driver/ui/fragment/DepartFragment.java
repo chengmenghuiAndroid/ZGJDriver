@@ -9,6 +9,8 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -18,8 +20,8 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
-import com.amap.api.maps.MapView;
 import com.amap.api.maps.Projection;
+import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
@@ -38,12 +40,15 @@ import com.lty.zgj.driver.WebSocket.WebSocketManager;
 import com.lty.zgj.driver.WebSocket.WebSocketRequst;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.adapter.DepartAdapter;
+import com.lty.zgj.driver.adapter.DepartFullAdapter;
 import com.lty.zgj.driver.bean.LoginWebWebSocketModel;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.GsonUtils;
 import com.lty.zgj.driver.core.tool.ScreenUtils;
+import com.lty.zgj.driver.ui.activity.LoginActivity;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.tbruyelle.rxpermissions.RxPermissions;
+import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,19 +70,26 @@ import rx.functions.Action1;
  * 发车
  */
 
-public class DepartFragment extends AbsBaseWebSocketFragment implements LocationSource,
-        AMapLocationListener {
+public class DepartFragment extends AbsBaseWebSocketFragment implements LocationSource, AMapLocationListener {
 
     @BindView(R.id.map)
-    MapView mapView;
+    TextureMapView mapView;
     @BindView(R.id.xrecyclerview)
     XRecyclerView xrecyclerview;
     @BindView(R.id.tv_unfoldRv_down)
-    TextView tvUnfoldRvDown;
+    ImageView tvUnfoldRvDown;
     @BindView(R.id.tv_unfoldRv_up)
-    TextView tvUnfoldRvUp;
+    ImageView tvUnfoldRvUp;
     @BindView(R.id.ar)
     AutoRelativeLayout auAr;
+    @BindView(R.id.al_autoLinearLayout)
+    AutoLinearLayout autoLinearLayout;
+    @BindView(R.id.au_al)
+    AutoLinearLayout auAl;
+    @BindView(R.id.al_btn)
+    AutoLinearLayout alBtn;
+    @BindView(R.id.tv_btn)
+    TextView tvBtn;
 
     List<String> list = new ArrayList<>();
     List<String> list2 = new ArrayList<>();
@@ -113,10 +125,13 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private double longitude;
     private String city;
     private String street;
+    private View mHeader;
+    private DepartFullAdapter departFullAdapter;
 
 
     public void initData(Bundle savedInstanceState) {
         mapView.onCreate(savedInstanceState);// 此方法必须重写
+        tvBtn.setText("发车");
         list.add("A");
         list.add("B");
         list.add("C");
@@ -126,14 +141,17 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         init();
         initRv();
         getAdapter().setData(list);
-        layoutParams = auAr.getLayoutParams();
+        layoutParams = autoLinearLayout.getLayoutParams();
         addPolylineInPlayGround(coords);
-//        startMove();
     }
+
+
 
 
     private void initRv() {
         setLayoutManager(xrecyclerview);
+        mHeader = View.inflate(context, R.layout.depart_icon, null);
+        getAdapter().setIconView(mHeader);
         xrecyclerview.setAdapter(getAdapter());
     }
 
@@ -145,6 +163,17 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             departAdapter.notifyDataSetChanged();
         }
         return departAdapter;
+
+    }
+
+    public DepartFullAdapter getFullAdapter() {
+        if (departFullAdapter == null) {
+            departFullAdapter = new DepartFullAdapter(context);
+
+        } else {
+            departFullAdapter.notifyDataSetChanged();
+        }
+        return departFullAdapter;
 
     }
 
@@ -248,9 +277,10 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     protected void onCommonResponse(CommonResponse<String> response) {
         closeRoundProgressDialog();//关闭加载对话框
         CommonResponse.BodyBean body = response.getBody();
-        int code = body.getCode();
+        int code = body.getStateCode();
         //token过期 去登录界面
         if (code == 104) {
+            LoginActivity.launch(context);
             context.finish();
         } else {
             String data = body.getData();
@@ -434,9 +464,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             case R.id.tv_unfoldRv_down:
                 //设置展开高度
                 layoutParams.height = ScreenUtils.getScreenHeight(context) - 700;
-                auAr.setLayoutParams(layoutParams);
-
-                ShowDialogRelative.toastDialog(context, "点击了");
+                autoLinearLayout.setLayoutParams(layoutParams);
+                xrecyclerview.setAdapter(getFullAdapter());
                 list.clear();
                 list.add("C");
                 list.add("D");
@@ -458,15 +487,20 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 list.add("D");
                 list.add("D");
                 list.add("D");
+                list.add("D");
+                list.add("D");
+                list.add("D");
 
-                getAdapter().setData(list);
+
+                getFullAdapter().setData(list);
                 tvUnfoldRvDown.setVisibility(View.GONE);
                 tvUnfoldRvUp.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.tv_unfoldRv_up:
-                layoutParams.height = 500;
-                auAr.setLayoutParams(layoutParams);
+                layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                autoLinearLayout.setLayoutParams(layoutParams);
+                xrecyclerview.setAdapter(getAdapter());
 
                 list.clear();
                 list.add("A");
@@ -683,7 +717,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     @Override
     protected void onFragmentVisible() {
         super.onFragmentVisible();
-        ShowDialogRelative.toastDialog(context,"onFragmentVisible");
     }
 
     /**
@@ -705,7 +738,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             sendText(socketJsonGps);
         }else {
             //webSocket 断开后重新鉴权
-            webSocketConnectLogin(token);
+            String token_new = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
+            webSocketConnectLogin(token_new);
         }
         Log.e(THIS_FILE, "gpsTime------" + gpsTime);
         Log.e(THIS_FILE, "token---SharedPref----" + token);

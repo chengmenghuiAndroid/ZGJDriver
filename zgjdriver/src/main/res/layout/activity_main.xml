@@ -11,33 +11,30 @@
 
     <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="96px"
         android:orientation="horizontal"
-        android:background="@color/eline_main_color">
+        android:background="@drawable/shape_toolbar">
 
 
-        <TextView
+        <ImageView
             android:id="@+id/tv_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="设置"
-            android:textColor="@color/white"
-            android:textSize="35px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30px"
-            android:padding="20px"/>
+            android:padding="10px"
+            android:src="@mipmap/nav_button_mine_default"/>
 
-        <TextView
+
+        <ImageView
             android:id="@+id/tv_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="消息"
-            android:textColor="@color/white"
-            android:textSize="35px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="30px"
-            android:padding="20px"/>
+            android:padding="10px"
+            android:src="@mipmap/nav_button_message_default"/>
 
         <com.flyco.tablayout.SlidingTabLayout
             android:id="@+id/tl_1"
@@ -46,11 +43,14 @@
             tl:tl_textAllCaps="true"
             tl:tl_textBold="BOTH"
             tl:tl_textsize="14sp"
+            tl:tl_textSelectColor="@color/white"
+            tl:tl_textUnselectColor="@color/text_unselect_color"
             tl:tl_tab_space_equal="true"
             android:layout_toRightOf="@id/tv_set"
             android:layout_toLeftOf="@id/tv_msg"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"/>
+            android:layout_marginLeft="150px"
+            android:layout_marginRight="150px"
+            tl:tl_indicator_width="36px"/>
 
     </com.zhy.autolayout.AutoRelativeLayout>
 

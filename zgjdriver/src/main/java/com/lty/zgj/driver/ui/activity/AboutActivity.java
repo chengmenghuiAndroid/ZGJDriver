@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.base.BaseXActivity;
+import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import butterknife.BindView;
@@ -63,6 +64,9 @@ public class AboutActivity extends BaseXActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        StatusBarUtils.with(this)
+                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
+                .init();
         title.setText("关于坐公交");
     }
 

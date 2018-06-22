@@ -15,7 +15,7 @@
         android:id="@+id/tv_travel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="其余未出行行程 3 趟"
+        android:text="其余未出行   3趟"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="30dp"/>
     <View

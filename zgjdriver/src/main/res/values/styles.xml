@@ -3,10 +3,10 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/eline_main_color</item>
-        <item name="colorPrimaryDark">@color/eline_main_color</item>
+        <item name="colorPrimary">@color/zgj_main_color</item>
+        <item name="colorPrimaryDark">@color/zgj_main_color</item>
         <!-- Label标签的颜色 -->
-        <item name="colorAccent">@color/eline_main_color</item>
+        <item name="colorAccent">@color/zgj_main_color</item>
     </style>
 
 

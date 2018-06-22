@@ -7,11 +7,14 @@
     <color name="kprogresshud_grey_color">#449E9E9E</color>
     <color name="kprogresshud_default_color">#b1000000</color>
     <color name="fadegray">#DCE6F0</color>
-    <color name="eline_main_color">#2BCFD9</color>
+    <color name="eline_main_color">#FF5349FC</color>
+    <color name="zgj_main_color">#FF5349FC</color>
     <color name="item_color_bg">#CFCFCF</color>
     <color name="item_btn_bg">#008B8B</color>
-    <color name="cursor">#2AB650</color>
-    <color name="editText_input">#333333</color>
+    <color name="cursor">#FF5349FC</color>
+    <color name="editText_input">#FF292835</color>
     <color name="line_item">#DDDDDD</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_unselect_color">#B3FFFFFF</color>
 
 </resources>

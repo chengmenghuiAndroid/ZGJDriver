@@ -9,11 +9,12 @@ import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
 import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
-import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.WebSocket.WebSocketManager;
+import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.Utils;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
+import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,6 +56,9 @@ public class SetActivity extends AbsBaseWebSocketActivity {
 
     @Override
     protected void initView() {
+        StatusBarUtils.with(this)
+                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
+                .init();
         EventBus.getDefault().register(this);
         title.setText("设置");
         String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);

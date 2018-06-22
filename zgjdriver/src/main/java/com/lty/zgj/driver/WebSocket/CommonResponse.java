@@ -37,17 +37,18 @@ public class CommonResponse<T> {
          * message : token 过期
          */
 
-        private int code;
+        private int stateCode;
         private String message;
         private String data;     //请求返回的数据
 
-        public int getCode() {
-            return code;
+        public int getStateCode() {
+            return stateCode;
         }
 
-        public void setCode(int code) {
-            this.code = code;
+        public void setStateCode(int stateCode) {
+            this.stateCode = stateCode;
         }
+
 
         public String getMessage() {
             return message;

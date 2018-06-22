@@ -18,6 +18,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="已完成"/>
@@ -27,37 +28,76 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal">
+
+
             <TextView
+                android:id="@+id/tv_data_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2018-6-1 8:00"/>
+                android:text="2018年6月1日"/>
+
+            <TextView
+                android:id="@+id/tv_ymd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="07:10"
+                android:layout_marginLeft="10dp"/>
 
             <View
-                android:layout_width="30dp"
+                android:layout_width="20dp"
                 android:layout_height="1dp"
                 android:background="@color/cursor"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"/>
 
             <TextView
+                android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="9:00"/>
+                android:text="9:00"
+                android:layout_marginLeft="5dp"/>
 
         </com.zhy.autolayout.AutoLinearLayout>
 
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/tv_routeName_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="光谷广场（公交站)"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="1dp"
+                android:background="@color/cursor"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/tv_routeName_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="光谷广场（公交站)"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="5dp"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+
         <TextView
+            android:id="@+id/tv_plate_numbers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="光谷广场（公交站---工程大学（公交站）"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"/>
-
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="没有按时发车"
+            android:text="车牌号"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"/>
 

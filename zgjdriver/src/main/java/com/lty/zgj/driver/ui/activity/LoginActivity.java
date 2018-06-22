@@ -2,7 +2,6 @@ package com.lty.zgj.driver.ui.activity;
 
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -10,15 +9,20 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.base.BaseXActivity;
+import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
+import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
+import com.lty.zgj.driver.WebSocket.CommonResponse;
+import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.bean.LoginModel;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.MD5Util;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
+import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.lty.zgj.driver.weight.ClearEditText;
 import com.lty.zgj.driver.weight.CountDownTimerUtils;
+import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,7 +38,7 @@ import cn.droidlover.xdroidbase.router.Router;
  * Created by Administrator on 2018/6/5.
  */
 
-public class LoginActivity extends BaseXActivity {
+public class LoginActivity extends AbsBaseWebSocketActivity {
 
     private static final String THIS_FILE = "LoginActivity";
     @BindView(R.id.et_pws)
@@ -45,6 +49,8 @@ public class LoginActivity extends BaseXActivity {
     TextView tvSendCode;
     @BindView(R.id.ar_login_btn)
     AutoLinearLayout arLoginBtn;
+    @BindView(R.id.tv_btn)
+    TextView tvBtn;
 
     private WebSocketClient mSocketClient;
     private CountDownTimerUtils countDownTimerUtils;
@@ -52,15 +58,23 @@ public class LoginActivity extends BaseXActivity {
      * 最后按下的时间
      */
     private long lastTime;
+    private boolean isConnect = false; //是否断开连接
 
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_driver_login;
+    }
+
+    @Override
     protected void initView() {
+        StatusBarUtils.with(this).init();
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        tvBtn.setText("登录");
         etPhoneNumber.setText("1234567890");
         et_pws.setText("12345");
         initCountDownTimer();
-
     }
 
 
@@ -70,19 +84,19 @@ public class LoginActivity extends BaseXActivity {
     })
 
 
-    public void onLoginEventClick(View v){
+    public void onLoginEventClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ar_login_btn:
                 JSONObject param = new JSONObject();
                 String phoneNumber = etPhoneNumber.getText().toString();
                 String pws = et_pws.getText().toString();
 
-                if(TextUtils.isEmpty(phoneNumber)){
+                if (TextUtils.isEmpty(phoneNumber)) {
                     ShowDialogRelative.toastDialog(context, "用户不能为空");
                     return;
                 }
-                if(TextUtils.isEmpty(pws)){
+                if (TextUtils.isEmpty(pws)) {
                     ShowDialogRelative.toastDialog(context, "用户密码不能为空");
                     return;
                 }
@@ -90,11 +104,11 @@ public class LoginActivity extends BaseXActivity {
                 param.put("account", phoneNumber);
                 param.put("pwd", MD5Util.getMD5(pws));
                 fetchLoginData(param);
-                Log.e(THIS_FILE, "param----"+param);
+                Log.e(THIS_FILE, "param----" + param);
                 break;
 
-                case R.id.tv_send_code:
-                    countDownTimerUtils.start();
+            case R.id.tv_send_code:
+                countDownTimerUtils.start();
                 break;
         }
     }
@@ -109,11 +123,11 @@ public class LoginActivity extends BaseXActivity {
         ObjectLoader.getInstance().getLoginData(new ProgressSubscriber<LoginModel>(new SubscriberOnNextListener<LoginModel>() {
             @Override
             public void onNext(LoginModel loginModel) {
-                if(loginModel != null){
+                if (loginModel != null) {
                     String driver_custom_token = loginModel.getDRIVER_CUSTOM_TOKEN();
                     SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, driver_custom_token);
-                    Log.e(THIS_FILE, "driver_custom_token-----"+driver_custom_token);
-                    Log.e("token", "token-----" + driver_custom_token+"-----"+"http获取的token");
+                    Log.e(THIS_FILE, "driver_custom_token-----" + driver_custom_token);
+                    Log.e("token", "token-----" + driver_custom_token + "-----" + "http获取的token");
                     SharedPref.getInstance(context).putBoolean(Constant.isLoginSuccess, true);
                     MainActivity.launch(context);
                     finish();
@@ -123,7 +137,7 @@ public class LoginActivity extends BaseXActivity {
 
             @Override
             public void onError(Throwable e) {
-                Log.e("TAG","");
+                Log.e("TAG", "");
             }
         }, context), param);
     }
@@ -150,14 +164,19 @@ public class LoginActivity extends BaseXActivity {
 
     }
 
-
     @Override
-    public void initData(Bundle savedInstanceState) {
-        initView();
+    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
+        return WebSocketService.class;
     }
 
     @Override
-    public int getLayoutId() {
-        return R.layout.activity_driver_login;
+    protected void onCommonResponse(CommonResponse<String> response) {
+
     }
+
+    @Override
+    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
+
+    }
+
 }
