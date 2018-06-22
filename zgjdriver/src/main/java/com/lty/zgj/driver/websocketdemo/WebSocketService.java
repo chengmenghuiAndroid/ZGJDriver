@@ -43,11 +43,13 @@ public class WebSocketService extends AbsBaseWebSocketService {
 
             JSONObject mJsonObject = new JSONObject(substring);
             JSONObject headerPacket = mJsonObject.getJSONObject("headerPacket");
-            String body = mJsonObject.getString("body");
+            JSONObject body = mJsonObject.getJSONObject("body");
+            String bodyDate = body.getString("bodyDate");
 
             int msgId = headerPacket.getInt("msgId");
+
             if(msgId == 0x301){
-                onReceiveMessageData(BaseApplication.getContext(), body);
+                onReceiveMessageData(BaseApplication.getContext(), bodyDate);
             }
 
             CommonResponse<String> response = JSON.parseObject(substring, new TypeReference<CommonResponse<String>>() {});
@@ -87,6 +89,7 @@ public class WebSocketService extends AbsBaseWebSocketService {
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
         builder.setAutoCancel(true);
+//        builder.setContentInfo(gtTransmitMessage);
         builder.setContentTitle("普通通知");
         mNotificationManager.notify(1, builder.build());
 
