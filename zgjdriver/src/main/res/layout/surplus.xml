@@ -165,7 +165,7 @@
                 android:src="@mipmap/over"
                 android:layout_toRightOf="@id/surplus_time_4"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="2px"/>
+                android:layout_marginLeft="26px"/>
 
             <TextView
                 android:id="@+id/surplus_station_4"
