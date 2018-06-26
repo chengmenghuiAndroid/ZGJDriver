@@ -72,8 +72,8 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
             EventBus.getDefault().register(this);
         }
         tvBtn.setText("登录");
-        etPhoneNumber.setText("1234567890");
-        et_pws.setText("12345");
+        etPhoneNumber.setText("13566668888");
+        et_pws.setText("123456");
         initCountDownTimer();
     }
 

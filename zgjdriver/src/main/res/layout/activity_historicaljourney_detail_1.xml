@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/custom_layout"/>
+
+    <com.lty.zgj.driver.weight.ReboundScrollView
+        android:id="@+id/s_reboundScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:id="@+id/au_al"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="2018年06月20日"
+                        android:textColor="#FF02CF97"
+                        android:layout_marginLeft="30px"/>
+                    <TextView
+                        android:id="@+id/tv_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20px"
+                        android:text="已完成"
+                        android:textColor="#FF02CF97"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="30px"/>
+
+                    <TextView
+                        android:id="@+id/tv_plate_numbers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20px"
+                        android:layout_below="@id/tv_status"
+                        android:text="鄂A·X3396"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="#FF56556A"/>
+
+
+                    <com.zhy.autolayout.AutoRelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20px"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:layout_below="@id/tv_plate_numbers">
+
+
+                        <TextView
+                            android:id="@+id/tv_station_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="30px"
+                            android:text="光谷广场(公交站)"
+                            android:textColor="#FF292835"
+                            android:textSize="30px"/>
+
+                        <ImageView
+                            android:id="@+id/icon_arrowhead"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20px"
+                            android:layout_toRightOf="@id/tv_station_start"
+                            android:src="@mipmap/icon_arrowhead"/>
+
+                        <TextView
+                            android:id="@+id/tv_station_end"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20px"
+                            android:layout_toRightOf="@id/icon_arrowhead"
+                            android:text="工程大学(公交站)"
+                            android:textColor="#FF292835"
+                            android:textSize="30px"/>
+
+                    </com.zhy.autolayout.AutoRelativeLayout>
+
+                </com.zhy.autolayout.AutoRelativeLayout>
+
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/al_autoLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/au_al"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <com.zhy.autolayout.AutoRelativeLayout
+                        android:id="@+id/ar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <cn.droidlover.xrecyclerview.XRecyclerView
+                            android:id="@+id/xrecyclerview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </cn.droidlover.xrecyclerview.XRecyclerView>
+
+                    </com.zhy.autolayout.AutoRelativeLayout>
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/al_autoLinearLayout"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <com.zhy.autolayout.AutoLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="30px">
+
+
+                        <TextView
+                            android:id="@+id/tv_ticket_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="购票人数:0"
+                            android:textColor="#FF02CF97"
+                            android:textSize="26px"
+                            android:layout_marginLeft="30px"/>
+
+                        <TextView
+                            android:id="@+id/tv_km"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="共计：28km"
+                            android:textColor="#FF02CF97"
+                            android:textSize="26px"
+                            android:layout_marginLeft="60px"/>
+
+
+                    </com.zhy.autolayout.AutoLinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginLeft="30px"
+                        android:layout_marginRight="30px"
+                        android:layout_marginTop="20px"
+                        android:background="#FFE1E0FB"/>
+
+                    <com.zhy.autolayout.AutoLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="发车时间准"
+                            android:textSize="12dp"
+                            android:textColor="#FFFF3E9E"
+                            android:layout_marginLeft="30px"/>
+
+
+                        <com.zhy.autolayout.AutoRelativeLayout
+                            android:id="@+id/ar_bad_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <cn.droidlover.xrecyclerview.XRecyclerView
+                                android:id="@+id/xrecyclerview_bad_time"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            </cn.droidlover.xrecyclerview.XRecyclerView>
+
+                        </com.zhy.autolayout.AutoRelativeLayout>
+
+                    </com.zhy.autolayout.AutoLinearLayout>
+
+                    <com.zhy.autolayout.AutoLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal">
+                        <ImageView
+                            android:id="@+id/tv_unfoldRv_down"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/al_autoLinearLayout"
+                            android:layout_centerHorizontal="true"
+                            android:padding="10dp"
+                            android:src="@mipmap/icon_arrow_down"
+                            />
+
+                        <ImageView
+                            android:id="@+id/tv_unfoldRv_up"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/al_autoLinearLayout"
+                            android:layout_centerHorizontal="true"
+                            android:padding="10dp"
+                            android:src="@mipmap/icon_arrow_up"
+                            android:visibility="gone"/>
+
+
+                    </com.zhy.autolayout.AutoLinearLayout>
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+
+            <!--<com.lty.zgj.driver.weight.MapContainer-->
+                <!--android:id="@+id/map_container"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <com.amap.api.maps.TextureMapView
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </com.amap.api.maps.TextureMapView>
+            <!--</com.lty.zgj.driver.weight.MapContainer>-->
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.lty.zgj.driver.weight.ReboundScrollView>
+</com.zhy.autolayout.AutoLinearLayout>
+
+
+

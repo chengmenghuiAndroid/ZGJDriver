@@ -43,7 +43,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
         roundProgressDialog = new RoundProgressDialog(this);
         initBind();
 //        initView();
-//        initView(savedInstanceState);
+        initView(savedInstanceState);
 
         mRecevier = new FinishActivityRecevier();
         registerFinishReciver();

@@ -13,7 +13,6 @@ import com.lty.zgj.driver.bean.HistoricalJourneyModel;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
-import com.lty.zgj.driver.weight.StatusBarUtils;
 
 import java.util.List;
 
@@ -42,12 +41,12 @@ public class HistoricalJourneyActivity extends BaseXActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        StatusBarUtils.with(this)
-                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
-                .init();
+//        StatusBarUtils.with(this)
+//                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
+//                .init();
         tvTitle.setText("历史行程");
         initAdapter();
-        fetchTripDate(1, 0);
+        fetchTripDate(23, 0);
     }
 
     @Override
@@ -63,12 +62,12 @@ public class HistoricalJourneyActivity extends BaseXActivity {
                 .setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
                     @Override
                     public void onRefresh() {
-                        fetchTripDate(1, 0);
+                        fetchTripDate(23, 0);
                     }
 
                     @Override
                     public void onLoadMore(int page) {
-                        fetchTripDate(1, page);
+                        fetchTripDate(23, page);
                     }
                 });
 
@@ -144,8 +143,9 @@ public class HistoricalJourneyActivity extends BaseXActivity {
             super.onItemClick(position, model, tag, holder);
             int status = model.getStatus();
             int tripNo = model.getTripNo();
+            String id = model.getId();
 
-            HistoricalJourneyDetailActivity.launch(context, status, tripNo);
+            HistoricalJourneyDetailActivity.launch(context, status, tripNo, id);
         }
     };
 

@@ -5,7 +5,15 @@ import android.support.v7.widget.GridLayoutManager;
 
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.adapter.WaitGoingOutAdapter;
+import com.lty.zgj.driver.adapter.WaitGoingOutItemAdapter;
+import com.lty.zgj.driver.adapter.WaitGoingOutTravelAdapter;
 import com.lty.zgj.driver.base.BaseXFragment;
+import com.lty.zgj.driver.bean.TripListModel;
+import com.lty.zgj.driver.net.ObjectLoader;
+import com.lty.zgj.driver.subscribers.ProgressSubscriber;
+import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
+
+import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
@@ -21,19 +29,13 @@ public class WaitGoingOutFragment extends BaseXFragment {
     @BindView(R.id.contentLayout)
     XRecyclerContentLayout contentLayout;
 
+    private WaitGoingOutItemAdapter goingOutItemAdapter; //
+    private WaitGoingOutTravelAdapter waitGoingOutTravelAdapter; //未出行
+
     private WaitGoingOutAdapter waitGoingOutAdapter;
-
-    private WaitGoingOutAdapter getAdapter() {
-        if(waitGoingOutAdapter == null){
-            waitGoingOutAdapter = new WaitGoingOutAdapter(context);
-        }else {
-            waitGoingOutAdapter.notifyDataSetChanged();
-        }
-
-        return waitGoingOutAdapter;
-
-    }
-
+    private TripListModel tripListModelData;
+    private WaitGoingOutItemAdapter surplusAdapter;
+    private WaitGoingOutTravelAdapter travelAdapter;
 
 
     public void setLayoutManager(XRecyclerView recyclerView) {
@@ -42,9 +44,14 @@ public class WaitGoingOutFragment extends BaseXFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        initRv();
+    }
+
+
+    private void initRv() {
         contentLayout.getRecyclerView().setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false));
         setLayoutManager(contentLayout.getRecyclerView());
-        contentLayout.getRecyclerView().setAdapter(getAdapter());
+
         contentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
@@ -57,7 +64,13 @@ public class WaitGoingOutFragment extends BaseXFragment {
             }
         });
 
-        contentLayout.getRecyclerView().useDefLoadMoreView();
+
+        surplusAdapter = getSurplusAdapter();
+        travelAdapter = getTravelAdapter();
+
+
+
+//        contentLayout.getRecyclerView().useDefLoadMoreView();
     }
 
     @Override
@@ -70,7 +83,7 @@ public class WaitGoingOutFragment extends BaseXFragment {
      */
     @Override
     protected void lazyLoad() {
-
+        fetchTripListData(23);
     }
 
     /**
@@ -80,4 +93,67 @@ public class WaitGoingOutFragment extends BaseXFragment {
     protected void stopLoad() {
 
     }
+
+    private void fetchTripListData(int id) {
+        ObjectLoader.getInstance().getTripListModelData(new ProgressSubscriber<TripListModel>(new SubscriberOnNextListener<TripListModel>() {
+            @Override
+            public void onNext(TripListModel tripListModel) {
+
+                waitGoingOutAdapter = new WaitGoingOutAdapter(context, surplusAdapter, travelAdapter, tripListModel);
+                contentLayout.getRecyclerView().setAdapter(waitGoingOutAdapter);
+
+                List<TripListModel.NoStartListBean> noStartList = tripListModel.getNoStartList();
+                List<TripListModel.TodayListBean> todayList = tripListModel.getTodayList();
+
+
+                if(todayList != null && todayList.size() >0){
+                    getSurplusAdapter().setData(todayList);
+
+                }
+
+                if(noStartList != null && noStartList.size() >0){
+                    getTravelAdapter().setData(noStartList);
+
+                }
+
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        }, context),id);
+
+    }
+
+    //今日行程
+    public WaitGoingOutItemAdapter getSurplusAdapter() {
+        if(goingOutItemAdapter == null){
+
+            goingOutItemAdapter = new WaitGoingOutItemAdapter(context);
+
+        }else {
+            goingOutItemAdapter.notifyDataSetChanged();
+        }
+
+        return goingOutItemAdapter;
+
+    }
+
+
+    //其余为出行
+    public WaitGoingOutTravelAdapter getTravelAdapter() {
+        if(waitGoingOutTravelAdapter == null){
+            waitGoingOutTravelAdapter = new WaitGoingOutTravelAdapter(context);
+
+        }else {
+            waitGoingOutTravelAdapter.notifyDataSetChanged();
+        }
+
+        return waitGoingOutTravelAdapter;
+
+    }
+
+
 }

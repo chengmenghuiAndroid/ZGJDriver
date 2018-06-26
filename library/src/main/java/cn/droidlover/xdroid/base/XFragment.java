@@ -47,6 +47,7 @@ public abstract class XFragment extends Fragment implements UiCallback {
         if (rootView == null) {
             rootView = inflater.inflate(getLayoutId(), null);
             unbinder = KnifeKit.bind(this, rootView);
+            isInit = true;
         } else {
             ViewGroup viewGroup = (ViewGroup) rootView.getParent();
             if (viewGroup != null) {

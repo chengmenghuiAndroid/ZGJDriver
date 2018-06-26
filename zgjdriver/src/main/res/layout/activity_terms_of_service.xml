@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.zhy.autolayout.AutoLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,11 +9,34 @@
     <include layout="@layout/custom_layout"/>
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="软件服务条款"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"/>
+    <com.lty.zgj.driver.weight.ReboundScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30px"
+                android:text="软件服务条款"
+                android:textColor="#FF292835"
+                android:textSize="32px"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:textColor="#FF56556A"
+                android:textSize="28px"
+                tools:ignore="HardcodedText"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+    </com.lty.zgj.driver.weight.ReboundScrollView>
 </com.zhy.autolayout.AutoLinearLayout>

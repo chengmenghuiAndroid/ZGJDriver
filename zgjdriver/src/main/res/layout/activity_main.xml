@@ -26,15 +26,30 @@
             android:src="@mipmap/nav_button_mine_default"/>
 
 
-        <ImageView
-            android:id="@+id/tv_msg"
+
+        <com.zhy.autolayout.AutoFrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30px"
-            android:padding="10px"
-            android:src="@mipmap/nav_button_message_default"/>
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/tv_msg_dot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:src="@drawable/shape_msg_dot"
+                android:layout_marginLeft="42px"/>
+
+            <ImageView
+                android:id="@+id/tv_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/nav_button_message_default"
+                android:layout_marginRight="30px"
+                android:padding="10px"/>
+        </com.zhy.autolayout.AutoFrameLayout>
+
 
         <com.flyco.tablayout.SlidingTabLayout
             android:id="@+id/tl_1"

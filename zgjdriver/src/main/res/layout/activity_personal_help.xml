@@ -2,7 +2,28 @@
 <com.zhy.autolayout.AutoLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <include layout="@layout/custom_layout"/>
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text=" 坐公交司机端使用说明"
+       android:layout_marginTop="56px"
+       android:layout_gravity="center_horizontal"
+       android:textColor="#FF292835"
+       android:textSize="32px"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="30px"
+        android:layout_marginTop="20px"
+        android:textColor="#FF56556A"
+        android:textSize="28px"
+        android:text="定制公交是公交公司针对市民差异化、多样化的出行需求提供更好的公共出行服务。秉承安全、快捷、舒适、环保的出行服务理念。（内容通过后台配置）"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

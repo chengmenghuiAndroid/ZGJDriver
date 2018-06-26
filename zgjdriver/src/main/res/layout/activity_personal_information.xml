@@ -5,42 +5,52 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:background="#FFEEEEF8">
 
     <include layout="@layout/custom_layout"/>
 
-    <com.zhy.autolayout.AutoRelativeLayout
-        android:id="@+id/user_icon"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="67dp">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300px"
+        android:background="@mipmap/bg_personal_information"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_width="52dp"
             android:layout_height="52dp"
-            android:src="@drawable/icon_head2"
+            android:src="@mipmap/image_avatar"
             app:civ_border_color="#FFFFFF"
-            app:civ_border_width="2px"/>
+            app:civ_border_width="2px"
+            android:layout_marginTop="49px"/>
 
-    </com.zhy.autolayout.AutoRelativeLayout>
 
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
 
-        <TextView
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="张三"
-            />
+            android:orientation="horizontal"
+            android:layout_marginTop="30px"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="男"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="张三"
+                android:textSize="32px"
+                android:textColor="#FFFFFFFF"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_male"
+               android:layout_marginLeft="10px"
+                android:visibility="gone"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
 
     </com.zhy.autolayout.AutoLinearLayout>
 
@@ -49,12 +59,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="10dp">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line_item"/>
+        android:layout_marginTop="20px"
+        android:background="@color/white">
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:id="@+id/terms_of_service"
@@ -83,10 +89,11 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:background="@color/line_item"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"/>
 
 
         </com.zhy.autolayout.AutoRelativeLayout>
@@ -119,10 +126,11 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:background="@color/line_item"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"/>
 
 
 
@@ -153,20 +161,9 @@
                 android:layout_marginRight="30dp"/>
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/line_item"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentBottom="true"/>
-
-
-
         </com.zhy.autolayout.AutoRelativeLayout>
 
 
     </com.zhy.autolayout.AutoLinearLayout>
-
-
 
 </com.zhy.autolayout.AutoLinearLayout>

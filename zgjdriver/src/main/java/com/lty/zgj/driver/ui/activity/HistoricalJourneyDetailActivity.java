@@ -6,10 +6,8 @@ import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,17 +24,17 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polyline;
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.adapter.HistoricalJourneyDetailAdapter;
+import com.lty.zgj.driver.adapter.HistoricalJourneyDetailFullAdapter;
 import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.bean.HistoricalJourneyDetailModel;
-import com.lty.zgj.driver.core.tool.ScreenUtils;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
-import com.lty.zgj.driver.weight.MapContainer;
 import com.lty.zgj.driver.weight.ReboundScrollView;
 import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoLinearLayout;
+import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,38 +51,49 @@ import rx.functions.Action1;
  * Created by Administrator on 2018/6/21.
  */
 
-public class HistoricalJourneyDetailActivity extends BaseXActivity implements AMapLocationListener , LocationSource{
-
+public class HistoricalJourneyDetailActivity extends BaseXActivity implements AMapLocationListener, LocationSource {
     @BindView(R.id.nav_button)
     ImageView navButton;
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.tv_right)
     TextView tvRight;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
+    @BindView(R.id.tv_status)
+    TextView tvStatus;
+    @BindView(R.id.tv_plate_numbers)
+    TextView tvPlateNumbers;
+    @BindView(R.id.tv_station_start)
+    TextView tvStationStart;
+    @BindView(R.id.icon_arrowhead)
+    ImageView iconArrowhead;
+    @BindView(R.id.tv_station_end)
+    TextView tvStationEnd;
+    @BindView(R.id.au_al)
+    AutoRelativeLayout auAl;
     @BindView(R.id.xrecyclerview)
     XRecyclerView xrecyclerview;
+    @BindView(R.id.ar)
+    AutoRelativeLayout ar;
     @BindView(R.id.al_autoLinearLayout)
-    AutoLinearLayout autoLinearLayout;
+    AutoLinearLayout alAutoLinearLayout;
+    @BindView(R.id.tv_ticket_number)
+    TextView tvTicketNumber;
+    @BindView(R.id.tv_km)
+    TextView tvKm;
+    @BindView(R.id.xrecyclerview_bad_time)
+    XRecyclerView xrecyclerviewBadTime;
+    @BindView(R.id.ar_bad_time)
+    AutoRelativeLayout arBadTime;
     @BindView(R.id.tv_unfoldRv_down)
-    TextView tvUnfoldRvDown;
+    ImageView tvUnfoldRvDown;
     @BindView(R.id.tv_unfoldRv_up)
-    TextView tvUnfoldRvUp;
+    ImageView tvUnfoldRvUp;
     @BindView(R.id.map)
     TextureMapView mapView;
     @BindView(R.id.s_reboundScrollView)
-    ReboundScrollView reboundScrollView;
-    @BindView(R.id.map_container)
-    MapContainer mapContainer;
-    @BindView(R.id.tv_plate_numbers)
-    TextView tvPlateNumbers;
-    @BindView(R.id.tv_status)
-    TextView tvStatus;
-    @BindView(R.id.tv_ticket_number)
-    TextView tvTicketNumber;
-    @BindView(R.id.tv_startName)
-    TextView tvStartName;
-    @BindView(R.id.tv_endName)
-    TextView tvEndName;
+    ReboundScrollView sReboundScrollView;
 
     private HistoricalJourneyDetailAdapter detailAdapter;
 
@@ -95,7 +104,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     private float mapZoom;
     private LatLng mapTarget;
     private Polyline mPolyline;
-    private LocationSource.OnLocationChangedListener mListener;
+    private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
     private boolean isFirstLoc = true;
@@ -109,6 +118,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     private int size;
     private AMap aMap;
     private MyLocationStyle myLocationStyle;
+    private HistoricalJourneyDetailFullAdapter detailFullAdapter;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -127,30 +137,17 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         checkPermissionsLocation();
         initRv();
         init();
-        layoutParams = autoLinearLayout.getLayoutParams();
-        fetchTripDetailData(1, 5, 11);
-        mapContainer.setScrollView(reboundScrollView);
+//        layoutParams = alAutoLinearLayout.getLayoutParams();
+        String id = getIntent().getStringExtra("id");
+        fetchTripDetailData(id);
 
-        //禁止滑动
-        setReboundScrollView();
         int status = getIntent().getIntExtra("status", 0);
-        if(status == 1){
+        if (status == 1) {
             tvStatus.setText("已完成");
-        }else if(status == 2){
+        } else if (status == 2) {
             tvStatus.setText("已取消");
         }
-        Log.e(THIS_FILE, "status----"+status);
-    }
-
-    private void setReboundScrollView() {
-        reboundScrollView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-
-
-        });
+        Log.e(THIS_FILE, "status----" + status);
     }
 
 
@@ -257,7 +254,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
      * 激活定位
      */
     @Override
-    public void activate(LocationSource.OnLocationChangedListener listener) {
+    public void activate(OnLocationChangedListener listener) {
         mListener = listener;
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(context);
@@ -310,7 +307,18 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
 
     }
 
-    private RecyclerItemCallback<HistoricalJourneyDetailModel.StationsBean,HistoricalJourneyDetailAdapter.ViewHolder> itemClick = new RecyclerItemCallback<HistoricalJourneyDetailModel.StationsBean, HistoricalJourneyDetailAdapter.ViewHolder>() {
+    public HistoricalJourneyDetailFullAdapter getFullAdapter() {
+        if (detailFullAdapter == null) {
+            detailFullAdapter = new HistoricalJourneyDetailFullAdapter(context);
+
+        } else {
+            detailFullAdapter.notifyDataSetChanged();
+        }
+        return detailFullAdapter;
+
+    }
+
+    private RecyclerItemCallback<HistoricalJourneyDetailModel.StationsBean, HistoricalJourneyDetailAdapter.ViewHolder> itemClick = new RecyclerItemCallback<HistoricalJourneyDetailModel.StationsBean, HistoricalJourneyDetailAdapter.ViewHolder>() {
         /**
          * 单击事件
          *
@@ -323,7 +331,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         public void onItemClick(int position, HistoricalJourneyDetailModel.StationsBean model, int tag, HistoricalJourneyDetailAdapter.ViewHolder holder) {
             super.onItemClick(position, model, tag, holder);
 
-            ShowDialogRelative.toastDialog(context, "点击了"+ position);
+            ShowDialogRelative.toastDialog(context, "点击了" + position);
         }
     };
 
@@ -335,20 +343,21 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_historicaljourney_detail;
+        return R.layout.activity_historicaljourney_detail_1;
 
     }
 
 
-    public static void launch(Activity activity, int status, int tripNo) {
+    public static void launch(Activity activity, int status, int tripNo, String id) {
         Router.newIntent(activity)
                 .to(HistoricalJourneyDetailActivity.class)
                 .putInt("status", status)
                 .putInt("tripNo", tripNo)
+                .putString("id", id)
                 .launch();
     }
 
-    private void fetchTripDetailData(int Id, int tripNo, int routeId) {
+    private void fetchTripDetailData(String Id) {
         ObjectLoader.getInstance().getTripDetailData(new ProgressSubscriber<HistoricalJourneyDetailModel>(new SubscriberOnNextListener<HistoricalJourneyDetailModel>() {
             @Override
             public void onNext(HistoricalJourneyDetailModel historicalJourneyDetailModel) {
@@ -359,9 +368,9 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                     setStation();
 
                     tvPlateNumbers.setText(historicalJourneyDetailModel.getBusNum());//车牌号
-                    tvTicketNumber.setText("购票人数"+historicalJourneyDetailModel.getNums());
-                    tvStartName.setText(historicalJourneyDetailModel.getStartName());
-                    tvEndName.setText(historicalJourneyDetailModel.getEndName());
+                    tvTicketNumber.setText("购票人数" + historicalJourneyDetailModel.getNums());
+//                    tvStartName.setText(historicalJourneyDetailModel.getStartName());
+//                    tvEndName.setText(historicalJourneyDetailModel.getEndName());
                 }
 
             }
@@ -370,7 +379,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
             public void onError(Throwable e) {
                 Log.e("Throwable", "---" + e.getMessage());
             }
-        }, context), Id, tripNo, routeId);
+        }, context), Id);
     }
 
     private void setStation() {
@@ -399,22 +408,25 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         switch (view.getId()) {
             case R.id.tv_unfoldRv_down:
                 //设置展开高度
-                layoutParams.height = ScreenUtils.getScreenHeight(context) - 1000;
-                autoLinearLayout.setLayoutParams(layoutParams);
 
                 list.clear();
-                list.addAll(stations);
-                getAdapter().setData(list);
+                xrecyclerview.setAdapter(getFullAdapter());
+                list.clear();
+                if (stations != null && stations.size() > 0) {
+                    list.addAll(stations);
+                    getFullAdapter().setData(list);
+                }
                 tvUnfoldRvDown.setVisibility(View.GONE);
                 tvUnfoldRvUp.setVisibility(View.VISIBLE);
+                mapView.setVisibility(View.GONE);
                 break;
 
             case R.id.tv_unfoldRv_up:
-                layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                autoLinearLayout.setLayoutParams(layoutParams);
+                xrecyclerview.setAdapter(getAdapter());
                 setStation();
                 tvUnfoldRvDown.setVisibility(View.VISIBLE);
                 tvUnfoldRvUp.setVisibility(View.GONE);
+                mapView.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -452,4 +464,5 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
             }
         }
     }
+
 }

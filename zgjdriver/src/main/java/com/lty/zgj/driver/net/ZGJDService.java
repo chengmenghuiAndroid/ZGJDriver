@@ -2,15 +2,22 @@ package com.lty.zgj.driver.net;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.lty.zgj.driver.bean.DepartModel;
+import com.lty.zgj.driver.bean.DriverNoticeInfoDetailModel;
+import com.lty.zgj.driver.bean.DriverNoticeInfoModel;
+import com.lty.zgj.driver.bean.EndBusModel;
 import com.lty.zgj.driver.bean.HistoricalJourneyDetailModel;
 import com.lty.zgj.driver.bean.HistoricalJourneyModel;
 import com.lty.zgj.driver.bean.HttpResult;
 import com.lty.zgj.driver.bean.LoginModel;
+import com.lty.zgj.driver.bean.StartBustModel;
+import com.lty.zgj.driver.bean.TripListModel;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -25,11 +32,11 @@ public interface ZGJDService {
 
     /**
      * 历史行程
-     * @param Id 司机Id
+     * @param driverId 司机Id
      * @return
      */
-    @GET("trip/{Id}/{page}")
-    Observable<HttpResult<HistoricalJourneyModel>> getTrip(@Path("Id") int Id, @Path("page") int page);
+    @GET("trip/{driverId}/{page}")
+    Observable<HttpResult<HistoricalJourneyModel>> getTrip(@Path("driverId") int driverId, @Path("page") int page);
 
 
 
@@ -37,15 +44,66 @@ public interface ZGJDService {
 
     //192.168.2.31:8090/driver/trip/info/1/5/11   5行程编号 11线路id
     /**
-     * @param Id
-     * @param tripNo 行程编号
-     * @param routeId 线路id
+     * @param scheduleId
      * @return
      */
-    @GET("trip/info/{Id}/{tripNo}/{routeId}")
-    Observable<HttpResult<HistoricalJourneyDetailModel>> getTripDetail(@Path("Id") int Id,
-                                                                       @Path("tripNo") int tripNo,
-                                                                       @Path("routeId") int routeId);
+    @GET("trip/info/{scheduleId}")
+    Observable<HttpResult<HistoricalJourneyDetailModel>> getTripDetail(@Path("scheduleId") String scheduleId);
+
+
+    /**
+     * 发车
+     * @param driverId
+     * @return
+     */
+    @POST("trip/today/{driverId}")
+    Observable<HttpResult<DepartModel>> getDepartModel(@Path("driverId") int driverId);
+
+
+    /**
+     * 待发车
+     * @param driverId
+     * @return
+     */
+    @POST("trip/getTripList/{driverId}")
+    Observable<HttpResult<TripListModel>> getTripListModel(@Path("driverId") int driverId);
+
+    /**
+     *发车
+     * @param scheduleId 班次id
+     * @return
+     */
+    @POST("trip/startBus/{scheduleId}")
+    Observable<HttpResult<StartBustModel>> startBus(@Path("scheduleId") String scheduleId);
+
+
+
+    /**
+     *发车完成
+     * @param scheduleId 班次id
+     * @return
+     */
+    @POST("trip/endBus/{scheduleId}")
+    Observable<HttpResult<EndBusModel>> endBus(@Path("scheduleId") String scheduleId);
+
+    /**
+     * 消息通知
+     * @param driverId 司机id
+     * @return
+     */
+    @POST("driverNoticeInfo/search")
+    Observable<HttpResult<DriverNoticeInfoModel>> driverNoticeInfo(@Query("driverId") int driverId,
+                                                                   @Query("page") int page);
+
+    /**
+     * 消息详情
+     * @param noticeId 条目id
+     * @return
+     */
+    @GET("driverNoticeInfo/getNotice/{noticeId}")
+    Observable<HttpResult<DriverNoticeInfoDetailModel>> driverNoticeInfoDetail(@Path("noticeId") int noticeId);
+
+
 
 }
 

@@ -15,6 +15,7 @@ import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.Utils;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.lty.zgj.driver.weight.StatusBarUtils;
+import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,7 +46,10 @@ public class SetActivity extends AbsBaseWebSocketActivity {
     @BindView(R.id.personal_about_zgj)
     AutoRelativeLayout personalAboutZgj;
     @BindView(R.id.ar_login_btn)
-    AutoRelativeLayout arLoginBtn;
+    AutoLinearLayout arLoginBtn;
+
+    @BindView(R.id.tv_btn)
+    TextView tvBtn;
 
     private String webSocketJson;
 
@@ -61,6 +65,7 @@ public class SetActivity extends AbsBaseWebSocketActivity {
                 .init();
         EventBus.getDefault().register(this);
         title.setText("设置");
+        tvBtn.setText("退出登录");
         String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
         webSocketConnectLogin(token);
         closeRoundProgressDialog();//关闭加载对话框
@@ -143,7 +148,6 @@ public class SetActivity extends AbsBaseWebSocketActivity {
 
         super.onBackPressed();
     }
-
 
 
 }

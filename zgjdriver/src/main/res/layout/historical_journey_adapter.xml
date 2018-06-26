@@ -3,50 +3,54 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line_item"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"/>
-    <com.zhy.autolayout.AutoLinearLayout
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/ar_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="20px">
 
         <TextView
             android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已完成"/>
+            android:text="已完成"
+            android:layout_alignParentRight="true"
+            android:textColor="#FF02CF97"
+            android:layout_marginRight="30px"/>
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
+            android:orientation="horizontal">
 
 
             <TextView
                 android:id="@+id/tv_data_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2018年6月1日"/>
+                android:text="2018年6月1日"
+                android:layout_marginLeft="30px"
+                android:textSize="28px"
+                android:textColor="#FF56556A"/>
 
             <TextView
                 android:id="@+id/tv_ymd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="07:10"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="20px"
+                android:textSize="28px"
+                android:textColor="#FF56556A"/>
 
             <View
-                android:layout_width="20dp"
-                android:layout_height="1dp"
-                android:background="@color/cursor"
+                android:layout_width="30px"
+                android:layout_height="1px"
+                android:background="#FF56556A"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"/>
 
@@ -55,61 +59,92 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="9:00"
-                android:layout_marginLeft="5dp"/>
-
+                android:layout_marginLeft="5dp"
+                android:textSize="28px"
+                android:textColor="#FF56556A"/>
         </com.zhy.autolayout.AutoLinearLayout>
 
+    </com.zhy.autolayout.AutoRelativeLayout>
 
-        <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/tv_routeName_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="光谷广场（公交站)"
-                android:layout_gravity="center_horizontal"
-                />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#FFE1E0FB"
+        android:layout_below="@id/ar_date"
+        android:layout_marginTop="20px"/>
 
-            <View
-                android:layout_width="20dp"
-                android:layout_height="1dp"
-                android:background="@color/cursor"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"/>
 
-            <TextView
-                android:id="@+id/tv_routeName_right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="光谷广场（公交站)"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="5dp"/>
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_plate_numbers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="车牌号"
+            android:text="鄂A·X3396"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"/>
+            android:textColor="#FF56556A"
+            android:layout_marginTop="30px"/>
 
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+
+            <TextView
+                android:id="@+id/tv_routeName_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"
+                android:text="光谷广场(公交站)"
+                android:textColor="#FF292835"
+                android:textSize="30px"/>
+
+            <ImageView
+                android:id="@+id/icon_arrowhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20px"
+                android:layout_toRightOf="@id/tv_routeName_left"
+                android:src="@mipmap/icon_arrowhead"/>
+
+            <TextView
+                android:id="@+id/tv_routeName_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20px"
+                android:layout_toRightOf="@id/icon_arrowhead"
+                android:text="工程大学(公交站)"
+                android:textColor="#FF292835"
+                android:textSize="30px"/>
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFF3E9E"
+            android:text="没有按时发车"
+            android:textSize="28px"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"/>
 
     </com.zhy.autolayout.AutoLinearLayout>
-
+    
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line_item"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"/>
-
+        android:layout_height="20px"
+        android:background="#FFEEEEF8"
+        android:layout_marginTop="30px"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

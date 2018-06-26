@@ -104,6 +104,7 @@
         <activity android:name=".ui.activity.HistoricalJourneyActivity"/>
         <activity android:name=".ui.activity.DepartOverActivity"/>
         <activity android:name=".ui.activity.HistoricalJourneyDetailActivity"/>
+        <activity android:name=".ui.activity.MessageDetailActivity"/>
 
 
         <meta-data

@@ -79,11 +79,10 @@ public class WebSocketRequst {
      * @param scheduleTripId 行程id
      * @return
      */
-    public Map<String, Object> travelPathUpload(int scheduleTripId, int scheduleId, int routeId, int stationId, String stationName,
+    public Map<String, Object> travelPathUpload(int scheduleTripId, int routeId, int stationId, String stationName,
                                                 long stationTime, long scheduleDate, int busId){
         Map<String, Object> params = new HashMap<>();
         params.put("scheduleTripId", scheduleTripId);
-        params.put("scheduleId", scheduleId);
         params.put("routeId", routeId);
         params.put("stationId", stationId);
         params.put("stationName", stationName);

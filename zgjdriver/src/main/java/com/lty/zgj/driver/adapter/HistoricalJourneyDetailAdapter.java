@@ -56,40 +56,57 @@ public class HistoricalJourneyDetailAdapter extends RecyclerAdapter<HistoricalJo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_ICON) return;
+
+
+        if (getItemViewType(position) == TYPE_ICON) {
+            return;
+        }
+
         final int pos = getRealPosition(holder);
 
-
         if (data.size() > 0) {
-            final HistoricalJourneyDetailModel.StationsBean stationsBean = data.get(pos);
+
+
+            HistoricalJourneyDetailModel.StationsBean stationsBean = data.get(pos);
 
 
             if (pos == 0) {
-                setGone(holder.view3);
+                setInvisible(holder.dashed_icon_1);
+                holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.mipmap.start));
             } else if (pos == data.size() - 1) {
-                setGone(holder.view2);
+                setInvisible(holder.dashed_icon_2);
+                holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.mipmap.over));
             } else {
-                setVisible(holder.view3);
-                setVisible(holder.view2);
+                setVisible(holder.dashed_icon_1);
+                setVisible(holder.dashed_icon_2);
+                holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.drawable.shape_oval_green));
             }
 
+            if (pos == 1) {
+                setGone(holder.dashed_icon_2);
+            } else if (pos == 2) {
+                setGone(holder.dashed_icon_1);
+            }
+
+            String stationTime = setArriveStationTime(stationsBean);
+            holder.tvDepartTime.setText(stationTime);
             holder.tvStation.setText(stationsBean.getStationName());
-            String planTime = stationsBean.getPlanTime();
-            String substring_1 = planTime.substring(0, 2);
-            String substring_2 = planTime.substring(2, planTime.length());
-            String time = substring_1 + ":" + substring_2;
-
-            holder.tvDepartTime.setText("今天"+ time);
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getRecItemClick().onItemClick(pos, stationsBean, TAG_VIEW, holder);
-                }
-            });
-
+            int stationNo = stationsBean.getStationNo();
+            holder.tvStationPerson.setText(String.valueOf(stationNo));
         }
 
+    }
 
+    /**
+     * @param stationsBean
+     * @return
+     */
+    private String setArriveStationTime(HistoricalJourneyDetailModel.StationsBean stationsBean) {
+        String planTime = stationsBean.getPlanTime();
+        String substring_1 = planTime.substring(0, 2);
+        String substring_2 = planTime.substring(2, planTime.length());
+        String time = substring_1 + ":" + substring_2;
+        return time;
     }
 
 
@@ -117,21 +134,21 @@ public class HistoricalJourneyDetailAdapter extends RecyclerAdapter<HistoricalJo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.view_1)
-        View view1;
-        @BindView(R.id.view_2)
-        View view2;
-        @BindView(R.id.view_3)
-        View view3;
         @BindView(R.id.icon_oval)
         ImageView iconOval;
+        @BindView(R.id.dashed_1)
+        ImageView dashed_icon_1;
+        @BindView(R.id.dashed_2)
+        ImageView dashed_icon_2;
+        @BindView(R.id.al_item)
+        AutoLinearLayout alItem;
         @BindView(R.id.tv_depart_time)
         TextView tvDepartTime;
         @BindView(R.id.tv_station)
         TextView tvStation;
-        @BindView(R.id.al_item)
-        AutoLinearLayout alItem;
+        @BindView(R.id.tv_station_person)
+        TextView tvStationPerson;
+
 
         public ViewHolder(View itemView) {
             super(itemView);

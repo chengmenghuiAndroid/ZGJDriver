@@ -16,11 +16,12 @@ import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
 import com.lty.zgj.driver.WebSocket.CommonResponse;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.broadcast.ToMainActivityBroadcastReceiver;
+import com.lty.zgj.driver.core.config.Constant;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
-import retrofit2.http.HEAD;
+import cn.droidlover.xdroidbase.cache.SharedPref;
 
 /**
  * Created by zk721 on 2018/1/28.
@@ -30,8 +31,7 @@ public class WebSocketService extends AbsBaseWebSocketService {
 
     @Override
     protected String getConnectUrl() {
-        return "ws://10.1.254.172:18089/diverSocket";
-//        return "ws://192.168.2.131:18089/diverSocket";
+        return "ws://116.205.13.132:18089/diverSocket";
     }
 
     @Override
@@ -41,20 +41,25 @@ public class WebSocketService extends AbsBaseWebSocketService {
 
             Log.e("WebSocketService", "textResponse-----"+textResponse);
             String substring = textResponse.substring(1, textResponse.length() - 16);
+            CommonResponse<String> response = JSON.parseObject(substring, new TypeReference<CommonResponse<String>>() {});
+
+
+
             Log.e("WebSocketService", "substring-----"+substring);
 
             JSONObject mJsonObject = new JSONObject(substring);
             JSONObject headerPacket = mJsonObject.getJSONObject("headerPacket");
-            JSONObject body = mJsonObject.getJSONObject("body");
-            String bodyDate = body.getString("bodyDate");
-
             int msgId = headerPacket.getInt("msgId");
 
-            if(msgId == 0x301){
+            if(msgId == 0x301){ //
+                JSONObject body = mJsonObject.getJSONObject("body");
+                JSONObject data = body.getJSONObject("data");
+                String bodyDate = data.getString("bodyDate");
                 onReceiveMessageData(BaseApplication.getContext(), bodyDate);
+            }else {
+                //鉴权业务类型
+                EventBus.getDefault().post(response);
             }
-
-            CommonResponse<String> response = JSON.parseObject(substring, new TypeReference<CommonResponse<String>>() {});
 
             if (response == null) {
                 EventBus.getDefault().post(new WebSocketSendDataErrorEvent("", textResponse, "响应数据为空"));
@@ -66,7 +71,6 @@ public class WebSocketService extends AbsBaseWebSocketService {
 //            }else{
 //                EventBus.getDefault().post(new WebSocketSendDataErrorEvent(response.getCommand().getPath(), textResponse, response.getMsg()));
 //            }
-            EventBus.getDefault().post(response);
         }catch(Exception e){
             //一般由于 JSON 解析时出现异常
             EventBus.getDefault().post(new WebSocketSendDataErrorEvent("", textResponse, "数据异常:" + e.getMessage()));
@@ -91,9 +95,20 @@ public class WebSocketService extends AbsBaseWebSocketService {
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
         builder.setAutoCancel(true);
-//        builder.setContentInfo(gtTransmitMessage);
+        builder.setContentText(gtTransmitMessage);
         builder.setContentTitle("普通通知");
         mNotificationManager.notify(1, builder.build());
 
+        SharedPref.getInstance(context).putInt(Constant.DOT_KET, -1);
+        //消息小红点通知
+        sendBroadcastReciver(context, String.valueOf(Constant.SHOW_DOT));
+
+    }
+
+    // 发送广播
+    private void sendBroadcastReciver(Context context, String value) {
+        Intent intent = new Intent("MyDotReceiver");
+        intent.putExtra("key", value);
+        context.sendBroadcast(intent);
     }
 }

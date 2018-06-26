@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
+import com.lty.zgj.driver.bean.DepartModel;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.utils.AutoUtils;
 
@@ -19,7 +21,7 @@ import cn.droidlover.xrecyclerview.RecyclerAdapter;
  * Created by Administrator on 2018/6/12.
  */
 
-public class DepartAdapter extends RecyclerAdapter<String, DepartAdapter.ViewHolder> {
+public class DepartAdapter extends RecyclerAdapter<DepartModel.ListBean, DepartAdapter.ViewHolder> {
 
 
     private int TYPE_ICON = 0;
@@ -64,36 +66,59 @@ public class DepartAdapter extends RecyclerAdapter<String, DepartAdapter.ViewHol
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (getItemViewType(position) == TYPE_ICON){
+        if (getItemViewType(position) == TYPE_ICON) {
             return;
         }
 
         final int pos = getRealPosition(holder);
-        String s = data.get(pos);
 
-        if (pos == 0) {
-            setInvisible(holder.dashed_icon_1);
-            holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.mipmap.start));
-        } else if (pos == data.size() - 1) {
-            setInvisible(holder.dashed_icon_2);
-            holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.mipmap.over));
-        } else {
-            setVisible(holder.dashed_icon_1);
-            setVisible(holder.dashed_icon_2);
-            holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.drawable.shape_oval_green));
-        }
+        if (data.size() > 0) {
 
-        if(pos == 1){
-            setGone(holder.dashed_icon_2);
-        }else if(pos == 2){
-            setGone(holder.dashed_icon_1);
+
+            DepartModel.ListBean departModel = data.get(pos);
+
+            if (pos == 0) {
+                setInvisible(holder.dashed_icon_1);
+                holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.mipmap.start));
+            } else if (pos == data.size() - 1) {
+                setInvisible(holder.dashed_icon_2);
+                holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.mipmap.over));
+            } else {
+                setVisible(holder.dashed_icon_1);
+                setVisible(holder.dashed_icon_2);
+                holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.drawable.shape_oval_green));
+            }
+
+            if (pos == 1) {
+                setGone(holder.dashed_icon_2);
+            } else if (pos == 2) {
+                setGone(holder.dashed_icon_1);
+            }
+
+            String stationTime = setArriveStationTime(departModel);
+            holder.tvDepartTime.setText(stationTime);
+            holder.tvStation.setText(departModel.getStationName());
+            int stationNo = departModel.getStationNo();
+            holder.tvStationPerson.setText(String.valueOf(stationNo));
         }
+    }
+
+    /**
+     * @param departModel
+     * @return
+     */
+    private String setArriveStationTime(DepartModel.ListBean departModel) {
+        String planTime = departModel.getPlanTime();
+        String substring_1 = planTime.substring(0, 2);
+        String substring_2 = planTime.substring(2, planTime.length());
+        String time = substring_1 + ":" + substring_2;
+        return time;
     }
 
 
     private int getRealPosition(RecyclerView.ViewHolder holder) {
         int position = holder.getLayoutPosition();
-        if(position > 2){
+        if (position > 2) {
             return mIconView == null ? position : position - 1;
         }
 
@@ -104,30 +129,6 @@ public class DepartAdapter extends RecyclerAdapter<String, DepartAdapter.ViewHol
         mIconView = iconView;
     }
 
-
-//    public class ViewIconHolder extends RecyclerView.ViewHolder {
-//        @BindView(R.id.view_1)
-//        View view1;
-//
-//        public ViewIconHolder(View view) {
-//            super(view);
-//            KnifeKit.bind(this, view);
-//        }
-//    }
-//
-//    public class ViewNormalHolder extends RecyclerView.ViewHolder {
-//        @BindView(R.id.view_3)
-//        View view3;
-//        @BindView(R.id.view_2)
-//        View view2;
-//        @BindView(R.id.al_item)
-//        AutoLinearLayout alItem;
-//
-//        public ViewNormalHolder(View view) {
-//            super(view);
-//            KnifeKit.bind(this, view);
-//        }
-//    }
 
     @Override
     public int getItemCount() {
@@ -143,10 +144,16 @@ public class DepartAdapter extends RecyclerAdapter<String, DepartAdapter.ViewHol
         ImageView dashed_icon_2;
         @BindView(R.id.al_item)
         AutoLinearLayout alItem;
+        @BindView(R.id.tv_depart_time)
+        TextView tvDepartTime;
+        @BindView(R.id.tv_station)
+        TextView tvStation;
+        @BindView(R.id.tv_station_person)
+        TextView tvStationPerson;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            if(itemView == mIconView) return;
+            if (itemView == mIconView) return;
             KnifeKit.bind(this, itemView);
             AutoUtils.auto(itemView);
         }

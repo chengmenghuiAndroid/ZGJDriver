@@ -16,5 +16,6 @@
     <color name="line_item">#DDDDDD</color>
     <color name="white">#FFFFFF</color>
     <color name="text_unselect_color">#B3FFFFFF</color>
+    <color name="red">#FF0000</color>
 
 </resources>

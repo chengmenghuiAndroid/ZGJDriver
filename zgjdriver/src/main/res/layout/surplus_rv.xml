@@ -7,12 +7,11 @@
     android:background="@color/white">
 
     <TextView
-        android:id="@+id/surplus"
+        android:id="@+id/tv_surplus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="今日(05月08日)行程  1趟"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="30px"
         android:textColor="#FF56556A"
         android:textSize="28px"/>
     <View

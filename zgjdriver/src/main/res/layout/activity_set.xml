@@ -3,43 +3,42 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FFEEEEF8">
 
 
     <include layout="@layout/custom_layout"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line_item"
-        android:layout_marginTop="10dp"/>
-
     <com.zhy.autolayout.AutoRelativeLayout
         android:id="@+id/ar_travel_history"
         android:layout_width="match_parent"
-        android:layout_height="88px">
+        android:layout_height="88px"
+        android:background="@color/white"
+        android:layout_marginTop="20px">
+
+        <ImageView
+            android:id="@+id/icon_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_history"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="我的历史出行"
-            android:textSize="32px"
+            android:textSize="30px"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"/>
+            android:layout_toRightOf="@id/icon_history"
+            android:layout_marginLeft="10px"
+            />
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line_item"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentBottom="true"/>
 
 
         <ImageView
             style="@style/person_center_next_style"
-            android:src="@drawable/btn_order_jump"
-            android:layout_centerVertical="true"
+            android:src="@mipmap/icon_arrow"
             />
 
     </com.zhy.autolayout.AutoRelativeLayout>
@@ -49,13 +48,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:background="@color/white"
+        android:layout_marginTop="20px">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line_item"
-            android:layout_marginTop="10dp"/>
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:id="@+id/personal_information"
@@ -63,27 +58,37 @@
             android:layout_height="88px">
 
 
-            <TextView
+            <ImageView
+                android:id="@+id/icon_personal_information"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="个人信息"
-                android:textSize="32px"
+                android:src="@mipmap/icon_personal_information"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="30px"/>
 
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个人信息"
+                android:textSize="30px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:layout_toRightOf="@id/icon_personal_information"/>
+
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/line_item"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentBottom="true"/>
+                android:layout_height="1px"
+                android:background="#FFE1E0FB"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"/>
 
 
             <ImageView
                 style="@style/person_center_next_style"
-                android:src="@drawable/btn_order_jump"
-                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_arrow"
                 />
 
         </com.zhy.autolayout.AutoRelativeLayout>
@@ -93,30 +98,37 @@
             android:layout_width="match_parent"
             android:layout_height="88px">
 
+            <ImageView
+                android:id="@+id/icon_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_help"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="帮助"
-                android:textSize="32px"
+                android:textSize="30px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"/>
+                android:layout_marginLeft="10px"
+                android:layout_toRightOf="@id/icon_help"/>
 
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/line_item"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentBottom="true"/>
+                android:layout_height="1px"
+                android:background="#FFE1E0FB"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"/>
 
 
             <ImageView
                 style="@style/person_center_next_style"
-                android:src="@drawable/btn_order_jump"
-                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_arrow"
                 />
-
         </com.zhy.autolayout.AutoRelativeLayout>
 
         <com.zhy.autolayout.AutoRelativeLayout
@@ -124,28 +136,27 @@
             android:layout_width="match_parent"
             android:layout_height="88px">
 
+            <ImageView
+                android:id="@+id/icon_about"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_about"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="关于坐公交"
-                android:textSize="32px"
+                android:textSize="30px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"/>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/line_item"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentBottom="true"/>
+                android:layout_marginLeft="10px"
+                android:layout_toRightOf="@id/icon_about"/>
 
 
             <ImageView
                 style="@style/person_center_next_style"
-                android:src="@drawable/btn_order_jump"
-                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_arrow"
                 />
 
         </com.zhy.autolayout.AutoRelativeLayout>
@@ -153,21 +164,15 @@
     </com.zhy.autolayout.AutoLinearLayout>
 
 
-    <com.zhy.autolayout.AutoRelativeLayout
+    <com.zhy.autolayout.AutoLinearLayout
         android:id="@+id/ar_login_btn"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
-        android:background="@drawable/shape_btn_circular"
-        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60px"
         android:layout_gravity="center_horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="退出登录"
-            android:textColor="@color/white"
-            android:layout_centerInParent="true"/>
+        <include layout="@layout/eline_login_btn"/>
 
-    </com.zhy.autolayout.AutoRelativeLayout>
+    </com.zhy.autolayout.AutoLinearLayout>
 
 </com.zhy.autolayout.AutoLinearLayout>

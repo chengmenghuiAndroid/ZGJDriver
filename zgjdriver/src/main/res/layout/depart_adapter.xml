@@ -62,21 +62,29 @@
 
         <TextView
             android:id="@+id/tv_station"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="光谷广场(公交站)"
             android:layout_marginLeft="30dp"
             android:layout_toRightOf="@id/tv_depart_time"
             android:layout_centerVertical="true"
-            android:textSize="12dp"
+            android:textSize="26px"
+            android:singleLine="true"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/tv_station_person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0人"
+            android:layout_marginLeft="30px"
+            android:layout_toRightOf="@id/tv_station"
+            android:layout_centerVertical="true"
+            android:textSize="26px"
             android:singleLine="true"
             android:layout_marginRight="5dp"/>
 
 
     </com.zhy.autolayout.AutoRelativeLayout>
-
-
-
-
 
 </com.zhy.autolayout.AutoLinearLayout>

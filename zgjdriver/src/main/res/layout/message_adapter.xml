@@ -2,55 +2,78 @@
 <com.zhy.autolayout.AutoRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="160px"
+    android:background="@color/white">
 
 
-    <ImageView
-        android:id="@+id/msg_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@mipmap/ic_launcher"
-        android:layout_marginLeft="15dp"
-        android:layout_centerVertical="true"/>
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="160px">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image_type"
+            android:layout_width="100px"
+            android:layout_height="100px"
+            android:src="@mipmap/pic_zgj"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"/>
 
 
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toRightOf="@+id/msg_icon"
-        android:layout_centerVertical="true">
         <TextView
-            android:id="@+id/msg_title"
+            android:id="@+id/tv_msg_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-
-            android:text="坐公交官方"/>
+            android:text="坐公交官方"
+            android:textColor="#FF292835"
+            android:textSize="30px"
+            android:layout_toRightOf="@id/profile_image_type"
+            android:layout_marginTop="40px"
+            android:layout_marginLeft="30px"/>
 
         <TextView
-            android:layout_width="160dp"
+            android:id="@+id/tv_msg_time"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/msg_title"
-            android:layout_marginLeft="10dp"
+            android:text="17:40:40"
+            android:textColor="#FF9FA7B3"
+            android:textSize="24px"
+            android:layout_marginTop="42px"
+            android:layout_marginLeft="30px"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30px"/>
+
+        <TextView
+            android:id="@+id/tv_msg_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tv_msg_title"
+            android:layout_toLeftOf="@+id/tv_msg_time"
+            android:layout_toStartOf="@+id/tv_msg_time"
+            android:text="2018.06.28"
+            android:textColor="#FF9FA7B3"
+            android:textSize="24px"/>
+
+        <TextView
+            android:id="@+id/tv_msg_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="通知：中国向世界打开大门、实行改革开放…"
+            android:textColor="#FF9897B8"
+            android:textSize="30px"
+            android:layout_toRightOf="@id/profile_image_type"
+            android:layout_marginLeft="30px"
             android:singleLine="true"
-            android:text="通知:jnkklnknknknknknknknknknknkk"/>
-    </com.zhy.autolayout.AutoLinearLayout>
+            android:layout_below="@id/tv_msg_title"
+            android:layout_marginTop="22px"
+            android:layout_marginRight="30px"/>
 
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2018-12-12 12:12:11"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line_item"
-        android:layout_alignParentBottom="true"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#FFE1E0FB"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"/>
+    </com.zhy.autolayout.AutoRelativeLayout>
 
 </com.zhy.autolayout.AutoRelativeLayout>

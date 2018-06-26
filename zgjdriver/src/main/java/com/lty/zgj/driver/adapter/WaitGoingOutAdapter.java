@@ -8,9 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
+import com.lty.zgj.driver.bean.TripListModel;
 import com.zhy.autolayout.utils.AutoUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroid.kit.KnifeKit;
@@ -24,18 +30,24 @@ import cn.droidlover.xrecyclerview.XRecyclerView;
 public class WaitGoingOutAdapter extends RecyclerAdapter<String, RecyclerView.ViewHolder> {
 
     DisplayMetrics dm;
-    private WaitGoingOutItemAdapter goingOutItemAdapter;
-    private WaitGoingOutTravelAdapter waitGoingOutTravelAdapter;
-
+//    private WaitGoingOutItemAdapter goingOutItemAdapter;
+//    private WaitGoingOutTravelAdapter waitGoingOutTravelAdapter; //未出行
+    private  static WaitGoingOutItemAdapter mSurplusAdapter;
+    private  static WaitGoingOutTravelAdapter mTravelAdapter;
+    private  static TripListModel mtripListModel;
     public static enum ITEM_TYPE {
         ITEM_TYPE_surplus, //剩余的行程
         ITEM_TYPE_travel   //未出行的
     }
 
-    public WaitGoingOutAdapter(Context context) {
+    public WaitGoingOutAdapter(Context context, WaitGoingOutItemAdapter surplusAdapter, WaitGoingOutTravelAdapter travelAdapter,
+                               TripListModel tripListModel) {
         super(context);
         dm = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        this.mSurplusAdapter = surplusAdapter;
+        this.mTravelAdapter = travelAdapter;
+        this.mtripListModel = tripListModel;
     }
 
     @Override
@@ -75,17 +87,50 @@ public class WaitGoingOutAdapter extends RecyclerAdapter<String, RecyclerView.Vi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+        List<TripListModel.NoStartListBean> noStartList = mtripListModel.getNoStartList();
+        List<TripListModel.TodayListBean> todayList = mtripListModel.getTodayList();
+
+
+
+
+
+
         if(holder instanceof ViewSurplusHolder){
             ((ViewSurplusHolder) holder).surplusRe.setNestedScrollingEnabled(false);
             setLayoutManager(((ViewSurplusHolder) holder).surplusRe);
-            ((ViewSurplusHolder) holder).surplusRe.setAdapter(getSurplusAdapter());
+            ((ViewSurplusHolder) holder).surplusRe.setAdapter(mSurplusAdapter);
+            if(todayList != null && todayList.size() >0){
+                ((ViewSurplusHolder) holder).tvSurplus.setText("今日"+(getSysTime())+"行程    "+todayList.size()+"趟");
+            }else {
+                ((ViewSurplusHolder) holder).tvSurplus.setText("今日"+(getSysTime())+"行程    "+todayList.size()+"趟");
+            }
+
+
+            //今日(05月08日)行程  1趟
 
         } else if(holder instanceof ViewTravelHolder) {
             ((ViewTravelHolder) holder).travelRe.setNestedScrollingEnabled(false);
             setLayoutManager(((ViewTravelHolder) holder).travelRe);
-            ((ViewTravelHolder) holder).travelRe.setAdapter(getTravelAdapter());
+            ((ViewTravelHolder) holder).travelRe.setAdapter(mTravelAdapter);
+            ((ViewTravelHolder) holder).tvTravel.setText("其余未出行    "+noStartList.size()+"趟");
         }
     }
+
+    private  String getSysTime() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM月dd日");// HH:mm:ss
+        //获取当前时间
+        Date date = new Date(System.currentTimeMillis());
+        String formatTime = simpleDateFormat.format(date);
+        return formatTime;
+    }
+
+    private String getStringDate(String dateTime) {
+        String year = dateTime.substring(0, 4);
+        String month = dateTime.substring(4, 6);
+        String day = dateTime.substring(6, dateTime.length());
+        return  month+"月"+ day+"日";
+    }
+
 
 
     @Override
@@ -112,6 +157,9 @@ public class WaitGoingOutAdapter extends RecyclerAdapter<String, RecyclerView.Vi
     public class ViewTravelHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.travel_re)
         XRecyclerView travelRe;
+        @BindView(R.id.tv_travel)
+        TextView tvTravel;
+
         public ViewTravelHolder(View view) {
             super(view);
             KnifeKit.bind(this, view);
@@ -122,6 +170,8 @@ public class WaitGoingOutAdapter extends RecyclerAdapter<String, RecyclerView.Vi
     public class ViewSurplusHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.surplus_re)
         XRecyclerView surplusRe;
+        @BindView(R.id.tv_surplus)
+        TextView tvSurplus;
 
         public ViewSurplusHolder(View view) {
             super(view);
@@ -131,32 +181,32 @@ public class WaitGoingOutAdapter extends RecyclerAdapter<String, RecyclerView.Vi
     }
 
 
-    public WaitGoingOutItemAdapter getSurplusAdapter() {
-        if(goingOutItemAdapter == null){
-
-            goingOutItemAdapter = new WaitGoingOutItemAdapter(context);
-
-        }else {
-            goingOutItemAdapter.notifyDataSetChanged();
-        }
-
-        return goingOutItemAdapter;
-
-    }
-
-
-    public WaitGoingOutTravelAdapter getTravelAdapter() {
-        if(waitGoingOutTravelAdapter == null){
-            waitGoingOutTravelAdapter = new WaitGoingOutTravelAdapter(context);
-
-        }else {
-            waitGoingOutTravelAdapter.notifyDataSetChanged();
-        }
-
-        return waitGoingOutTravelAdapter;
-
-    }
-
+//    public WaitGoingOutItemAdapter getSurplusAdapter() {
+//        if(goingOutItemAdapter == null){
+//
+//            goingOutItemAdapter = new WaitGoingOutItemAdapter(context);
+//
+//        }else {
+//            goingOutItemAdapter.notifyDataSetChanged();
+//        }
+//
+//        return goingOutItemAdapter;
+//
+//    }
+//
+//
+//    public WaitGoingOutTravelAdapter getTravelAdapter() {
+//        if(waitGoingOutTravelAdapter == null){
+//            waitGoingOutTravelAdapter = new WaitGoingOutTravelAdapter(context);
+//
+//        }else {
+//            waitGoingOutTravelAdapter.notifyDataSetChanged();
+//        }
+//
+//        return waitGoingOutTravelAdapter;
+//
+//    }
+//
     public void setLayoutManager(XRecyclerView recyclerView) {
         recyclerView.verticalLayoutManager(context);
 

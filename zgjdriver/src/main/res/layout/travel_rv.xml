@@ -15,9 +15,10 @@
         android:id="@+id/tv_travel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="其余未出行   3趟"
+        android:text="其余未出行   0趟"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="30dp"/>
+        android:layout_marginLeft="30px"
+        android:textColor="#FF56556A"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

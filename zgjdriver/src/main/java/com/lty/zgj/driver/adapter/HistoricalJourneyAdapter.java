@@ -52,6 +52,16 @@ public class HistoricalJourneyAdapter extends SimpleRecAdapter<HistoricalJourney
         String dateTime = recordsBean.getDate();
         String dataYmd = getString(dateTime);
         holder.tvDataTime.setText(dataYmd);
+        holder.tvRouteNameLeft.setText(recordsBean.getStartName());
+        holder.tvRouteNameRight.setText(recordsBean.getEndName());
+
+
+        String endTime = recordsBean.getEndTime();
+
+        holder.tvTime.setText(setArriveStationTime(endTime));
+        String startTime = recordsBean.getStartTime();
+
+        holder.tvYmd.setText(setArriveStationTime(startTime));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +71,13 @@ public class HistoricalJourneyAdapter extends SimpleRecAdapter<HistoricalJourney
         });
 
 
+    }
+
+    private String setArriveStationTime(String planTime) {
+        String substring_1 = planTime.substring(0, 2);
+        String substring_2 = planTime.substring(2, planTime.length());
+        String time = substring_1 + ":" + substring_2;
+        return time;
     }
 
     @NonNull
