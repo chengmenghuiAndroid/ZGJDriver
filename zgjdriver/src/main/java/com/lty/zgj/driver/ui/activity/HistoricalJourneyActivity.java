@@ -10,6 +10,7 @@ import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.adapter.HistoricalJourneyAdapter;
 import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.bean.HistoricalJourneyModel;
+import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
@@ -17,6 +18,7 @@ import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidbase.cache.SharedPref;
 import cn.droidlover.xdroidbase.router.Router;
 import cn.droidlover.xrecyclerview.RecyclerItemCallback;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
@@ -38,6 +40,7 @@ public class HistoricalJourneyActivity extends BaseXActivity {
     @BindView(R.id.contentLayout)
     XRecyclerContentLayout contentLayout;
     private HistoricalJourneyAdapter historicalJourneyAdapter;
+    private int driverId;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -46,7 +49,9 @@ public class HistoricalJourneyActivity extends BaseXActivity {
 //                .init();
         tvTitle.setText("历史行程");
         initAdapter();
-        fetchTripDate(23, 0);
+        driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
+
+        fetchTripDate(driverId, 0);
     }
 
     @Override
@@ -62,12 +67,12 @@ public class HistoricalJourneyActivity extends BaseXActivity {
                 .setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
                     @Override
                     public void onRefresh() {
-                        fetchTripDate(23, 0);
+                        fetchTripDate(driverId, 0);
                     }
 
                     @Override
                     public void onLoadMore(int page) {
-                        fetchTripDate(23, page);
+                        fetchTripDate(driverId, page);
                     }
                 });
 

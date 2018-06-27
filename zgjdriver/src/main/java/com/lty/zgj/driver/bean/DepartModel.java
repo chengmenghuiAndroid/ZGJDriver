@@ -30,7 +30,7 @@ public class DepartModel implements Serializable{
     private String date;
     private int busId;
     private int routeId;
-    private int status;
+    private int status;// 状态  0 未开始  1:进行中  2 已结束
     private List<ListBean> list;
     private List<PointListBean> pointList;
 
@@ -151,6 +151,28 @@ public class DepartModel implements Serializable{
         private double lon;
         private double lat;
         private int peopleCount;
+        private boolean uploadPoint;
+        private int tripNo;
+
+
+        public int getTripNo() {
+            return tripNo;
+        }
+
+        public void setTripNo(int tripNo) {
+            this.tripNo = tripNo;
+        }
+
+
+        public boolean isUploadPoint() {
+            return uploadPoint;
+        }
+
+        public void setUploadPoint(boolean uploadPoint) {
+            this.uploadPoint = uploadPoint;
+        }
+
+
 
         public int getStationId() {
             return stationId;

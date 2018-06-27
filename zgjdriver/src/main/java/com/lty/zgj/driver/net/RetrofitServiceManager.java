@@ -8,6 +8,7 @@ import com.zhy.http.okhttp.cookie.store.PersistentCookieStore;
 
 import java.util.concurrent.TimeUnit;
 
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -28,10 +29,16 @@ public class RetrofitServiceManager {
         CookieJarImpl cookieJar = new CookieJarImpl(new PersistentCookieStore(BaseApplication.getContext()));
         // 设置具体的证书
 //        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(证书的inputstream, null, null);
-        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder()
+//        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder()
+//                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+//                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+//                .cookieJar(cookieJar);//配置cookie
+
+        OkHttpClient.Builder okHttpClient = RetrofitUrlManager.getInstance().with(new OkHttpClient.Builder()) //RetrofitUrlManager 初始化
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
-                .cookieJar(cookieJar);//配置cookie
+                .cookieJar(cookieJar);//配置cookie;
+
 
         //配置https
 //      okHttpClient.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);

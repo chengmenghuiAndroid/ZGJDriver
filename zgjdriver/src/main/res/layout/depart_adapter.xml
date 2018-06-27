@@ -54,7 +54,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/shape_oval_green"
-            android:text="7:00"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:textSize="12dp"/>
@@ -64,7 +63,6 @@
             android:id="@+id/tv_station"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="光谷广场(公交站)"
             android:layout_marginLeft="30dp"
             android:layout_toRightOf="@id/tv_depart_time"
             android:layout_centerVertical="true"
@@ -76,13 +74,13 @@
             android:id="@+id/tv_station_person"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0人"
             android:layout_marginLeft="30px"
             android:layout_toRightOf="@id/tv_station"
             android:layout_centerVertical="true"
             android:textSize="26px"
             android:singleLine="true"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp"
+            android:textColor="#FF5349FC"/>
 
 
     </com.zhy.autolayout.AutoRelativeLayout>

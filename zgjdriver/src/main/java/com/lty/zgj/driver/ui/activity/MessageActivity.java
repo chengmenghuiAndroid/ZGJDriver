@@ -54,8 +54,8 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
         EventBus.getDefault().register(this);
         closeRoundProgressDialog();//关闭加载对话框
         initRv();
-
-        fetchDriverNoticeInfoData(1, 0);
+        int driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
+        fetchDriverNoticeInfoData(driverId, 0);
 
     }
 
@@ -71,7 +71,9 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
 
             @Override
             public void onLoadMore(int page) {
-                fetchDriverNoticeInfoData(1, page);
+                int driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
+
+                fetchDriverNoticeInfoData(driverId, page);
 
             }
         });

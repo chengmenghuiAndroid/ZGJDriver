@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 
+import com.lty.zgj.driver.net.UrlKit;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
+
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 
 
 /**
@@ -44,6 +47,10 @@ public class BaseApplication extends Application {
         context = this;
         Intent intent = new Intent(this, WebSocketService.class);
         startService(intent);
+
+        //将每个 BaseUrl 进行初始化,运行时可以随时改变 DOMAIN_NAME 对应的值,从而达到切换 BaseUrl 的效果
+        RetrofitUrlManager.getInstance().putDomain(UrlKit.URL_YD_NAME, UrlKit.URL_YD);
+        RetrofitUrlManager.getInstance().putDomain(UrlKit.URL__CQJ_NAME, UrlKit.URL__CQJ);
     }
 
 

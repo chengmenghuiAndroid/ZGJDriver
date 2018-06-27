@@ -25,7 +25,7 @@ import com.lty.zgj.driver.adapter.DepartOverAdapter;
 import com.lty.zgj.driver.adapter.DepartOverFullAdapter;
 import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.bean.DepartModel;
-import com.lty.zgj.driver.bean.EndBusModel;
+import com.lty.zgj.driver.bean.HistoricalJourneyDetailModel;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
@@ -95,8 +95,28 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
 
         layoutParams = autoLinearLayout.getLayoutParams();
         String scheduleId = getIntent().getStringExtra("scheduleId");
-        fetchData(scheduleId);
+        fetchTripDetailData(scheduleId);
+
     }
+
+    private void fetchTripDetailData(String Id) {
+        ObjectLoader.getInstance().getTripDetailData(new ProgressSubscriber<HistoricalJourneyDetailModel>(new SubscriberOnNextListener<HistoricalJourneyDetailModel>() {
+            @Override
+            public void onNext(HistoricalJourneyDetailModel historicalJourneyDetailModel) {
+
+                if (historicalJourneyDetailModel != null) {
+
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("Throwable", "---" + e.getMessage());
+            }
+        }, context), Id);
+    }
+
 
 
     private void initRv() {
@@ -145,19 +165,6 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
         recyclerView.verticalLayoutManager(context);
     }
 
-    private void fetchData(String  scheduleId) {
-        ObjectLoader.getInstance().getEndBusModelData(new ProgressSubscriber<EndBusModel>(new SubscriberOnNextListener<EndBusModel>() {
-            @Override
-            public void onNext(EndBusModel endBusModel) {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-        }, context), scheduleId);
-    }
 
     /**
      * 检查定位权限

@@ -15,10 +15,13 @@ import com.lty.zgj.driver.bean.TripListModel;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
+
+import static me.jessyan.retrofiturlmanager.RetrofitUrlManager.DOMAIN_NAME_HEADER;
 
 /**
  * Created by cheng on 2017/12/5.
@@ -35,11 +38,9 @@ public interface ZGJDService {
      * @param driverId 司机Id
      * @return
      */
-    @GET("trip/{driverId}/{page}")
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
+    @GET("/trip/{driverId}/{page}")
     Observable<HttpResult<HistoricalJourneyModel>> getTrip(@Path("driverId") int driverId, @Path("page") int page);
-
-
-
 
 
     //192.168.2.31:8090/driver/trip/info/1/5/11   5行程编号 11线路id
@@ -47,16 +48,18 @@ public interface ZGJDService {
      * @param scheduleId
      * @return
      */
-    @GET("trip/info/{scheduleId}")
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
+    @GET("/trip/info/{scheduleId}")
     Observable<HttpResult<HistoricalJourneyDetailModel>> getTripDetail(@Path("scheduleId") String scheduleId);
 
 
     /**
-     * 发车
+     * 获取发车数据
      * @param driverId
      * @return
      */
-    @POST("trip/today/{driverId}")
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
+    @POST("/trip/today/{driverId}")
     Observable<HttpResult<DepartModel>> getDepartModel(@Path("driverId") int driverId);
 
 
@@ -65,7 +68,8 @@ public interface ZGJDService {
      * @param driverId
      * @return
      */
-    @POST("trip/getTripList/{driverId}")
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
+    @POST("/trip/getTripList/{driverId}")
     Observable<HttpResult<TripListModel>> getTripListModel(@Path("driverId") int driverId);
 
     /**
@@ -73,17 +77,17 @@ public interface ZGJDService {
      * @param scheduleId 班次id
      * @return
      */
-    @POST("trip/startBus/{scheduleId}")
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
+    @POST("/trip/startBus/{scheduleId}")
     Observable<HttpResult<StartBustModel>> startBus(@Path("scheduleId") String scheduleId);
-
-
 
     /**
      *发车完成
      * @param scheduleId 班次id
      * @return
      */
-    @POST("trip/endBus/{scheduleId}")
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
+    @POST("/trip/endBus/{scheduleId}")
     Observable<HttpResult<EndBusModel>> endBus(@Path("scheduleId") String scheduleId);
 
     /**
@@ -91,7 +95,8 @@ public interface ZGJDService {
      * @param driverId 司机id
      * @return
      */
-    @POST("driverNoticeInfo/search")
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL__CQJ_NAME})
+    @POST("/driverNoticeInfo/search")
     Observable<HttpResult<DriverNoticeInfoModel>> driverNoticeInfo(@Query("driverId") int driverId,
                                                                    @Query("page") int page);
 
@@ -100,7 +105,8 @@ public interface ZGJDService {
      * @param noticeId 条目id
      * @return
      */
-    @GET("driverNoticeInfo/getNotice/{noticeId}")
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL__CQJ_NAME})
+    @GET("/driverNoticeInfo/getNotice/{noticeId}")
     Observable<HttpResult<DriverNoticeInfoDetailModel>> driverNoticeInfoDetail(@Path("noticeId") int noticeId);
 
 

@@ -9,6 +9,7 @@ import com.lty.zgj.driver.adapter.WaitGoingOutItemAdapter;
 import com.lty.zgj.driver.adapter.WaitGoingOutTravelAdapter;
 import com.lty.zgj.driver.base.BaseXFragment;
 import com.lty.zgj.driver.bean.TripListModel;
+import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
@@ -16,6 +17,7 @@ import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidbase.cache.SharedPref;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 
@@ -36,6 +38,7 @@ public class WaitGoingOutFragment extends BaseXFragment {
     private TripListModel tripListModelData;
     private WaitGoingOutItemAdapter surplusAdapter;
     private WaitGoingOutTravelAdapter travelAdapter;
+    private int driverId;
 
 
     public void setLayoutManager(XRecyclerView recyclerView) {
@@ -83,7 +86,8 @@ public class WaitGoingOutFragment extends BaseXFragment {
      */
     @Override
     protected void lazyLoad() {
-        fetchTripListData(23);
+        driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
+        fetchTripListData(driverId);
     }
 
     /**

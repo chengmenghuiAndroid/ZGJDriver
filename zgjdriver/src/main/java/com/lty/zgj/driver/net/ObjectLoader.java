@@ -142,6 +142,8 @@ public class ObjectLoader {
         toSubscribe(modelObservable, startBustModelSubscriber);
     }
 
+
+
     /**
      * 发车完成
      * @param endBusModelSubscriber

@@ -52,7 +52,7 @@ public class WebSocketRequst {
      * @param gpsTime gps时间(以秒为单位的时间戳)
      * @return
      */
-    public Map<String, Object> gpsUpload(int scheduleId, int routeId, double longitude, double latitude,
+    public Map<String, Object> gpsUpload(String scheduleId, int routeId, double longitude, double latitude,
                                          String cityCode, int busId, int driverId, long gpsTime){
         Map<String, Object> params = new HashMap<>();
         params.put("scheduleId", scheduleId);
@@ -80,14 +80,15 @@ public class WebSocketRequst {
      * @return
      */
     public Map<String, Object> travelPathUpload(int scheduleTripId, int routeId, int stationId, String stationName,
-                                                long stationTime, long scheduleDate, int busId){
+                                                long stationTime, int busId, String scheduleId){
         Map<String, Object> params = new HashMap<>();
         params.put("scheduleTripId", scheduleTripId);
         params.put("routeId", routeId);
         params.put("stationId", stationId);
         params.put("stationName", stationName);
-        params.put("scheduleDate", scheduleDate);
+        params.put("stationTime", stationTime);
         params.put("busId", busId);
+        params.put("scheduleId", scheduleId);
         return params;
     }
 

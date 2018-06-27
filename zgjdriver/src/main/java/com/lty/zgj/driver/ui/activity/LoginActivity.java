@@ -72,15 +72,15 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
             EventBus.getDefault().register(this);
         }
         tvBtn.setText("登录");
-        etPhoneNumber.setText("13566668888");
-        et_pws.setText("123456");
         initCountDownTimer();
     }
 
 
     @OnClick({
             R.id.ar_login_btn,
-            R.id.tv_send_code
+            R.id.tv_send_code,
+            R.id.logo_icon,
+
     })
 
 
@@ -109,6 +109,12 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
 
             case R.id.tv_send_code:
                 countDownTimerUtils.start();
+                break;
+            case R.id.logo_icon:
+//                etPhoneNumber.setText("13995534205");
+//                et_pws.setText("534205");
+                etPhoneNumber.setText("13554011992");
+                et_pws.setText("011992");
                 break;
         }
     }

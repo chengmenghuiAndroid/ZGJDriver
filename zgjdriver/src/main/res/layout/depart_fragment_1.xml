@@ -51,11 +51,11 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_depart_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30px"
                     android:layout_marginTop="30px"
-                    android:text="今天(05月08日)"
                     android:textColor="#FFFF3E9E"
                     android:textSize="24px"/>
 
@@ -66,7 +66,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20px"
-                    android:text="鄂A·X3396"
                     android:textColor="#FF56556A"
                     android:textSize="26px"/>
 
@@ -84,7 +83,6 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="30px"
-                        android:text="光谷广场(公交站)"
                         android:textColor="#FF292835"
                         android:textSize="30px"/>
 
@@ -104,7 +102,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20px"
                         android:layout_toRightOf="@id/icon_arrowhead"
-                        android:text="工程大学(公交站)"
                         android:textColor="#FF292835"
                         android:textSize="30px"/>
 
