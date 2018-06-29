@@ -58,10 +58,6 @@ public class HistoricalJourneyDetailAdapter extends RecyclerAdapter<HistoricalJo
         if (getItemViewType(position) == TYPE_ICON) return;
 
 
-        if (getItemViewType(position) == TYPE_ICON) {
-            return;
-        }
-
         final int pos = getRealPosition(holder);
 
         if (data.size() > 0) {
@@ -93,6 +89,13 @@ public class HistoricalJourneyDetailAdapter extends RecyclerAdapter<HistoricalJo
             holder.tvStation.setText(stationsBean.getStationName());
             int stationNo = stationsBean.getStationNo();
             holder.tvStationPerson.setText(String.valueOf(stationNo));
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    getRecItemClick().onItemClick();
+                }
+            });
         }
 
     }

@@ -3,6 +3,7 @@ package com.lty.zgj.driver.ui.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class HistoricalJourneyActivity extends BaseXActivity {
 //                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
 //                .init();
         tvTitle.setText("历史行程");
+        getUiDelegate().visible(true, navButton);
         initAdapter();
         driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
 
@@ -153,5 +155,9 @@ public class HistoricalJourneyActivity extends BaseXActivity {
             HistoricalJourneyDetailActivity.launch(context, status, tripNo, id);
         }
     };
+
+    public void back(View view) {
+        finish();
+    }
 
 }

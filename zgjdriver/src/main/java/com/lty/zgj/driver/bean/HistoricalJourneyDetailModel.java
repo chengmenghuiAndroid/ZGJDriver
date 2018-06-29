@@ -41,6 +41,16 @@ public class HistoricalJourneyDetailModel {
     private List<RelAssitsBean> relAssits;
     private List<StationsBean> stations;
     private List<AssitsBean> assits;
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
 
     public String getDate() {
         return date;

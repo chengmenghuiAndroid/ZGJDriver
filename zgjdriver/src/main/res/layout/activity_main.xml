@@ -53,7 +53,7 @@
 
         <com.flyco.tablayout.SlidingTabLayout
             android:id="@+id/tl_1"
-            android:layout_width="match_parent"
+            android:layout_width="240px"
             android:layout_height="48dp"
             tl:tl_textAllCaps="true"
             tl:tl_textBold="BOTH"
@@ -61,11 +61,9 @@
             tl:tl_textSelectColor="@color/white"
             tl:tl_textUnselectColor="@color/text_unselect_color"
             tl:tl_tab_space_equal="true"
-            android:layout_toRightOf="@id/tv_set"
-            android:layout_toLeftOf="@id/tv_msg"
-            android:layout_marginLeft="150px"
-            android:layout_marginRight="150px"
-            tl:tl_indicator_width="36px"/>
+            tl:tl_indicator_width="36px"
+            android:layout_centerHorizontal="true"
+            />
 
     </com.zhy.autolayout.AutoRelativeLayout>
 

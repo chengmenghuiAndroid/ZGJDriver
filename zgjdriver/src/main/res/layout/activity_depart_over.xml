@@ -137,7 +137,6 @@
                             android:id="@+id/tv_late_departure"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="光谷大道当代国际花园,未按时发车"
                             android:textColor="#FFFF3E9E"
                             android:textSize="28px"
                             android:layout_marginTop="40px"
@@ -158,7 +157,7 @@
                android:layout_marginBottom="30px"/>
 
             <com.zhy.autolayout.AutoLinearLayout
-                android:id="@+id/al_btn"
+                android:id="@+id/al_btn_complete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"

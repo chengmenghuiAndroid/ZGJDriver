@@ -28,6 +28,7 @@ public class DepartAdapter extends RecyclerAdapter<DepartModel.ListBean, DepartA
     private int TYPE_NORMAL = 1;
     private View mIconView;
     private View view;
+    private int TAG_DEPART = 3;
 
     public DepartAdapter(Context context) {
         super(context);
@@ -65,7 +66,7 @@ public class DepartAdapter extends RecyclerAdapter<DepartModel.ListBean, DepartA
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (getItemViewType(position) == TYPE_ICON) {
             return;
         }
@@ -75,7 +76,7 @@ public class DepartAdapter extends RecyclerAdapter<DepartModel.ListBean, DepartA
         if (data.size() > 0) {
 
 
-            DepartModel.ListBean departModel = data.get(pos);
+            final DepartModel.ListBean departModel = data.get(pos);
 
             if (pos == 0) {
                 setInvisible(holder.dashed_icon_1);
@@ -100,6 +101,13 @@ public class DepartAdapter extends RecyclerAdapter<DepartModel.ListBean, DepartA
             holder.tvStation.setText(departModel.getStationName());
             int stationNo = departModel.getStationNo();
             holder.tvStationPerson.setText(String.valueOf(stationNo)+"人");
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getRecItemClick().onItemClick(position, departModel, TAG_DEPART, holder);
+                }
+            });
         }
     }
 

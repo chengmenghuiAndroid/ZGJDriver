@@ -21,6 +21,8 @@ import cn.droidlover.xdroid.kit.KnifeKit;
 public class WaitGoingOutTravelAdapter extends SimpleRecAdapter<TripListModel.NoStartListBean, WaitGoingOutTravelAdapter.ViewHolder> {
 
 
+    private static final int NO_START_DEPART = 100002;
+
     public WaitGoingOutTravelAdapter(Context context) {
         super(context);
     }
@@ -36,8 +38,8 @@ public class WaitGoingOutTravelAdapter extends SimpleRecAdapter<TripListModel.No
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        TripListModel.NoStartListBean noStartListBean = data.get(position);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final TripListModel.NoStartListBean noStartListBean = data.get(position);
         holder.tvPlateNumbers.setText(noStartListBean.getBusPlateNumber());
         holder.tvStationStart.setText(noStartListBean.getStartName());
         holder.tvStationEnd.setText(noStartListBean.getEndName());
@@ -48,6 +50,14 @@ public class WaitGoingOutTravelAdapter extends SimpleRecAdapter<TripListModel.No
         String stationEndTime = setArriveStationTime(noStartListBean.getEndTime());
         holder.startTime.setText(stationStartTime);
         holder.endTime.setText(stationEndTime);
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getRecItemClick().onItemClick(position, noStartListBean,NO_START_DEPART, holder);
+            }
+        });
     }
 
 

@@ -37,9 +37,9 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="张三"
                 android:textSize="32px"
                 android:textColor="#FFFFFFFF"/>
 
@@ -77,9 +77,9 @@
                 android:layout_marginLeft="30px"/>
 
             <TextView
+                android:id="@+id/tv_tel_numbers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="11111111"
                 android:textSize="32px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="30px"
@@ -105,6 +105,7 @@
 
 
             <TextView
+                android:id="@+id/tv_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="住址"
@@ -116,7 +117,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="金融港"
                 android:textSize="32px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="30px"
@@ -130,7 +130,8 @@
                 android:background="@color/line_item"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"/>
+                android:layout_marginRight="30px"
+                android:visibility="gone"/>
 
 
 
@@ -138,7 +139,8 @@
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="88px">
+            android:layout_height="88px"
+            android:visibility="gone">
 
 
             <TextView
@@ -153,12 +155,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="512km"
                 android:textSize="32px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="30px"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="30dp"/>
+                android:layout_marginRight="30dp"
+                />
 
 
         </com.zhy.autolayout.AutoRelativeLayout>

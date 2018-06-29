@@ -8,25 +8,51 @@
         android:id="@+id/tv_travel_itinerary_null"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:visibility="gone">
 
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/pic_bus"
-            android:layout_marginTop="100px"/>
+            android:layout_marginTop="100px"
+            android:src="@mipmap/pic_bus"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="您今日没有定制公交发车任务，请好好休息~"
             android:layout_marginTop="60px"
-            android:textSize="28px"
-            android:textColor="#FF9897B8"/>
+            android:text="您今日没有定制公交发车任务，请好好休息~"
+            android:textColor="#FF9897B8"
+            android:textSize="28px"/>
 
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/au_ar_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFEEEEF8"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100px"
+            android:src="@mipmap/icon_loading"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60px"
+            android:text="加载中..."
+            android:textColor="#FF9897B8"
+            android:textSize="28px"/>
     </com.zhy.autolayout.AutoLinearLayout>
 
 
@@ -124,8 +150,9 @@
                 <com.zhy.autolayout.AutoLinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60px"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
                     <ImageView
                         android:id="@+id/tv_unfoldRv_down"
                         android:layout_width="wrap_content"
@@ -153,30 +180,49 @@
             </com.zhy.autolayout.AutoLinearLayout>
 
 
-            <!--<com.zhy.autolayout.AutoLinearLayout-->
-                <!--android:id="@+id/al_autoLinearLayout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@id/au_al"-->
-                <!--android:orientation="vertical">-->
-
-
-
-            <!--</com.zhy.autolayout.AutoLinearLayout>-->
-
         </com.zhy.autolayout.AutoRelativeLayout>
 
 
-
-        <com.amap.api.maps.TextureMapView
-            android:id="@+id/map"
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="581px"
-            android:layout_below="@id/au_ar"
+            android:layout_height="wrap_content"
             android:layout_above="@id/al_btn"
+            android:layout_below="@id/au_ar"
             android:layout_marginBottom="30px">
-        </com.amap.api.maps.TextureMapView>
 
+            <com.zhy.autolayout.AutoFrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.amap.api.maps.TextureMapView
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="581px">
+
+                </com.amap.api.maps.TextureMapView>
+
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:id="@+id/au_ar_bounds"
+                    android:layout_width="66px"
+                    android:layout_height="66px"
+                    android:background="@drawable/shape_corner"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginRight="30px"
+                    android:layout_marginBottom="30px">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_overview"
+                        android:layout_centerInParent="true"/>
+
+                </com.zhy.autolayout.AutoRelativeLayout>
+
+
+            </com.zhy.autolayout.AutoFrameLayout>
+
+
+        </com.zhy.autolayout.AutoLinearLayout>
 
 
         <com.zhy.autolayout.AutoLinearLayout

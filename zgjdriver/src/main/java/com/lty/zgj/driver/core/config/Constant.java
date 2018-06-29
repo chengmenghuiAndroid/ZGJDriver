@@ -14,6 +14,8 @@ public class Constant {
     public static final int WAIT_OUT = 10001;
     public static final int EVENT_DEPART = 10002;
     public static final String DRIVER_ID = "driverId";
+    public static final int CLICK_ITEM = 10003;
+    public static final int CLICK_DEPART_TAB = 10004;
     public static String isLoginSuccess = "isLoginSuccess";
     public static String RECEIVER_ACTION_FINISH_MAIN = "action_main";
     public static String RECEIVER_ACTION_FINISH_LOGIN = "action_login";
@@ -21,4 +23,5 @@ public class Constant {
     public static final int SHOW_DOT = -1; //显示小红点
     public static final int HIDE_DOT = 0; //隐藏小红点
     public static final String DOT_KET = "DOT_KET";
+    public static String isLoadData = "isLoadData";
 }

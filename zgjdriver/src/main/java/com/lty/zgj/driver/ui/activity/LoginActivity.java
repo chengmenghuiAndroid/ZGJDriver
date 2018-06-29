@@ -68,10 +68,10 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
     @Override
     protected void initView() {
         StatusBarUtils.with(this).init();
+        tvBtn.setText("登录");
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        tvBtn.setText("登录");
         initCountDownTimer();
     }
 
@@ -113,8 +113,8 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
             case R.id.logo_icon:
 //                etPhoneNumber.setText("13995534205");
 //                et_pws.setText("534205");
-                etPhoneNumber.setText("13554011992");
-                et_pws.setText("011992");
+                etPhoneNumber.setText("15629088908");
+                et_pws.setText("088908");
                 break;
         }
     }

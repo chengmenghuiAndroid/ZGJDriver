@@ -31,10 +31,11 @@ public class AboutActivity extends BaseXActivity {
     AutoRelativeLayout termsOfService;
     @BindView(R.id.version_introduction)
     AutoRelativeLayout versionIntroduction;
+    @BindView(R.id.version_check)
+    AutoRelativeLayout versionCheck;
 
 
     /**
-     *
      * @param v
      */
     @OnClick({
@@ -68,10 +69,18 @@ public class AboutActivity extends BaseXActivity {
                 .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
                 .init();
         title.setText("关于坐公交");
+        getUiDelegate().visible(true, navButton);
     }
 
     @Override
     public int getLayoutId() {
         return R.layout.activity_about;
     }
+
+
+    public void back(View view) {
+        finish();
+    }
+
+
 }

@@ -66,6 +66,7 @@ public class SetActivity extends AbsBaseWebSocketActivity {
         EventBus.getDefault().register(this);
         title.setText("设置");
         tvBtn.setText("退出登录");
+        navButton.setVisibility(View.VISIBLE);
         String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
         webSocketConnectLogin(token);
         closeRoundProgressDialog();//关闭加载对话框
@@ -149,5 +150,7 @@ public class SetActivity extends AbsBaseWebSocketActivity {
         super.onBackPressed();
     }
 
-
+    public void back(View view) {
+        finish();
+    }
 }

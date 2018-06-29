@@ -569,6 +569,18 @@ public class TimeUtils {
         String day = dateTime.substring(6, dateTime.length());
         return year +"-"+ month+"-"+ day;
     }
+    public static String getYMD(String dateTime) {
+        String year = dateTime.substring(0, 4);
+        String month = dateTime.substring(4, 6);
+        String day = dateTime.substring(6, dateTime.length());
+        return year +"年"+ month+"月"+ day+"日";
+    }
+    public static String getYMD_(String dateTime) {
+        String year = dateTime.substring(0, 4);
+        String month = dateTime.substring(4, 6);
+        String day = dateTime.substring(6, dateTime.length());
+        return year +"-"+ month+"-"+ day;
+    }
     public static String getMD(String dateTime) {
         String year = dateTime.substring(0, 4);
         String month = dateTime.substring(4, 6);

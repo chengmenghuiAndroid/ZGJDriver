@@ -1,5 +1,6 @@
 package com.lty.zgj.driver.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 
@@ -10,14 +11,18 @@ import com.lty.zgj.driver.adapter.WaitGoingOutTravelAdapter;
 import com.lty.zgj.driver.base.BaseXFragment;
 import com.lty.zgj.driver.bean.TripListModel;
 import com.lty.zgj.driver.core.config.Constant;
+import com.lty.zgj.driver.event.MessageEvent;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidbase.cache.SharedPref;
+import cn.droidlover.xrecyclerview.RecyclerItemCallback;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 
@@ -134,9 +139,8 @@ public class WaitGoingOutFragment extends BaseXFragment {
     //今日行程
     public WaitGoingOutItemAdapter getSurplusAdapter() {
         if(goingOutItemAdapter == null){
-
             goingOutItemAdapter = new WaitGoingOutItemAdapter(context);
-
+            goingOutItemAdapter.setRecItemClick(recItemClick);
         }else {
             goingOutItemAdapter.notifyDataSetChanged();
         }
@@ -145,12 +149,33 @@ public class WaitGoingOutFragment extends BaseXFragment {
 
     }
 
+    private RecyclerItemCallback<TripListModel.TodayListBean,WaitGoingOutItemAdapter.ViewHolder> recItemClick = new RecyclerItemCallback<TripListModel.TodayListBean, WaitGoingOutItemAdapter.ViewHolder>() {
+        /**
+         * 单击事件
+         *
+         * @param position 位置
+         * @param model    实体
+         * @param tag      标签
+         * @param holder   控件
+         */
+
+        @SuppressLint("ResourceType")
+        @Override
+        public void onItemClick(int position, TripListModel.TodayListBean model, int tag, WaitGoingOutItemAdapter.ViewHolder holder) {
+            super.onItemClick(position, model, tag, holder);
+            //点击 条目之后 就加载 待出行详情
+            EventBus.getDefault().post(new MessageEvent(model.getId()));
+
+
+        }
+    };
+
 
     //其余为出行
     public WaitGoingOutTravelAdapter getTravelAdapter() {
         if(waitGoingOutTravelAdapter == null){
             waitGoingOutTravelAdapter = new WaitGoingOutTravelAdapter(context);
-
+            waitGoingOutTravelAdapter.setRecItemClick(GoingOutTraveItemClick);
         }else {
             waitGoingOutTravelAdapter.notifyDataSetChanged();
         }
@@ -159,5 +184,21 @@ public class WaitGoingOutFragment extends BaseXFragment {
 
     }
 
+    private RecyclerItemCallback<TripListModel.NoStartListBean,WaitGoingOutTravelAdapter.ViewHolder> GoingOutTraveItemClick = new RecyclerItemCallback<TripListModel.NoStartListBean, WaitGoingOutTravelAdapter.ViewHolder>() {
+        /**
+         * 单击事件
+         *
+         * @param position 位置
+         * @param model    实体
+         * @param tag      标签
+         * @param holder   控件
+         */
+        @Override
+        public void onItemClick(int position, TripListModel.NoStartListBean model, int tag, WaitGoingOutTravelAdapter.ViewHolder holder) {
+            super.onItemClick(position, model, tag, holder);
+             //点击 条目之后 就加载 其余未出行
+            EventBus.getDefault().post(new MessageEvent(model.getId()));
+        }
+    };
 
 }

@@ -123,6 +123,16 @@ public class ObjectLoader {
     }
 
     /**
+     * 待发车详情接口
+     * @param detailModelSubscriber
+     * @param Id
+     */
+    public void getDepartDetailModelData(Subscriber<DepartModel> detailModelSubscriber, String Id){
+        Observable<DepartModel> modelObservable = Api.getGankService().getDepartDetailModel(Id).map(new HttpResultFunc<DepartModel>());
+        toSubscribe(modelObservable, detailModelSubscriber);
+    }
+
+    /**
      * 待出行
      * @param tripListModelSubscriber
      * @param Id

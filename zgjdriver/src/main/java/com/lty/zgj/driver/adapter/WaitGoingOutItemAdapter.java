@@ -12,8 +12,9 @@ import com.zhy.autolayout.utils.AutoUtils;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroid.base.SimpleRecAdapter;
 import cn.droidlover.xdroid.kit.KnifeKit;
-import cn.droidlover.xdroidbase.base.SimpleRecAdapter;
+
 
 /**
  * Created by Administrator on 2018/6/12.
@@ -21,6 +22,8 @@ import cn.droidlover.xdroidbase.base.SimpleRecAdapter;
 
 public class WaitGoingOutItemAdapter extends SimpleRecAdapter<TripListModel.TodayListBean, WaitGoingOutItemAdapter.ViewHolder> {
 
+
+    private static final int TODAY_DEPART = 100001;
 
     public WaitGoingOutItemAdapter(Context context) {
         super(context);
@@ -37,13 +40,18 @@ public class WaitGoingOutItemAdapter extends SimpleRecAdapter<TripListModel.Toda
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        TripListModel.TodayListBean todayList = data.get(position);
-        List<TripListModel.TodayListBean.ListBean> beanList = todayList.getList();
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final TripListModel.TodayListBean todayListModel = data.get(position);
+        List<TripListModel.TodayListBean.ListBean> beanList = todayListModel.getList();
 
         setStationInfo(holder, beanList);
 
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getRecItemClick().onItemClick(position, todayListModel, TODAY_DEPART, holder);
+            }
+        });
     }
 
     private void setStationInfo(ViewHolder holder, List<TripListModel.TodayListBean.ListBean> beanList) {
@@ -68,6 +76,7 @@ public class WaitGoingOutItemAdapter extends SimpleRecAdapter<TripListModel.Toda
         String planTime_4 = listBean_4.getPlanTime();
         holder.surplusTime4.setText(setArriveStationTime(planTime_4));
         holder.surplusStation4.setText(listBean_4.getStationName());
+
 
     }
 

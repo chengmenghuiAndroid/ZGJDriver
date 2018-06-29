@@ -64,6 +64,16 @@ public interface ZGJDService {
 
 
     /**
+     * 待发车详情 接口
+     * @param itemId
+     * @return
+     */
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
+    @POST("/trip/detail/{itemId}")
+    Observable<HttpResult<DepartModel>> getDepartDetailModel(@Path("itemId") String itemId);
+
+
+    /**
      * 待发车
      * @param driverId
      * @return

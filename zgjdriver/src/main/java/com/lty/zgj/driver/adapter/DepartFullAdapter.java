@@ -43,7 +43,7 @@ public class DepartFullAdapter extends SimpleRecAdapter<DepartModel.ListBean, De
         holder.tvDepartTime.setText(stationTime);
         holder.tvStation.setText(departModel.getStationName());
         int stationNo = departModel.getStationNo();
-        holder.tvStationPerson.setText(String.valueOf(stationNo));
+        holder.tvStationPerson.setText(String.valueOf(stationNo)+"人");
 
 
         if (position == 0) {

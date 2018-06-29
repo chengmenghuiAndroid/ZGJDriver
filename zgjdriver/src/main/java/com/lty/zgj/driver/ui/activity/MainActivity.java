@@ -15,11 +15,17 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.core.config.Constant;
+import com.lty.zgj.driver.event.MessageEvent;
+import com.lty.zgj.driver.event.ReceiveDateEvent;
 import com.lty.zgj.driver.jupsh.MyDotReceiver;
 import com.lty.zgj.driver.ui.fragment.DepartFragment;
 import com.lty.zgj.driver.ui.fragment.WaitGoingOutFragment;
 import com.lty.zgj.driver.weight.CustomViewPager;
 import com.lty.zgj.driver.weight.StatusBarUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -49,6 +55,7 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener ,
     private long lastTime;
     private boolean isLoad;
     private boolean isLoadData;
+    private MyDotReceiver myDotReceiver;
 
     @Override
     public void onTabSelect(int position) {
@@ -75,7 +82,9 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener ,
         tabLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position) {
-
+                if(position == 0){
+                    EventBus.getDefault().postSticky(new ReceiveDateEvent("", Constant.CLICK_DEPART_TAB));
+                }
             }
 
             @Override
@@ -83,6 +92,8 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener ,
 
             }
         });
+        useEventBus();
+
     }
 
     @Override
@@ -165,7 +176,7 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener ,
     private void initBroadcastReciver() {
         IntentFilter mIntentFilter = new IntentFilter();
         mIntentFilter .addAction("MyDotReceiver");
-        MyDotReceiver myDotReceiver = new MyDotReceiver();
+        myDotReceiver = new MyDotReceiver();
 
         // 注册此监听
         myDotReceiver.setBRInteractionListener(this);
@@ -190,5 +201,24 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener ,
         }else {
             getUiDelegate().visible(true, msgDot);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myDotReceiver);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void mainThread(MessageEvent messageEvent) {
+        tabLayout.setCurrentTab(0);
+        EventBus.getDefault().postSticky(new ReceiveDateEvent(messageEvent.getItemId(), Constant.CLICK_ITEM));
+    }
+
+    @Override
+    public boolean useEventBus() {
+        boolean registered = EventBus.getDefault().isRegistered(this);
+
+        return !registered;
     }
 }

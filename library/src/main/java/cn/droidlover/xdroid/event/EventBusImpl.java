@@ -8,6 +8,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class EventBusImpl implements IBus {
 
+
     @Override
     public void register(Object object) {
         if (!EventBus.getDefault().isRegistered(object)) {

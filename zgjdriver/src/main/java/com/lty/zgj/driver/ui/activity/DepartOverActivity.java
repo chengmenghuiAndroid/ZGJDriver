@@ -2,6 +2,8 @@ package com.lty.zgj.driver.ui.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +21,15 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.adapter.DepartOverAdapter;
 import com.lty.zgj.driver.adapter.DepartOverFullAdapter;
@@ -35,6 +45,7 @@ import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -46,7 +57,7 @@ import rx.functions.Action1;
  * Created by Administrator on 2018/6/19.
  */
 
-public class DepartOverActivity extends BaseXActivity implements AMapLocationListener, LocationSource{
+public class DepartOverActivity extends BaseXActivity implements AMapLocationListener, LocationSource {
     @BindView(R.id.nav_button)
     ImageView navButton;
     @BindView(R.id.tv_title)
@@ -76,9 +87,19 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
     private ViewGroup.LayoutParams layoutParams;
     private View mHeader;
     private DepartOverAdapter departOverAdapter;
-    private List<DepartModel.ListBean> list = new ArrayList<>();
+    private List<HistoricalJourneyDetailModel.StationsBean> list = new ArrayList<>();
     private DepartOverFullAdapter departOverFullAdapter;
     private List<DepartModel.ListBean> departModelList;
+
+    private Polyline mPolyline;
+    private ArrayList<Marker> markerList;
+    private ArrayList<MarkerOptions> markerOptionlist = new ArrayList<>();
+    private List<Double> coords = new ArrayList<Double>();
+    private List<HistoricalJourneyDetailModel.StationsBean> stations;
+    private int size;
+
+    private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
+    private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -99,12 +120,33 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
 
     }
 
+
+
     private void fetchTripDetailData(String Id) {
         ObjectLoader.getInstance().getTripDetailData(new ProgressSubscriber<HistoricalJourneyDetailModel>(new SubscriberOnNextListener<HistoricalJourneyDetailModel>() {
             @Override
             public void onNext(HistoricalJourneyDetailModel historicalJourneyDetailModel) {
 
                 if (historicalJourneyDetailModel != null) {
+
+                    stations = historicalJourneyDetailModel.getStations();
+                    size = stations.size();
+
+                    setStation();
+
+                    //计划辅助点信息
+                    List<HistoricalJourneyDetailModel.AssitsBean> assits = historicalJourneyDetailModel.getAssits();
+                    //辅助点信息
+                    coords.clear();
+                    for (HistoricalJourneyDetailModel.AssitsBean point : assits) {
+                        coords.add(point.getLon());
+                        coords.add(point.getLat());
+                    }
+                    addPolylineInPlayGround(coords);
+
+                    //添加终点起点
+                    addStartAndEnd(assits);
+                    addmark(stations);
 
                 }
 
@@ -118,33 +160,29 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
     }
 
 
-
     private void initRv() {
         setLayoutManager(xrecyclerview);
         mHeader = View.inflate(context, R.layout.depart_over_icon, null);
         getAdapter().setIconView(mHeader);
         xrecyclerview.setAdapter(getAdapter());
 
-
-        DepartModel  mdepartModel = (DepartModel) getIntent().getSerializableExtra("mdepartModel");
-        departModelList = mdepartModel.getList();
         setStation();
     }
 
     private void setStation() {
-        if (departModelList != null && departModelList.size() > 0) {
-            int size = departModelList.size();
+        if (stations != null && stations.size() > 0) {
+            int size = stations.size();
 
             if (size < 4) {
                 list.clear();
-                list.addAll(departModelList);
+                list.addAll(stations);
                 getAdapter().setData(list);
             } else {
                 list.clear();
-                list.add(departModelList.get(0));
-                list.add(departModelList.get(1));
-                list.add(departModelList.get(size - 2));
-                list.add(departModelList.get(size - 1));
+                list.add(stations.get(0));
+                list.add(stations.get(1));
+                list.add(stations.get(size - 2));
+                list.add(stations.get(size - 1));
                 getAdapter().setData(list);
             }
         }
@@ -225,6 +263,7 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
         //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         myLocationStyle = new MyLocationStyle();
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        setupLocationStyle();
         aMap.getUiSettings().setMyLocationButtonEnabled(true); //设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
@@ -239,6 +278,23 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
                 //从location对象中获取经纬度信息，地址描述信息，建议拿到位置之后调用逆地理编码接口获取
             }
         });
+    }
+
+    /**
+     * 设置自定义定位蓝点
+     */
+    private void setupLocationStyle() {
+        // 自定义定位蓝点图标
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
+                fromResource(R.mipmap.icon_location));
+        // 自定义精度范围的圆形边框颜色
+        myLocationStyle.strokeColor(STROKE_COLOR);
+        //自定义精度范围的圆形边框宽度
+        myLocationStyle.strokeWidth(5);
+        // 设置圆形的填充颜色
+        myLocationStyle.radiusFillColor(FILL_COLOR);
+        // 将自定义的 myLocationStyle 对象添加到地图上
+        aMap.setMyLocationStyle(myLocationStyle);
     }
 
     /**
@@ -355,6 +411,7 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
     @OnClick({
             R.id.tv_unfoldRv_down,
             R.id.tv_unfoldRv_up,
+            R.id.al_btn_complete
 
     })
 
@@ -369,8 +426,8 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
                 xrecyclerview.setAdapter(getFullAdapter());
                 list.clear();
 
-                if (departModelList != null && departModelList.size() > 0) {
-                    list.addAll(departModelList);
+                if (stations != null && stations.size() > 0) {
+                    list.addAll(stations);
                     getFullAdapter().setData(list);
                 }
 
@@ -391,19 +448,165 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
                 getUiDelegate().visible(true, mapView);
                 break;
 
+            case R.id.al_btn_complete:
+                finish();
+                break;
+
         }
     }
 
 
-        public DepartOverFullAdapter getFullAdapter() {
-            if (departOverFullAdapter == null) {
-                departOverFullAdapter = new DepartOverFullAdapter(context);
+    public DepartOverFullAdapter getFullAdapter() {
+        if (departOverFullAdapter == null) {
+            departOverFullAdapter = new DepartOverFullAdapter(context);
 
 
-            } else {
-                departOverFullAdapter.notifyDataSetChanged();
-            }
-            return departOverFullAdapter;
+        } else {
+            departOverFullAdapter.notifyDataSetChanged();
         }
+        return departOverFullAdapter;
+    }
+
+
+    private void addmark(List<HistoricalJourneyDetailModel.StationsBean> stations) {
+
+//        第一步添加marker到地图上：
+        for (int i = 0; i < stations.size(); i++) {//此处dataList是存有想要添加marker点的集合
+            MarkerOptions markerOptions = new MarkerOptions();//初始化 MarkerOptions对象
+
+//            if (i != 0 && i != dataList.size() - 1) {
+//                markerOptions.position(new LatLng(dataList.get(i).getLat(), dataList.get(i).getLon()));
+//            }
+
+            if (i != 0 && i != stations.size() - 1) {
+                markerOptions.position(new LatLng(stations.get(i).getLat(), stations.get(i).getLon()));
+            }
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.oval_site));//设置marker图标
+
+            markerOptionlist.add(markerOptions);
+        }
+        //第二个参数是设置是否移动到屏幕中心，FALSE是不移动
+        //添加到地图上，返回所有marker的集合
+        //添加到地图上，返回所有marker的集合
+        markerList = aMap.addMarkers(markerOptionlist, false);
+
+        // 第二步设置marker监听
+        //设置market 点击事件// 定义 Marker 点击事件监听
+        aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+            // marker 对象被点击时回调的接口
+// 返回 true 则表示接口已响应事件，否则返回false
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                //markerList即为添加到地图上返回的marker集合
+                for (int i = 0; i < markerList.size(); i++) {
+                    if (marker.equals(markerList.get(i))) {
+                        //已找到你所点击的marker，接下来进行你想要的操作
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+
+        });
+
+
+    }
+
+    /**
+     * 设置起点终点站
+     *
+     * @param assits
+     */
+    private void addStartAndEnd(List<HistoricalJourneyDetailModel.AssitsBean> assits) {
+
+        View view_start = View.inflate(context, R.layout.customer_start_marker, null);
+        Bitmap bitmap_start = convertViewToBitmap(view_start);
+        MarkerOptions startMarker = new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromBitmap(bitmap_start));
+        HistoricalJourneyDetailModel.AssitsBean startStation = assits.get(0);
+        LatLng startLatlng = new LatLng(startStation.getLat(), startStation.getLon());
+        startMarker.position(startLatlng);
+        aMap.addMarker(startMarker);
+
+
+        View view_end = View.inflate(context, R.layout.customer_end_marker, null);
+        Bitmap bitmap_end = convertViewToBitmap(view_end);
+        MarkerOptions endMarker = new MarkerOptions().icon(BitmapDescriptorFactory
+                .fromBitmap(bitmap_end));
+        HistoricalJourneyDetailModel.AssitsBean endStation = assits.get(assits.size() - 1);
+        LatLng endLatlng = new LatLng(endStation.getLat(), endStation.getLon());
+        endMarker.position(endLatlng);
+        aMap.addMarker(endMarker);
+    }
+
+    //view 转bitmap
+
+    public static Bitmap convertViewToBitmap(View view) {
+
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+
+        view.buildDrawingCache();
+
+        Bitmap bitmap = view.getDrawingCache();
+
+        return bitmap;
+
+    }
+
+
+    /**
+     * 添加轨迹线
+     */
+    private void addPolylineInPlayGround(List<Double> coordPoints) {
+        List<LatLng> list = readLatLngs(coordPoints);
+        List<Integer> colorList = new ArrayList<Integer>();
+        List<BitmapDescriptor> bitmapDescriptors = new ArrayList<BitmapDescriptor>();
+
+        int[] colors = new int[]{Color.argb(255, 0, 255, 0), Color.argb(255, 255, 255, 0), Color.argb(255, 255, 0, 0)};
+
+        //用一个数组来存放纹理
+        List<BitmapDescriptor> textureList = new ArrayList<BitmapDescriptor>();
+        textureList.add(BitmapDescriptorFactory.fromResource(R.mipmap.route));
+
+        List<Integer> texIndexList = new ArrayList<Integer>();
+        texIndexList.add(0);//对应上面的第0个纹理
+        texIndexList.add(1);
+        texIndexList.add(2);
+
+        Random random = new Random();
+        for (int i = 0; i < list.size(); i++) {
+            colorList.add(colors[random.nextInt(3)]);
+            bitmapDescriptors.add(textureList.get(0));
+
+        }
+
+        mPolyline = aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.mipmap.route)) //setCustomTextureList
+                // (bitmapDescriptors)
+                .setCustomTextureIndex(texIndexList)
+                .addAll(list)
+                .useGradient(true)
+                .width(24));
+        LatLngBounds bounds = new LatLngBounds(list.get(0), list.get(list.size() - 2));
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+
+    }
+
+
+    /**
+     * 读取坐标点
+     *
+     * @return
+     */
+    private List<LatLng> readLatLngs(List<Double> coordPoints) {
+        List<LatLng> points = new ArrayList<LatLng>();
+
+        for (int i = 0; i < coordPoints.size(); i += 2) {
+            points.add(new LatLng(coordPoints.get(i + 1), coordPoints.get(i)));
+        }
+        return points;
+    }
 
 }
