@@ -15,6 +15,7 @@ import com.lty.zgj.driver.event.MessageEvent;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
+import com.lty.zgj.driver.ui.activity.PendingTripActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -115,15 +116,11 @@ public class WaitGoingOutFragment extends BaseXFragment {
                 List<TripListModel.TodayListBean> todayList = tripListModel.getTodayList();
 
 
-                if(todayList != null && todayList.size() >0){
-                    getSurplusAdapter().setData(todayList);
 
-                }
+                getSurplusAdapter().setData(todayList);
 
-                if(noStartList != null && noStartList.size() >0){
-                    getTravelAdapter().setData(noStartList);
+                getTravelAdapter().setData(noStartList);
 
-                }
 
 
             }
@@ -197,7 +194,9 @@ public class WaitGoingOutFragment extends BaseXFragment {
         public void onItemClick(int position, TripListModel.NoStartListBean model, int tag, WaitGoingOutTravelAdapter.ViewHolder holder) {
             super.onItemClick(position, model, tag, holder);
              //点击 条目之后 就加载 其余未出行
-            EventBus.getDefault().post(new MessageEvent(model.getId()));
+            String itemId = model.getId();
+//            EventBus.getDefault().post(new MessageEvent(model.getId()));
+            PendingTripActivity.launch(context, String.valueOf(itemId));
         }
     };
 

@@ -2,7 +2,10 @@
 <com.zhy.autolayout.AutoLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/custom_layout"/>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:id="@+id/tv_travel_itinerary_null"
@@ -51,7 +54,8 @@
             android:layout_marginTop="60px"
             android:text="加载中..."
             android:textColor="#FF9897B8"
-            android:textSize="28px"/>
+            android:textSize="28px"
+            />
     </com.zhy.autolayout.AutoLinearLayout>
 
 
@@ -189,8 +193,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/al_btn"
-            android:layout_below="@id/au_ar"
-            android:layout_marginBottom="30px">
+            android:layout_below="@id/au_ar">
 
             <com.zhy.autolayout.AutoFrameLayout
                 android:layout_width="match_parent"
@@ -199,7 +202,7 @@
                 <com.amap.api.maps.TextureMapView
                     android:id="@+id/map"
                     android:layout_width="match_parent"
-                    android:layout_height="581px">
+                    android:layout_height="match_parent">
 
                 </com.amap.api.maps.TextureMapView>
 
@@ -227,17 +230,6 @@
         </com.zhy.autolayout.AutoLinearLayout>
 
 
-        <com.zhy.autolayout.AutoLinearLayout
-            android:id="@+id/al_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30px">
-
-            <include layout="@layout/eline_login_btn"/>
-
-        </com.zhy.autolayout.AutoLinearLayout>
 
 
     </com.zhy.autolayout.AutoRelativeLayout>

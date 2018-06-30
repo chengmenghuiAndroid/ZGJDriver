@@ -41,9 +41,9 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
             unbinder = KnifeKit.bind(this);
         }
         roundProgressDialog = new RoundProgressDialog(this);
+        initView(savedInstanceState);
         initBind();
 //        initView();
-        initView(savedInstanceState);
 
         mRecevier = new FinishActivityRecevier();
         registerFinishReciver();

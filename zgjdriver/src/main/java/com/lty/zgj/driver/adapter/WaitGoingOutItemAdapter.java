@@ -41,6 +41,7 @@ public class WaitGoingOutItemAdapter extends SimpleRecAdapter<TripListModel.Toda
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+
         final TripListModel.TodayListBean todayListModel = data.get(position);
         List<TripListModel.TodayListBean.ListBean> beanList = todayListModel.getList();
 

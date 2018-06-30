@@ -208,6 +208,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
         aMap.getUiSettings().setTiltGesturesEnabled(false);//设置地图是否可以倾斜
         aMap.getUiSettings().setRotateGesturesEnabled(false);//设置地图是否可以旋转
+        aMap.getUiSettings().setZoomControlsEnabled(false);
 
         //蓝点初始化
         //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
@@ -215,12 +216,12 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         setupLocationStyle();
 
-        aMap.getUiSettings().setMyLocationButtonEnabled(true); //设置默认定位按钮是否显示，非必需设置。
+        aMap.getUiSettings().setMyLocationButtonEnabled(false); //设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
 
-        myLocationStyle.showMyLocation(true);
+        myLocationStyle.showMyLocation(false);
 
 
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
@@ -291,23 +292,47 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     @Override
     public void activate(OnLocationChangedListener listener) {
         mListener = listener;
+        startLocationClient();
+    }
+
+    private void startLocationClient() {
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(context);
-            mLocationOption = new AMapLocationClientOption();
-            //设置定位监听
-            mlocationClient.setLocationListener(this);
-            //设置为高精度定位模式
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-            //是指定位间隔
-            mLocationOption.setInterval(2000);
-            //设置定位参数
-            mlocationClient.setLocationOption(mLocationOption);
-            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-            // 在定位结束后，在合适的生命周期调用onDestroy()方法
-            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-            mlocationClient.startLocation();
         }
+
+
+        //初始化定位参数
+        initLocationOption();
+        //设置定位监听
+        mlocationClient.setLocationListener(this);
+        //设置定位参数
+        mlocationClient.setLocationOption(mLocationOption);
+        // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+        // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+        // 在定位结束后，在合适的生命周期调用onDestroy()方法
+        // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+        mlocationClient.startLocation();
+
+    }
+
+    private void initLocationOption() {
+
+        if (mLocationOption == null) {
+            mLocationOption = new AMapLocationClientOption();
+        }
+        //定位精度:高精度模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置定位缓存策略
+        mLocationOption.setLocationCacheEnable(false);
+        //gps定位优先
+        mLocationOption.setGpsFirst(false);
+        //设置定位间隔
+        mLocationOption.setInterval(3000);
+        mLocationOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是ture
+        mLocationOption.setOnceLocation(true);//可选，设置是否单次定位。默认是false
+        mLocationOption.setOnceLocationLatest(true);//true表示获取最近3s内精度最高的一次定位结果；false表示使用默认的连续定位策略。
+        mLocationOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
+        //AMapLocationClientOption.setLocationProtocol(AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
     }
 
     /**
@@ -446,6 +471,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
 
     private void addmark( List<HistoricalJourneyDetailModel.StationsBean> stations) {
 
+
 //        第一步添加marker到地图上：
         for (int i = 0; i < stations.size(); i++) {//此处dataList是存有想要添加marker点的集合
             MarkerOptions markerOptions = new MarkerOptions();//初始化 MarkerOptions对象
@@ -457,7 +483,14 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
             if (i != 0 && i != stations.size() - 1) {
                 markerOptions.position(new LatLng(stations.get(i).getLat(), stations.get(i).getLon()));
             }
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.oval_site));//设置marker图标
+
+            View view_complete = View.inflate(context, R.layout.customer_complete_marker, null);
+            TextView tvPlanTime = view_complete.findViewById(R.id.tv_planTime);
+            tvPlanTime.setText(stations.get(i).getPlanTime());
+
+
+            Bitmap bitmap_complete = convertViewToBitmap(view_complete);
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap_complete));//设置marker图标
 
             markerOptionlist.add(markerOptions);
         }

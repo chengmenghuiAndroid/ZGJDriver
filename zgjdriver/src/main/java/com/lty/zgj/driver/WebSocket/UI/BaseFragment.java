@@ -78,7 +78,7 @@ public abstract class BaseFragment extends Fragment implements IBaseActivity {
         }
         initBind();
         initView(savedInstanceState);
-        initView();
+//        initView();
         return rootView;
     }
 
