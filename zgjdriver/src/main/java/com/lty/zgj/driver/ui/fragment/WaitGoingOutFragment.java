@@ -160,8 +160,13 @@ public class WaitGoingOutFragment extends BaseXFragment {
         @Override
         public void onItemClick(int position, TripListModel.TodayListBean model, int tag, WaitGoingOutItemAdapter.ViewHolder holder) {
             super.onItemClick(position, model, tag, holder);
-            //点击 条目之后 就加载 待出行详情
-            EventBus.getDefault().post(new MessageEvent(model.getId()));
+            String id = model.getId();
+            if(position == 0){
+                //点击 条目之后 就加载 待出行详情
+                EventBus.getDefault().post(new MessageEvent(id));
+            }else {
+                PendingTripActivity.launch(context, String.valueOf(id));
+            }
 
 
         }

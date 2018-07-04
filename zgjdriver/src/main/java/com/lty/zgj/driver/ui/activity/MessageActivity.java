@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
@@ -39,9 +41,12 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
 
     @BindView(R.id.tv_title)
     TextView title;
+    @BindView(R.id.nav_button)
+    ImageView navButton;
     @BindView(R.id.contentLayout)
     XRecyclerContentLayout contentLayout;
     private MessageAdapter messageAdapter;
+    private int driverId;
 
     @Override
     protected int getLayoutResId() {
@@ -50,14 +55,22 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
 
     @Override
     protected void initView() {
+
+    }
+
+    @Override
+    protected void initView(@Nullable Bundle savedInstanceState) {
+        super.initView(savedInstanceState);
+
         title.setText("消息");
+        navButton.setVisibility(View.VISIBLE);
         EventBus.getDefault().register(this);
         closeRoundProgressDialog();//关闭加载对话框
         initRv();
-        int driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
+        driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
         fetchDriverNoticeInfoData(driverId, 0);
-
     }
+
 
     private void initRv() {
         XRecyclerView recyclerView = contentLayout.getRecyclerView();
@@ -66,12 +79,12 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
         recyclerView.setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                fetchDriverNoticeInfoData(1, 1);
+                fetchDriverNoticeInfoData(driverId, 1);
             }
 
             @Override
             public void onLoadMore(int page) {
-                int driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
+
 
                 fetchDriverNoticeInfoData(driverId, page);
 
@@ -110,13 +123,7 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
 
     }
 
-    @Override
-    protected void initView(@Nullable Bundle savedInstanceState) {
-        super.initView(savedInstanceState);
-//        StatusBarUtils.with(this)
-//                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
-//                .init();
-    }
+
 
     private MessageAdapter getAdapter() {
         if(messageAdapter == null){
@@ -165,6 +172,10 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
             MessageDetailActivity.launch(context, Integer.parseInt(model.getType()), model.getId());
         }
     };
+
+    public void back(View view) {
+        finish();
+    }
 
 
 }

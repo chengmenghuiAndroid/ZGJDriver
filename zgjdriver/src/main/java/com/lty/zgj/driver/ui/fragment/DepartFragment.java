@@ -70,6 +70,7 @@ import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
 import com.lty.zgj.driver.ui.activity.DepartOverActivity;
 import com.lty.zgj.driver.ui.activity.LoginActivity;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
+import com.lty.zgj.driver.weight.CustomDialog;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
@@ -149,7 +150,11 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private float mapZoom;
     private LatLng mapTarget;
     private Polyline mPolyline;
+    private Polyline mPolylineWalk;
     private AMap aMap;
+    private CustomDialog mDialog;
+    private TextView tvPlanTime;
+    private View view_complete;
 
 
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
@@ -206,7 +211,9 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private final int ROUTE_TYPE_WALK = 3;
     private LatLonPoint mStartPoint;
     private LatLonPoint mEndPoint;
-
+    private String endName;
+    private Marker marker_time;
+    private String startName;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -287,7 +294,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     public DepartFullAdapter getFullAdapter() {
         if (departFullAdapter == null) {
             departFullAdapter = new DepartFullAdapter(context);
-
+            departFullAdapter.setRecItemClick(RecItemFull);
         } else {
             departFullAdapter.notifyDataSetChanged();
         }
@@ -344,21 +351,17 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         aMap.getUiSettings().setTiltGesturesEnabled(false);//设置地图是否可以倾斜
         aMap.getUiSettings().setRotateGesturesEnabled(false);//设置地图是否可以旋转
         aMap.getUiSettings().setZoomControlsEnabled(false);
-        //蓝点初始化
-        myLocationStyle = new MyLocationStyle();
-        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-        setupLocationStyle();
-
         aMap.getUiSettings().setMyLocationButtonEnabled(false); //设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
+        //蓝点初始化
 
-        myLocationStyle.showMyLocation(true);
-
+        setupLocationStyle();
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
                 //从location对象中获取经纬度信息，地址描述信息，建议拿到位置之后调用逆地理编码接口获取
+
+                Log.e(THIS_FILE, "location----位置改变----"+location);
             }
         });
     }
@@ -367,15 +370,21 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
      * 设置自定义定位蓝点
      */
     private void setupLocationStyle() {
+        myLocationStyle = new MyLocationStyle();
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
+        myLocationStyle.showMyLocation(true);
         // 自定义定位蓝点图标
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
                 fromResource(R.mipmap.icon_coordinate_point));
         // 自定义精度范围的圆形边框颜色
-        myLocationStyle.strokeColor(STROKE_COLOR);
+//        myLocationStyle.strokeColor(STROKE_COLOR);
+        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
         //自定义精度范围的圆形边框宽度
         myLocationStyle.strokeWidth(5);
+
+//        myLocationStyle.radiusFillColor(FILL_COLOR);
+        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
         // 设置圆形的填充颜色
-        myLocationStyle.radiusFillColor(FILL_COLOR);
         // 将自定义的 myLocationStyle 对象添加到地图上
         aMap.setMyLocationStyle(myLocationStyle);
     }
@@ -395,7 +404,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         }
 
         isLoadDataOnResume = true;
-        isFirstLoc = true;
     }
 
     @Override
@@ -447,19 +455,19 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
                     latitude = amapLocation.getLatitude();
                     longitude = amapLocation.getLongitude();
+
                     if (isFirstLoc) {
                         //将地图移动到定位点
                         aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
                         //点击定位按钮 能够将地图的中心移动到定位点
                         mListener.onLocationChanged(amapLocation);
                         //添加图钉
-//                    aMap.addMarker(getMarkerOptions(amapLocation));
+//                      aMap.addMarker(getMarkerOptions(amapLocation));
                         //获取定位信息
-                        isFirstLoc = false;
                         // 步行起点坐标
                         mStartPoint = new LatLonPoint(latitude, longitude);
                         searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);//定位成功 规划路径导航
-
+                        isFirstLoc = false;
                     }
                     StringBuffer buffer = new StringBuffer();
                     city = amapLocation.getCity();
@@ -471,7 +479,9 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 //                    Log.e(THIS_FILE, "buffer.toString------"+buffer.toString());
 //                    Log.e(THIS_FILE, "city------"+ city);
                     Log.e(THIS_FILE, "----latitude------" + latitude + "..longitude......." + longitude);
-                    cityCode = amapLocation.getCityCode();
+                    cityCode = amapLocation.getAdCode();
+                    SharedPref.getInstance(context).putString(Constant.cityCode, cityCode);
+                    Log.e(THIS_FILE, "----cityCode------" + cityCode);
                     Message message = handler.obtainMessage();
                     LatLng latLng = new LatLng(latitude, longitude);
                     message.obj = latLng;
@@ -528,7 +538,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
                         float distance = AMapUtils.calculateLineDistance(latLng, latLng2);
 
-                        if (distance <= 50) {
+                        if (distance <= 150) {
                             Log.e(THIS_FILE, "latLng2-----" + latLng2);
                             Log.e(THIS_FILE, "当前定位点 lat:" + lat + "lon:" + lon + "\n目标点: lat:" + latLng2.latitude + "...." + "lon:" + latLng2.longitude + "\n距离：" + distance + "米");
                             int tripNo = pointStation.getTripNo();//行程id
@@ -537,9 +547,12 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                             long stationTime = System.currentTimeMillis() / 1000;
 
                             travelPathUploadData(tripNo, routeId, stationId, stationName, stationTime, busId, scheduleId);
-
-                            ShowDialogRelative.toastDialog(context, "distance---" + distance);
                             pointStation.setUploadPoint(true);
+
+                            tvBtn.setText("到达" + stationName);
+                            if (pointStation.getStationName().equals(endName)) {
+                                tvBtn.setText("结束");
+                            }
                         }
                     }
                 }
@@ -617,7 +630,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
         // 在定位结束后，在合适的生命周期调用onDestroy()方法
         // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-//        mlocationClient.startLocation();
+        mlocationClient.startLocation();
 
     }
 
@@ -636,8 +649,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         mLocationOption.setInterval(3000);
         mLocationOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是ture
         mLocationOption.setOnceLocation(true);//可选，设置是否单次定位。默认是false
-        mLocationOption.setOnceLocationLatest(true);//true表示获取最近3s内精度最高的一次定位结果；false表示使用默认的连续定位策略。
-        mLocationOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
         //AMapLocationClientOption.setLocationProtocol(AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
     }
 
@@ -710,11 +721,9 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             case R.id.al_btn:
 
                 if (CLICK_STATUS == DEPAR_BTN) {
-                    if (status == 0) {
-                        fetchStartBuslData(scheduleId, mdepartModel);     //发车
-                    }
+                    fetchStartBuslData(scheduleId, mdepartModel);     //发车
                 } else {
-                    fetchEndBusData(scheduleId);                     //发车中
+                    depart();
                 }
                 break;
 
@@ -723,6 +732,27 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 setLatLngBounds();
                 break;
         }
+    }
+
+    private void depart() {
+        mDialog = new CustomDialog(context, R.layout.custom_dialog_login_out_layout, "提醒", "你是否确定结束发车?",
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.dismiss();
+                        fetchEndBusData(scheduleId);                     //发车中
+
+                    }
+                }, new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        }, "确认", "取消");
+        mDialog.setCanotBackPress();
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.show();
     }
 
     private void setLatLngBounds() {
@@ -740,7 +770,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         ObjectLoader.getInstance().getStartBuslData(new ProgressSubscriber<StartBustModel>(new SubscriberOnNextListener<StartBustModel>() {
             @Override
             public void onNext(StartBustModel startBustModel) {
-                tvBtn.setText("结束");
+                tvBtn.setText("到达" + startName);
                 handlerExecuteTimerTask(true);
                 CLICK_STATUS = END_BTN;
             }
@@ -760,6 +790,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 mycircleHandler.removeCallbacks(runnable);
                 handlerExecuteTimerTask(false);
                 deactivate();
+                aMap.clear();
                 DepartOverActivity.launch(context, scheduleId, mdepartModel);
             }
 
@@ -905,7 +936,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
      * 添加轨迹线
      */
     private void addPolylineInPlayGround(List<Double> coordPoints) {
-
         List<LatLng> list = readLatLngs(coordPoints);
         List<Integer> colorList = new ArrayList<Integer>();
         List<BitmapDescriptor> bitmapDescriptors = new ArrayList<BitmapDescriptor>();
@@ -934,28 +964,44 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 .setCustomTextureIndex(texIndexList)
                 .addAll(list)
                 .useGradient(true)
-                .width(24));
+                .width(18));
 
-        LatLngBounds bounds = new LatLngBounds(list.get(0), list.get(list.size() - 2));
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+
+        LatLngBounds.Builder newbounds = new LatLngBounds.Builder();
+        for (int i = 0; i < list.size(); i++) {//trajectorylist为轨迹集合
+            newbounds.include(list.get(i));
+        }
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 300));//第二个参数为四周留空宽度
 
     }
 
-    private void addmark(List<DepartModel.ListBean> dataList) {
+    private void addmark(List<DepartModel.ListBean> stations) {
 
 //        第一步添加marker到地图上：
         markerOptionlist.clear();
-        for (int i = 0; i < dataList.size(); i++) {//此处dataList是存有想要添加marker点的集合
+        for (int i = 0; i < stations.size(); i++) {//此处dataList是存有想要添加marker点的集合
             MarkerOptions markerOptions = new MarkerOptions();//初始化 MarkerOptions对象
 
 //            if (i != 0 && i != dataList.size() - 1) {
 //                markerOptions.position(new LatLng(dataList.get(i).getLat(), dataList.get(i).getLon()));
 //            }
 
-            if (i != 0 && i != dataList.size() - 1) {
-                markerOptions.position(new LatLng(dataList.get(i).getLat(), dataList.get(i).getLon()));
+            if (i == 0) {
+                markerOptions.position(new LatLng(stations.get(0).getLat(), stations.get(0).getLon()));
+                markerOptions.anchor(0.5f, 0.6f);
+                view_complete = View.inflate(context, R.layout.customer_start_marker, null);
+                setMarker(stations, 0, markerOptions);
+            } else if (i == stations.size() - 1) {
+                markerOptions.position(new LatLng(stations.get(stations.size() - 1).getLat(), stations.get(stations.size() - 1).getLon()));
+                markerOptions.anchor(0.5f, 0.6f);
+                view_complete = View.inflate(context, R.layout.customer_end_marker, null);
+                setMarker(stations, stations.size() - 1, markerOptions);
+            } else {
+                markerOptions.position(new LatLng(stations.get(i).getLat(), stations.get(i).getLon()));
+                markerOptions.anchor(0.5f, 0.2f);
+                view_complete = View.inflate(context, R.layout.customer_complete_marker, null);
+                setMarker(stations, i, markerOptions);
             }
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.oval_site));//设置marker图标
 
             markerOptionlist.add(markerOptions);
         }
@@ -986,6 +1032,16 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         });
 
 
+    }
+
+
+    private void setMarker(List<DepartModel.ListBean> stations, int i, MarkerOptions markerOptions) {
+//        tvPlanTime = view_complete.findViewById(R.id.tv_planTime);
+//        String planTime = stations.get(i).getPlanTime();
+//        String stationTime = TimeUtils.formatStationTime(planTime);
+//        tvPlanTime.setText(stationTime);
+        Bitmap bitmap_complete = convertViewToBitmap(view_complete);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap_complete));//设置marker图标
     }
 
     /**
@@ -1063,11 +1119,14 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             auArLoading.setVisibility(View.GONE);
             RavelItinerary.setVisibility(View.VISIBLE);
             status = departModel.getStatus();
+            endName = departModel.getEndName();
+            startName = departModel.getStartName();
+
             String date = departModel.getDate();
 
             if (status == 1) {
                 alBtn.setVisibility(View.VISIBLE);
-                tvBtn.setText("结束");
+                tvBtn.setText("到达" + startName);
                 handlerExecuteTimerTask(true);
                 CLICK_STATUS = END_BTN;
             } else if (status == 0) {
@@ -1093,8 +1152,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
 
             tvCarPai.setText(departModel.getBusPlateNumber());
-            tvStationstart.setText(departModel.getStartName());
-            tvStationEnd.setText(departModel.getEndName());
+            tvStationstart.setText(startName);
+            tvStationEnd.setText(endName);
 
 
             scheduleId = departModel.getId();
@@ -1117,7 +1176,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
             points = readLatLngs(coordsStation);//需要上传的站点信息
 
-            addStartAndEnd(departModelList); //设置起点和终点
+//            addStartAndEnd(departModelList); //设置起点和终点
             addmark(departModelList);       //添加站点信息图片
 
             pointList = departModel.getPointList();//辅助点信息
@@ -1137,6 +1196,11 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             for (DepartModel.PointListBean point : pointList) {
                 coords.add(point.getLongitude());
                 coords.add(point.getLatitude());
+            }
+
+            if (mPolyline != null) {
+                mPolyline.remove();
+                mPolyline = null;
             }
             addPolylineInPlayGround(coords); //绘制辅助线
 
@@ -1341,6 +1405,11 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
                     }
 
+                    if (mPolylineWalk != null) {
+                        mPolylineWalk.remove();
+                        mPolylineWalk = null;
+                    }
+
                     addPolylineInPlayGroundWalk(coordsWalkRoute);
 
 
@@ -1380,7 +1449,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
         }
 
-        mPolyline = aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.shape_dotted)) //setCustomTextureList
+        mPolylineWalk = aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.shape_dotted))
+                //setCustomTextureList
                 // (bitmapDescriptors)
                 .setCustomTextureIndex(texIndexList)
                 .addAll(list)
@@ -1401,20 +1471,45 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     }
 
     private RecyclerItemCallback<DepartModel.ListBean, DepartAdapter.ViewHolder> departItemClick = new RecyclerItemCallback<DepartModel.ListBean, DepartAdapter.ViewHolder>() {
-        /**
-         * 单击事件
-         *
-         * @param position 位置
-         * @param model    实体
-         * @param tag      标签
-         * @param holder   控件
-         */
+
         @Override
         public void onItemClick(int position, DepartModel.ListBean model, int tag, DepartAdapter.ViewHolder holder) {
             super.onItemClick(position, model, tag, holder);
             onMapLoaded(model.getLat(), model.getLon());
+            setPlanTimeMarker(model);
         }
     };
+
+    private RecyclerItemCallback<DepartModel.ListBean,DepartFullAdapter.ViewHolder> RecItemFull = new RecyclerItemCallback<DepartModel.ListBean, DepartFullAdapter.ViewHolder>() {
+
+        @Override
+        public void onItemClick(int position, DepartModel.ListBean model, int tag, DepartFullAdapter.ViewHolder holder) {
+            super.onItemClick(position, model, tag, holder);
+
+            setPlanTimeMarker(model);
+        }
+    };
+
+
+    private void setPlanTimeMarker(DepartModel.ListBean model) {
+        String planTime = model.getPlanTime();
+
+        View view_ = View.inflate(getActivity(), R.layout.customer_time, null);
+        TextView view_time = view_.findViewById(R.id.tv_planTime);
+        String stationTime = TimeUtils.formatStationTime(planTime);
+        view_time.setText(stationTime);
+
+        if (marker_time != null) {
+            marker_time.remove();
+        }
+
+        Bitmap bitmap_time = convertViewToBitmap(view_);
+        MarkerOptions timeMarker = new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap_time));
+        timeMarker.anchor(0.5f, -0.3f);
+        LatLng startLatlng = new LatLng(model.getLat(), model.getLon());
+        timeMarker.position(startLatlng);
+        marker_time = aMap.addMarker(timeMarker);
+    }
 
     /**
      * 监听amap地图加载成功事件回调

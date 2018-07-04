@@ -2,6 +2,7 @@ package com.lty.zgj.driver.ui.activity;
 
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -9,17 +10,13 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
-import com.lty.zgj.driver.WebSocket.CommonResponse;
-import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
+import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.bean.LoginModel;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.MD5Util;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
-import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.lty.zgj.driver.weight.ClearEditText;
 import com.lty.zgj.driver.weight.CountDownTimerUtils;
 import com.lty.zgj.driver.weight.StatusBarUtils;
@@ -38,7 +35,7 @@ import cn.droidlover.xdroidbase.router.Router;
  * Created by Administrator on 2018/6/5.
  */
 
-public class LoginActivity extends AbsBaseWebSocketActivity {
+public class LoginActivity extends BaseXActivity {
 
     private static final String THIS_FILE = "LoginActivity";
     @BindView(R.id.et_pws)
@@ -60,19 +57,20 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
     private long lastTime;
     private boolean isConnect = false; //是否断开连接
 
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.activity_driver_login;
-    }
 
     @Override
-    protected void initView() {
+    public void initData(Bundle savedInstanceState) {
         StatusBarUtils.with(this).init();
         tvBtn.setText("登录");
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         initCountDownTimer();
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_driver_login;
     }
 
 
@@ -169,20 +167,4 @@ public class LoginActivity extends AbsBaseWebSocketActivity {
         }
 
     }
-
-    @Override
-    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
-        return WebSocketService.class;
-    }
-
-    @Override
-    protected void onCommonResponse(CommonResponse<String> response) {
-
-    }
-
-    @Override
-    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-
-    }
-
 }

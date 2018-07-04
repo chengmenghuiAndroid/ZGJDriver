@@ -1,6 +1,8 @@
 package com.lty.zgj.driver.ui.activity;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.Utils;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
+import com.lty.zgj.driver.weight.CustomDialog;
 import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
@@ -47,11 +50,11 @@ public class SetActivity extends AbsBaseWebSocketActivity {
     AutoRelativeLayout personalAboutZgj;
     @BindView(R.id.ar_login_btn)
     AutoLinearLayout arLoginBtn;
-
     @BindView(R.id.tv_btn)
     TextView tvBtn;
 
     private String webSocketJson;
+    private CustomDialog mDialog;
 
     @Override
     protected int getLayoutResId() {
@@ -60,6 +63,14 @@ public class SetActivity extends AbsBaseWebSocketActivity {
 
     @Override
     protected void initView() {
+        String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
+        webSocketConnectLogin(token);
+        closeRoundProgressDialog();//关闭加载对话框
+    }
+
+    @Override
+    protected void initView(@Nullable Bundle savedInstanceState) {
+        super.initView(savedInstanceState);
         StatusBarUtils.with(this)
                 .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
                 .init();
@@ -67,9 +78,6 @@ public class SetActivity extends AbsBaseWebSocketActivity {
         title.setText("设置");
         tvBtn.setText("退出登录");
         navButton.setVisibility(View.VISIBLE);
-        String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
-        webSocketConnectLogin(token);
-        closeRoundProgressDialog();//关闭加载对话框
     }
 
     private void webSocketConnectLogin(String token) {
@@ -124,10 +132,31 @@ public class SetActivity extends AbsBaseWebSocketActivity {
                 AboutActivity.launch(context);
                 break;
             case R.id.ar_login_btn:
-                logOut();
+                loginOutDialog();
                 break;
 
         }
+    }
+
+
+    private void loginOutDialog() {
+        mDialog = new CustomDialog(this, R.layout.custom_dialog_login_out_layout,"提醒", "你是否确定退出登录?",
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.dismiss();
+                        logOut();
+                    }
+                }, new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        },"确认","取消");
+        mDialog.setCanotBackPress();
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.show();
     }
 
     /**

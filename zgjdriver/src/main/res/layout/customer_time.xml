@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/au_ar_time"
+        android:layout_width="120px"
+        android:layout_height="50px"
+        android:background="@drawable/shape_time_bg">
+
+        <TextView
+            android:id="@+id/tv_planTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30px"
+            android:textColor="#FF02CF97"
+            android:layout_below="@id/oval_get_off"
+            android:layout_centerInParent="true"/>
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+</com.zhy.autolayout.AutoRelativeLayout>

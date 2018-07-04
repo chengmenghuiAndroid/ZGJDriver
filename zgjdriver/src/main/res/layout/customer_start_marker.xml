@@ -13,16 +13,29 @@
             android:id="@+id/icon_get_on"
             android:layout_width="54px"
             android:layout_height="54px"
-            android:src="@mipmap/icon_get_on"/>
+            android:src="@mipmap/icon_get_on"
+            android:layout_centerHorizontal="true"/>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/oval_get_on"
+            android:layout_width="25px"
+            android:layout_height="25px"
             android:src="@mipmap/oval_get_on"
             android:layout_below="@+id/icon_get_on"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4px"/>
-        
+
+
+        <TextView
+            android:id="@+id/tv_planTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30px"
+            android:textColor="#FF02CF97"
+            android:layout_below="@id/oval_get_on"
+            android:layout_centerHorizontal="true"
+            />
+
     </com.zhy.autolayout.AutoRelativeLayout>
 
 </com.zhy.autolayout.AutoRelativeLayout>

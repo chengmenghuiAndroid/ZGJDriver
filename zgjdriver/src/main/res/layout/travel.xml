@@ -66,13 +66,12 @@
                 android:layout_marginLeft="5px"/>
         </com.zhy.autolayout.AutoLinearLayout>
 
-        
 
     </com.zhy.autolayout.AutoRelativeLayout>
 
 
     <com.zhy.autolayout.AutoRelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32px"
         android:orientation="horizontal">
@@ -86,7 +85,8 @@
             android:layout_marginLeft="30px"
             android:text="光谷广场(公交站)"
             android:textColor="#FF292835"
-            android:textSize="30px"/>
+            android:textSize="30px"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/icon_arrowhead"
@@ -99,14 +99,15 @@
 
         <TextView
             android:id="@+id/tv_station_end"
-            android:layout_width="wrap_content"
+            android:layout_width="260px"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20px"
             android:layout_toRightOf="@id/icon_arrowhead"
             android:text="工程大学(公交站)"
             android:textColor="#FF292835"
-            android:textSize="30px"/>
+            android:textSize="30px"
+            android:singleLine="true"/>
 
     </com.zhy.autolayout.AutoRelativeLayout>
 

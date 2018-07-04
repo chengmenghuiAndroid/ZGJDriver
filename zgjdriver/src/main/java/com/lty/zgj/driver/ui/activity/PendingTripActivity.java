@@ -69,6 +69,7 @@ import rx.functions.Action1;
 
 /**
  * Created by Administrator on 2018/6/30.
+ *
  */
 
 public class PendingTripActivity extends BaseXActivity implements LocationSource, AMapLocationListener, RouteSearch.OnRouteSearchListener {
@@ -104,6 +105,8 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
     AutoRelativeLayout auArBounds;
     @BindView(R.id.tv_title)
     TextView title;
+    @BindView(R.id.nav_button)
+    ImageView navButton;
 
     View infoWindowLayout;
     TextView snippet;
@@ -156,12 +159,15 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
     private final int ROUTE_TYPE_WALK = 3;
     private LatLonPoint mStartPoint;
     private LatLonPoint mEndPoint;
+    private TextView tvPlanTime;
+    private View view_complete;
 
 
     @Override
     public void initData(Bundle savedInstanceState) {
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         title.setText("待出行任务");
+        getUiDelegate().visible(true, navButton);
         checkPermissionsLocation();
         initRv();
         initGaodeMap();
@@ -200,7 +206,6 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
 
 
             //站点信息
-//            aMap.clear();
             coordsStation.clear();
             for (DepartModel.ListBean pointStation : departModelList) {
                 coordsStation.add(pointStation.getLon());
@@ -208,7 +213,7 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
                 boolean uploadPoint = pointStation.isUploadPoint(); //站点是否上传
             }
 
-            addStartAndEnd(departModelList); //设置起点和终点
+//            addStartAndEnd(departModelList); //设置起点和终点
             addmark(departModelList);       //添加站点信息图片
 
             pointList = departModel.getPointList();//辅助点信息
@@ -348,7 +353,7 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
 
         aMap.getUiSettings().setMyLocationButtonEnabled(false); //设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
 
         myLocationStyle.showMyLocation(true);
 
@@ -672,28 +677,40 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
                 .setCustomTextureIndex(texIndexList)
                 .addAll(list)
                 .useGradient(true)
-                .width(24));
+                .width(20));
 
         LatLngBounds bounds = new LatLngBounds(list.get(0), list.get(list.size() - 2));
         aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
 
     }
 
-    private void addmark(List<DepartModel.ListBean> dataList) {
+    private void addmark(List<DepartModel.ListBean> stations) {
 
 //        第一步添加marker到地图上：
         markerOptionlist.clear();
-        for (int i = 0; i < dataList.size(); i++) {//此处dataList是存有想要添加marker点的集合
+        for (int i = 0; i < stations.size(); i++) {//此处dataList是存有想要添加marker点的集合
             MarkerOptions markerOptions = new MarkerOptions();//初始化 MarkerOptions对象
 
 //            if (i != 0 && i != dataList.size() - 1) {
 //                markerOptions.position(new LatLng(dataList.get(i).getLat(), dataList.get(i).getLon()));
 //            }
 
-            if (i != 0 && i != dataList.size() - 1) {
-                markerOptions.position(new LatLng(dataList.get(i).getLat(), dataList.get(i).getLon()));
+            if (i == 0) {
+                markerOptions.position(new LatLng(stations.get(0).getLat(), stations.get(0).getLon()));
+                markerOptions.anchor(0.5f, 0.6f);
+                view_complete = View.inflate(context, R.layout.customer_start_marker, null);
+                setMarker(stations, 0, markerOptions);
+            } else if (i == stations.size() - 1) {
+                markerOptions.position(new LatLng(stations.get(stations.size() - 1).getLat(), stations.get(stations.size() - 1).getLon()));
+                markerOptions.anchor(0.5f, 0.6f);
+                view_complete = View.inflate(context, R.layout.customer_end_marker, null);
+                setMarker(stations, stations.size() - 1, markerOptions);
+            } else {
+                markerOptions.position(new LatLng(stations.get(i).getLat(), stations.get(i).getLon()));
+                markerOptions.anchor(0.5f, 0.2f);
+                view_complete = View.inflate(context, R.layout.customer_complete_marker, null);
+                setMarker(stations, i, markerOptions);
             }
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.oval_site));//设置marker图标
 
             markerOptionlist.add(markerOptions);
         }
@@ -724,6 +741,15 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
         });
 
 
+    }
+
+    private void setMarker(List<DepartModel.ListBean> stations, int i, MarkerOptions markerOptions) {
+//        tvPlanTime = view_complete.findViewById(R.id.tv_planTime);
+//        String planTime = stations.get(i).getPlanTime();
+//        String stationTime = TimeUtils.formatStationTime(planTime);
+//        tvPlanTime.setText(stationTime);
+        Bitmap bitmap_complete = convertViewToBitmap(view_complete);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap_complete));//设置marker图标
     }
 
     /**
@@ -944,5 +970,9 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
         //设置中心点和缩放比例
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(marker1));
 
+    }
+
+    public void back(View view) {
+        finish();
     }
 }

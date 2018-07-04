@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.zhy.autolayout.AutoLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -48,7 +48,7 @@
             android:layout_marginTop="52px"
             android:background="#DCE6F0"/>
 
-        <LinearLayout
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -85,8 +85,8 @@
                 android:textColor="#2BCFD9"
                 android:textSize="34px"/>
 
-        </LinearLayout>
+        </com.zhy.autolayout.AutoLinearLayout>
 
-    </LinearLayout>
+    </com.zhy.autolayout.AutoLinearLayout>
     <!--08A8FF-->
-</LinearLayout>
+</com.zhy.autolayout.AutoLinearLayout>

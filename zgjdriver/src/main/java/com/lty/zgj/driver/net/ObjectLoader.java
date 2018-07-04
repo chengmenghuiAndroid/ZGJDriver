@@ -13,6 +13,7 @@ import com.lty.zgj.driver.bean.HistoricalJourneyModel;
 import com.lty.zgj.driver.bean.HttpResult;
 import com.lty.zgj.driver.bean.LoginModel;
 import com.lty.zgj.driver.bean.StartBustModel;
+import com.lty.zgj.driver.bean.TicketGuideModel;
 import com.lty.zgj.driver.bean.TripListModel;
 
 import java.util.HashMap;
@@ -174,6 +175,13 @@ public class ObjectLoader {
     public void getDriverNoticeInfoDetailData(Subscriber<DriverNoticeInfoDetailModel> driverNoticeInfoModel, int noticeId){
         Observable<DriverNoticeInfoDetailModel> modelObservable = Api.getGankService().driverNoticeInfoDetail(noticeId).map(new HttpResultFunc<DriverNoticeInfoDetailModel>());
         toSubscribe(modelObservable, driverNoticeInfoModel);
+    }
+
+
+    public void getticketGuideData(Subscriber<TicketGuideModel> ticketGuideModelSubscriber, int driverId, int guideType){
+        Observable<TicketGuideModel> modelObservable = Api.getGankService().ticketGuide(driverId, guideType).map(new
+                HttpResultFunc<TicketGuideModel>());
+        toSubscribe(modelObservable, ticketGuideModelSubscriber);
     }
 
 

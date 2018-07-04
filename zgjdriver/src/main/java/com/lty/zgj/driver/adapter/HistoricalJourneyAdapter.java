@@ -69,8 +69,6 @@ public class HistoricalJourneyAdapter extends SimpleRecAdapter<HistoricalJourney
                 getRecItemClick().onItemClick(position, recordsBean, TAG_ITEM, holder);
             }
         });
-
-
     }
 
     private String setArriveStationTime(String planTime) {

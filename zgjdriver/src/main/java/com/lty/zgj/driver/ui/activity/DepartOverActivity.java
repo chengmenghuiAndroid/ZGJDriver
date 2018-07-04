@@ -36,6 +36,7 @@ import com.lty.zgj.driver.adapter.DepartOverFullAdapter;
 import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.bean.DepartModel;
 import com.lty.zgj.driver.bean.HistoricalJourneyDetailModel;
+import com.lty.zgj.driver.core.tool.TimeUtils;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
@@ -95,11 +96,15 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
     private ArrayList<Marker> markerList;
     private ArrayList<MarkerOptions> markerOptionlist = new ArrayList<>();
     private List<Double> coords = new ArrayList<Double>();
+    private List<Double> recoords= new ArrayList<Double>();
     private List<HistoricalJourneyDetailModel.StationsBean> stations;
     private int size;
+    private TextView tvPlanTime;
+    private View view_complete;
 
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
+    private List<HistoricalJourneyDetailModel.RelStationsBean> relStations;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -130,6 +135,7 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
                 if (historicalJourneyDetailModel != null) {
 
                     stations = historicalJourneyDetailModel.getStations();
+                    relStations = historicalJourneyDetailModel.getRelStations();
                     size = stations.size();
 
                     setStation();
@@ -142,11 +148,25 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
                         coords.add(point.getLon());
                         coords.add(point.getLat());
                     }
-                    addPolylineInPlayGround(coords);
+                    addPolylineInPlayGround(coords, R.mipmap.route_re);
+
+                    //实际辅助点信息
+                    List<HistoricalJourneyDetailModel.RelAssitsBean> relAssits = historicalJourneyDetailModel.getRelAssits();
+                    //辅助点信息
+                    recoords.clear();
+                    if(relAssits != null && relAssits.size() > 0){
+                        for (HistoricalJourneyDetailModel.RelAssitsBean repoint : relAssits) {
+                            recoords.add(repoint.getLon());
+                            recoords.add(repoint.getLat());
+                        }
+                        addPolylineInPlayGround(recoords, R.mipmap.route); //实际辅助点信息
+                    }
 
                     //添加终点起点
-                    addStartAndEnd(assits);
-                    addmark(stations);
+//                    addStartAndEnd(assits);
+                    if(stations != null && stations.size() > 0){
+                        addmark(stations);
+                    }
 
                 }
 
@@ -480,13 +500,22 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
 //                markerOptions.position(new LatLng(dataList.get(i).getLat(), dataList.get(i).getLon()));
 //            }
 
-            if (i != 0 && i != stations.size() - 1) {
+            if(i == 0){
+                markerOptions.position(new LatLng(stations.get(0).getLat(), stations.get(0).getLon()));
+                markerOptions.anchor(0.5f,0.6f);
+                view_complete = View.inflate(context, R.layout.customer_start_marker, null);
+                setMarker(stations, 0, markerOptions);
+            }else if(i == stations.size() - 1){
+                markerOptions.position(new LatLng(stations.get(stations.size() - 1).getLat(), stations.get(stations.size() - 1).getLon()));
+                markerOptions.anchor(0.5f,0.6f);
+                view_complete = View.inflate(context, R.layout.customer_end_marker, null);
+                setMarker(stations, stations.size() - 1, markerOptions);
+            }else {
                 markerOptions.position(new LatLng(stations.get(i).getLat(), stations.get(i).getLon()));
+                markerOptions.anchor(0.5f,0.2f);
+                view_complete = View.inflate(context, R.layout.customer_complete_marker, null);
+                setMarker(stations, i, markerOptions);
             }
-            View view_complete = View.inflate(context, R.layout.customer_complete_marker, null);
-            Bitmap bitmap_complete = convertViewToBitmap(view_complete);
-
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap_complete));//设置marker图标
 
             markerOptionlist.add(markerOptions);
         }
@@ -516,6 +545,24 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
         });
 
 
+    }
+
+    private void setMarker(List<HistoricalJourneyDetailModel.StationsBean> stations, int i, MarkerOptions markerOptions) {
+        tvPlanTime = view_complete.findViewById(R.id.tv_planTime);
+        if(relStations != null && relStations.size() >0){
+            for (HistoricalJourneyDetailModel.RelStationsBean  relStation :relStations){
+                int stationId = stations.get(i).getStationId();
+                int stationIRe = relStation.getStationId();
+                if(stationId == stationIRe){
+                    String planTime = relStation.getRealTime();
+                    String stationTime = TimeUtils.formatStationTime(planTime);
+                    tvPlanTime.setText(stationTime);
+                }
+
+            }
+        }
+        Bitmap bitmap_complete = convertViewToBitmap(view_complete);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap_complete));//设置marker图标
     }
 
     /**
@@ -565,7 +612,7 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
     /**
      * 添加轨迹线
      */
-    private void addPolylineInPlayGround(List<Double> coordPoints) {
+    private void addPolylineInPlayGround(List<Double> coordPoints, int resourceId) {
         List<LatLng> list = readLatLngs(coordPoints);
         List<Integer> colorList = new ArrayList<Integer>();
         List<BitmapDescriptor> bitmapDescriptors = new ArrayList<BitmapDescriptor>();
@@ -574,7 +621,7 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
 
         //用一个数组来存放纹理
         List<BitmapDescriptor> textureList = new ArrayList<BitmapDescriptor>();
-        textureList.add(BitmapDescriptorFactory.fromResource(R.mipmap.route));
+        textureList.add(BitmapDescriptorFactory.fromResource(resourceId));
 
         List<Integer> texIndexList = new ArrayList<Integer>();
         texIndexList.add(0);//对应上面的第0个纹理
@@ -588,14 +635,18 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
 
         }
 
-        mPolyline = aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.mipmap.route)) //setCustomTextureList
+        mPolyline = aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(resourceId)) //setCustomTextureList
                 // (bitmapDescriptors)
                 .setCustomTextureIndex(texIndexList)
                 .addAll(list)
                 .useGradient(true)
-                .width(24));
-        LatLngBounds bounds = new LatLngBounds(list.get(0), list.get(list.size() - 2));
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+                .width(20));
+
+        LatLngBounds.Builder newbounds = new LatLngBounds.Builder();
+        for (int i = 0; i < list.size(); i++) {//trajectorylist为轨迹集合
+            newbounds.include(list.get(i));
+        }
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 300));//第二个参数为四周留空宽度
 
     }
 

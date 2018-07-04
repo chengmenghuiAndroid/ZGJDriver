@@ -34,7 +34,7 @@
             android:id="@+id/tv_msg_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="17:40:40"
+            android:text="2018.06.28  17:40"
             android:textColor="#FF9FA7B3"
             android:textSize="24px"
             android:layout_marginTop="42px"
@@ -51,7 +51,8 @@
             android:layout_toStartOf="@+id/tv_msg_time"
             android:text="2018.06.28"
             android:textColor="#FF9FA7B3"
-            android:textSize="24px"/>
+            android:textSize="24px"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_msg_content"

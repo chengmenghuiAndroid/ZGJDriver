@@ -1,6 +1,7 @@
 package com.lty.zgj.driver.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +21,11 @@ import cn.droidlover.xdroid.kit.KnifeKit;
  */
 
 public class DepartFullAdapter extends SimpleRecAdapter<DepartModel.ListBean, DepartFullAdapter.ViewHolder>{
+
+    private int defItem = -1;
+    private int TAG_DEPART = 0;
+
+
     public DepartFullAdapter(Context context) {
         super(context);
     }
@@ -35,14 +41,14 @@ public class DepartFullAdapter extends SimpleRecAdapter<DepartModel.ListBean, De
     }
 
     @Override
-    public void onBindViewHolder(DepartFullAdapter.ViewHolder holder, int position) {
-        DepartModel.ListBean departModel = data.get(position);
+    public void onBindViewHolder(final DepartFullAdapter.ViewHolder holder, final int position) {
+        final DepartModel.ListBean departModel = data.get(position);
 
 
         String stationTime = setArriveStationTime(departModel);
         holder.tvDepartTime.setText(stationTime);
         holder.tvStation.setText(departModel.getStationName());
-        int stationNo = departModel.getStationNo();
+        int stationNo = departModel.getPeopleCount();
         holder.tvStationPerson.setText(String.valueOf(stationNo)+"人");
 
 
@@ -57,6 +63,25 @@ public class DepartFullAdapter extends SimpleRecAdapter<DepartModel.ListBean, De
             setVisible(holder.dashed_icon_2);
             holder.iconOval.setImageDrawable(context.getResources().getDrawable(R.drawable.shape_oval_green));
         }
+
+
+        if(defItem != -1){
+            if (position == defItem ) {
+                holder.itemView.setBackgroundColor(Color.parseColor("#FFEDECFE"));
+            } else {
+                holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+            }
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getRecItemClick().onItemClick(position, departModel, TAG_DEPART, holder);
+
+                defItem  = position;
+                notifyDataSetChanged();
+            }
+        });
 
 
     }

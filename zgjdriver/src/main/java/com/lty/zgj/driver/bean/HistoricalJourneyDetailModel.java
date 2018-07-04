@@ -170,16 +170,26 @@ public class HistoricalJourneyDetailModel {
          * stationName : 光谷汇金中心
          */
 
-        private String stationTime;
+        private String realTime;
         private String stationName;
+        private int stationId;
 
-        public String getStationTime() {
-            return stationTime;
+        public int getStationId() {
+            return stationId;
         }
 
-        public void setStationTime(String stationTime) {
-            this.stationTime = stationTime;
+        public void setStationId(int stationId) {
+            this.stationId = stationId;
         }
+
+        public String getRealTime() {
+            return realTime;
+        }
+
+        public void setRealTime(String realTime) {
+            this.realTime = realTime;
+        }
+
 
         public String getStationName() {
             return stationName;

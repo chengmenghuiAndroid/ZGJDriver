@@ -1,6 +1,7 @@
 package com.lty.zgj.driver.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,9 @@ public class DepartAdapter extends RecyclerAdapter<DepartModel.ListBean, DepartA
     private View mIconView;
     private View view;
     private int TAG_DEPART = 3;
+
+    private int defItem = -1;
+
 
     public DepartAdapter(Context context) {
         super(context);
@@ -99,15 +103,30 @@ public class DepartAdapter extends RecyclerAdapter<DepartModel.ListBean, DepartA
             String stationTime = setArriveStationTime(departModel);
             holder.tvDepartTime.setText(stationTime);
             holder.tvStation.setText(departModel.getStationName());
-            int stationNo = departModel.getStationNo();
+            int stationNo = departModel.getPeopleCount();
             holder.tvStationPerson.setText(String.valueOf(stationNo)+"人");
+
+            if(defItem != -1){
+                if (position == defItem ) {
+                    holder.itemView.setBackgroundColor(Color.parseColor("#FFEDECFE"));
+                } else {
+                    holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+                }
+            }
+
+
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getRecItemClick().onItemClick(position, departModel, TAG_DEPART, holder);
+
+                    defItem  = position;
+                    notifyDataSetChanged();
                 }
             });
+
+
         }
     }
 
@@ -150,14 +169,14 @@ public class DepartAdapter extends RecyclerAdapter<DepartModel.ListBean, DepartA
         ImageView dashed_icon_1;
         @BindView(R.id.dashed_2)
         ImageView dashed_icon_2;
-        @BindView(R.id.al_item)
-        AutoLinearLayout alItem;
         @BindView(R.id.tv_depart_time)
         TextView tvDepartTime;
         @BindView(R.id.tv_station)
         TextView tvStation;
         @BindView(R.id.tv_station_person)
         TextView tvStationPerson;
+        @BindView(R.id.al_item)
+        AutoLinearLayout autoRela;
 
         public ViewHolder(View itemView) {
             super(itemView);

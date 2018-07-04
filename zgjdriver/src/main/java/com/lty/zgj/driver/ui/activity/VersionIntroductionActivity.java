@@ -26,12 +26,7 @@ public class VersionIntroductionActivity extends BaseXActivity {
     TextView tvRight;
 
 
-    protected void initView() {
-        StatusBarUtils.with(this)
-                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
-                .init();
-        tvTitle.setText("软件版本介绍");
-    }
+
 
     public static void launch(Activity activity) {
         Router.newIntent(activity)
@@ -41,6 +36,15 @@ public class VersionIntroductionActivity extends BaseXActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        initView();
+    }
+
+    protected void initView() {
+        StatusBarUtils.with(this)
+                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
+                .init();
+        tvTitle.setText("软件版本介绍");
+        getUiDelegate().visible(true, navButton);
 
     }
 

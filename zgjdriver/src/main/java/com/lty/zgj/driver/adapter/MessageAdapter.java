@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.bean.DriverNoticeInfoModel;
+import com.lty.zgj.driver.core.tool.TimeUtils;
 import com.zhy.autolayout.utils.AutoUtils;
 
 import butterknife.BindView;
@@ -44,10 +45,16 @@ public class MessageAdapter extends SimpleRecAdapter<DriverNoticeInfoModel.Recor
         holder.tvMsgTitle.setText(recordsBean.getTitle());
         holder.tvMsgContent.setText(recordsBean.getContent());
 
+        String createTime = recordsBean.getCreateTime();
+        String ymdHms = TimeUtils.getYMDHms(createTime);
+        holder.tvMsgTime.setText(ymdHms);
+
+
 
         int type = Integer.parseInt(recordsBean.getType());
         switch (type){
             case 1:
+            case 3:
                 holder.profileImageType.setImageDrawable(context.getResources().getDrawable(R.mipmap.pic_zgj));
                 break;
 

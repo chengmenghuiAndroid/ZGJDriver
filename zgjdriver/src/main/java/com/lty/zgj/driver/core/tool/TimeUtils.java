@@ -589,6 +589,20 @@ public class TimeUtils {
     }
 
 
+
+    public static String getYMDHms(String dateTime) {
+        String year = dateTime.substring(0, 4);
+        String month = dateTime.substring(4, 6);
+        String day = dateTime.substring(6, 8);
+        String hour = dateTime.substring(8, 10);
+        String minute = dateTime.substring(10, dateTime.length());
+
+        return year+"."+month+"."+day+"  "+hour+":"+minute;
+    }
+
+
+
+
     /**
      * 计算时间差
      *

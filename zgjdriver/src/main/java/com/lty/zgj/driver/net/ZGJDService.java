@@ -11,6 +11,7 @@ import com.lty.zgj.driver.bean.HistoricalJourneyModel;
 import com.lty.zgj.driver.bean.HttpResult;
 import com.lty.zgj.driver.bean.LoginModel;
 import com.lty.zgj.driver.bean.StartBustModel;
+import com.lty.zgj.driver.bean.TicketGuideModel;
 import com.lty.zgj.driver.bean.TripListModel;
 
 import retrofit2.http.Body;
@@ -18,7 +19,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 import rx.Observable;
 
 import static me.jessyan.retrofiturlmanager.RetrofitUrlManager.DOMAIN_NAME_HEADER;
@@ -105,20 +105,31 @@ public interface ZGJDService {
      * @param driverId 司机id
      * @return
      */
-    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL__CQJ_NAME})
-    @POST("/driverNoticeInfo/search")
-    Observable<HttpResult<DriverNoticeInfoModel>> driverNoticeInfo(@Query("driverId") int driverId,
-                                                                   @Query("page") int page);
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
+    @GET("/driverNoticeInfo/search/{driverId}/{page}")
+    Observable<HttpResult<DriverNoticeInfoModel>> driverNoticeInfo(@Path("driverId") int driverId,
+                                                                   @Path("page") int page);
 
     /**
      * 消息详情
      * @param noticeId 条目id
      * @return
      */
-    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL__CQJ_NAME})
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
     @GET("/driverNoticeInfo/getNotice/{noticeId}")
     Observable<HttpResult<DriverNoticeInfoDetailModel>> driverNoticeInfoDetail(@Path("noticeId") int noticeId);
 
+
+    /**
+     *
+     * @param driverId
+     * @param guideType  使用条款  3 帮助说明4
+     * @return
+     */
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL__CQJ_NAME})
+    @GET("/get/{driverId}/{guideType}")
+    Observable<HttpResult<TicketGuideModel>> ticketGuide(@Path("driverId") int driverId,
+                                                         @Path("guideType") int guideType);
 
 
 }

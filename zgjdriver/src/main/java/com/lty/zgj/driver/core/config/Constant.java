@@ -24,4 +24,5 @@ public class Constant {
     public static final int HIDE_DOT = 0; //隐藏小红点
     public static final String DOT_KET = "DOT_KET";
     public static String isLoadData = "isLoadData";
+    public static String cityCode = "cityCode";
 }
