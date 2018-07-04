@@ -354,7 +354,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         aMap.getUiSettings().setMyLocationButtonEnabled(false); //设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
         //蓝点初始化
-
         setupLocationStyle();
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
@@ -371,11 +370,11 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
      */
     private void setupLocationStyle() {
         myLocationStyle = new MyLocationStyle();
+        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
         myLocationStyle.showMyLocation(true);
         // 自定义定位蓝点图标
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.mipmap.icon_coordinate_point));
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_coordinate_point));
         // 自定义精度范围的圆形边框颜色
 //        myLocationStyle.strokeColor(STROKE_COLOR);
         myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
@@ -455,12 +454,11 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
                     latitude = amapLocation.getLatitude();
                     longitude = amapLocation.getLongitude();
-
+                    //点击定位按钮 能够将地图的中心移动到定位点
+                    mListener.onLocationChanged(amapLocation);
                     if (isFirstLoc) {
                         //将地图移动到定位点
-                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
-                        //点击定位按钮 能够将地图的中心移动到定位点
-                        mListener.onLocationChanged(amapLocation);
+//                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
                         //添加图钉
 //                      aMap.addMarker(getMarkerOptions(amapLocation));
                         //获取定位信息
@@ -468,6 +466,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                         mStartPoint = new LatLonPoint(latitude, longitude);
                         searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);//定位成功 规划路径导航
                         isFirstLoc = false;
+                        mlocationClient.stopLocation();
+
                     }
                     StringBuffer buffer = new StringBuffer();
                     city = amapLocation.getCity();
@@ -619,7 +619,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             mlocationClient = new AMapLocationClient(context);
         }
 
-
         //初始化定位参数
         initLocationOption();
         //设置定位监听
@@ -646,10 +645,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         //gps定位优先
         mLocationOption.setGpsFirst(false);
         //设置定位间隔
-        mLocationOption.setInterval(3000);
+        mLocationOption.setInterval(2000);
         mLocationOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是ture
-        mLocationOption.setOnceLocation(true);//可选，设置是否单次定位。默认是false
-        //AMapLocationClientOption.setLocationProtocol(AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
     }
 
 
@@ -1322,7 +1319,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     public void ononMoonStickyEvent(ReceiveDateEvent receiveDateEvent) {
         int tag = receiveDateEvent.getTag();
 
-        isFirstLoc = true;
+//        isFirstLoc = true;
 
         switch (tag) {
             case Constant.CLICK_DEPART_TAB:

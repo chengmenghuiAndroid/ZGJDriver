@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,7 +112,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     List<String> list2 = new ArrayList<>();
     List<Double> pointsRepairShop = new ArrayList<Double>();
     List<Double> coords = new ArrayList<Double>();
-    List<Double> recoords= new ArrayList<Double>();
+    List<Double> recoords = new ArrayList<Double>();
     private float mapZoom;
     private LatLng mapTarget;
     private Polyline mPolyline;
@@ -204,34 +205,29 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
      * 设置一些amap的属性
      */
     private void setUpMap() {
-        //设置地图的放缩级别
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
         // 设置定位监听
         aMap.setLocationSource(this);
+        //设置地图的放缩级别
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
         // 设置定位的类型为定位模式，有定位、跟随或地图根据面向方向旋转几种
-        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
         aMap.getUiSettings().setTiltGesturesEnabled(false);//设置地图是否可以倾斜
-        aMap.getUiSettings().setRotateGesturesEnabled(false);//设置地图是否可以旋转
+        aMap.getUiSettings().setRotateGesturesEnabled(true);//设置地图是否可以旋转
         aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        //初始化定位蓝点样式类
 
-        //蓝点初始化
-        //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle = new MyLocationStyle();
-        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         setupLocationStyle();
-
-        aMap.getUiSettings().setMyLocationButtonEnabled(false); //设置默认定位按钮是否显示，非必需设置。
-        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
-
-        myLocationStyle.showMyLocation(false);
-
 
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
                 //从location对象中获取经纬度信息，地址描述信息，建议拿到位置之后调用逆地理编码接口获取
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                Log.e(THIS_FILE, "小蓝点定位经纬度-------" + "latitude----" + latitude
+                        + "........." + "longitude--" + longitude);
             }
         });
     }
@@ -240,15 +236,25 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
      * 设置自定义定位蓝点
      */
     private void setupLocationStyle() {
+
+        myLocationStyle = new MyLocationStyle();
+        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        //LOCATION_TYPE_LOCATION_ROTATE
+        //连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+        //显示小蓝点
+        myLocationStyle.showMyLocation(true);
         // 自定义定位蓝点图标
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.mipmap.icon_location));
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_coordinate_point));
         // 自定义精度范围的圆形边框颜色
-        myLocationStyle.strokeColor(STROKE_COLOR);
+//        myLocationStyle.strokeColor(STROKE_COLOR);
+        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
         //自定义精度范围的圆形边框宽度
         myLocationStyle.strokeWidth(5);
+
+//        myLocationStyle.radiusFillColor(FILL_COLOR);
+        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
         // 设置圆形的填充颜色
-        myLocationStyle.radiusFillColor(FILL_COLOR);
         // 将自定义的 myLocationStyle 对象添加到地图上
         aMap.setMyLocationStyle(myLocationStyle);
     }
@@ -303,8 +309,6 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(context);
         }
-
-
         //初始化定位参数
         initLocationOption();
         //设置定位监听
@@ -331,12 +335,8 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         //gps定位优先
         mLocationOption.setGpsFirst(false);
         //设置定位间隔
-        mLocationOption.setInterval(3000);
+        mLocationOption.setInterval(2000);
         mLocationOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是ture
-        mLocationOption.setOnceLocation(true);//可选，设置是否单次定位。默认是false
-        mLocationOption.setOnceLocationLatest(true);//true表示获取最近3s内精度最高的一次定位结果；false表示使用默认的连续定位策略。
-        mLocationOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
-        //AMapLocationClientOption.setLocationProtocol(AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
     }
 
     /**
@@ -443,9 +443,9 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                     tvTime.setText(TimeUtils.getYMD(dateTime));
 
                     int status = historicalJourneyDetailModel.getStatus();
-                    if(status == 1){
+                    if (status == 1) {
                         tvStatus.setText("已完成");
-                    }else if(status == 2){
+                    } else if (status == 2) {
                         tvStatus.setText("已取消");
                     }
 
@@ -453,7 +453,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                     List<HistoricalJourneyDetailModel.AssitsBean> assits = historicalJourneyDetailModel.getAssits();
                     //辅助点信息
                     coords.clear();
-                    if(assits != null  && assits.size() > 0){
+                    if (assits != null && assits.size() > 0) {
                         for (HistoricalJourneyDetailModel.AssitsBean point : assits) {
                             coords.add(point.getLon());
                             coords.add(point.getLat());
@@ -466,7 +466,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                     List<HistoricalJourneyDetailModel.RelAssitsBean> relAssits = historicalJourneyDetailModel.getRelAssits();
                     //辅助点信息
                     recoords.clear();
-                    if(relAssits != null && relAssits.size() > 0){
+                    if (relAssits != null && relAssits.size() > 0) {
                         for (HistoricalJourneyDetailModel.RelAssitsBean repoint : relAssits) {
                             recoords.add(repoint.getLon());
                             recoords.add(repoint.getLat());
@@ -477,7 +477,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                     //添加终点起点
 //                    addStartAndEnd(assits);
 
-                    if(stations != null && stations.size() > 0){
+                    if (stations != null && stations.size() > 0) {
                         addmark(stations);
                     }
 
@@ -493,7 +493,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     }
 
 
-    private void addmark( List<HistoricalJourneyDetailModel.StationsBean> stations) {
+    private void addmark(List<HistoricalJourneyDetailModel.StationsBean> stations) {
 
 
 //        第一步添加marker到地图上：
@@ -504,19 +504,19 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
 //                markerOptions.position(new LatLng(dataList.get(i).getLat(), dataList.get(i).getLon()));
 //            }
 
-           if(i == 0){
+            if (i == 0) {
                 markerOptions.position(new LatLng(stations.get(0).getLat(), stations.get(0).getLon()));
-                markerOptions.anchor(0.5f,0.6f);
+                markerOptions.anchor(0.5f, 0.6f);
                 view_complete = View.inflate(context, R.layout.customer_start_marker, null);
                 setMarker(stations, 0, markerOptions);
-            }else if(i == stations.size() - 1){
+            } else if (i == stations.size() - 1) {
                 markerOptions.position(new LatLng(stations.get(stations.size() - 1).getLat(), stations.get(stations.size() - 1).getLon()));
-                markerOptions.anchor(0.5f,0.6f);
+                markerOptions.anchor(0.5f, 0.6f);
                 view_complete = View.inflate(context, R.layout.customer_end_marker, null);
                 setMarker(stations, stations.size() - 1, markerOptions);
-            }else {
+            } else {
                 markerOptions.position(new LatLng(stations.get(i).getLat(), stations.get(i).getLon()));
-                markerOptions.anchor(0.5f,0.2f);
+                markerOptions.anchor(0.5f, 0.2f);
                 view_complete = View.inflate(context, R.layout.customer_complete_marker, null);
                 setMarker(stations, i, markerOptions);
             }
@@ -554,11 +554,11 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     private void setMarker(List<HistoricalJourneyDetailModel.StationsBean> stations, int i, MarkerOptions markerOptions) {
         tvPlanTime = view_complete.findViewById(R.id.tv_planTime);
 
-        if(relStations != null && relStations.size() >0){
-            for (HistoricalJourneyDetailModel.RelStationsBean  relStation :relStations){
+        if (relStations != null && relStations.size() > 0) {
+            for (HistoricalJourneyDetailModel.RelStationsBean relStation : relStations) {
                 int stationId = stations.get(i).getStationId();
                 int stationIRe = relStation.getStationId();
-                if(stationId == stationIRe){
+                if (stationId == stationIRe) {
                     String planTime = relStation.getRealTime();
                     String stationTime = TimeUtils.formatStationTime(planTime);
                     tvPlanTime.setText(stationTime);
@@ -576,9 +576,9 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
      *
      * @param assits
      */
-    private void addStartAndEnd(List<HistoricalJourneyDetailModel.AssitsBean>  assits) {
+    private void addStartAndEnd(List<HistoricalJourneyDetailModel.AssitsBean> assits) {
 
-        View view_start = View.inflate(context,R.layout.customer_start_marker, null);
+        View view_start = View.inflate(context, R.layout.customer_start_marker, null);
         TextView tvPlanTimeStart = view_start.findViewById(R.id.tv_planTime);
 
         Bitmap bitmap_start = convertViewToBitmap(view_start);
@@ -590,8 +590,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         aMap.addMarker(startMarker);
 
 
-
-        View view_end = View.inflate(context,R.layout.customer_end_marker, null);
+        View view_end = View.inflate(context, R.layout.customer_end_marker, null);
         Bitmap bitmap_end = convertViewToBitmap(view_end);
         MarkerOptions endMarker = new MarkerOptions().icon(BitmapDescriptorFactory
                 .fromBitmap(bitmap_end));
@@ -616,8 +615,6 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         return bitmap;
 
     }
-
-
 
 
     /**
@@ -660,7 +657,6 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         }
         aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 300));//第二个参数为四周留空宽度
     }
-
 
 
     /**
@@ -731,17 +727,17 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         if (mListener != null && amapLocation != null) {
             if (mListener != null && amapLocation != null) {
                 if (amapLocation != null && amapLocation.getErrorCode() == 0) {
-
-
+                    mListener.onLocationChanged(amapLocation);
+                    //点击定位按钮 能够将地图的中心移动到定位点
                     if (isFirstLoc) {
+
                         //将地图移动到定位点
 //                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
-                        //点击定位按钮 能够将地图的中心移动到定位点
-                        mListener.onLocationChanged(amapLocation);
                         //添加图钉
-//                    aMap.addMarker(getMarkerOptions(amapLocation));
+//                      aMap.addMarker(getMarkerOptions(amapLocation));
                         //获取定位信息
                         isFirstLoc = false;
+                        mlocationClient.stopLocation();
                     }
                     StringBuffer buffer = new StringBuffer();
 
@@ -749,7 +745,6 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
 //                    Log.e(THIS_FILE, "------"+ Utils.doubleToString(latitude) +"....."+ Utils.doubleToString(longitude));
 //                    Log.e(THIS_FILE, "buffer.toString------"+buffer.toString());
 //                    Log.e(THIS_FILE, "city------"+ city);
-
                 } else {
                     String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                     Log.e("定位AmapErr", errText);
@@ -761,5 +756,4 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     public void back(View view) {
         finish();
     }
-
 }
