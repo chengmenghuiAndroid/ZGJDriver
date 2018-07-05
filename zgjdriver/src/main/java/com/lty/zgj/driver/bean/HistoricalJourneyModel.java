@@ -77,7 +77,7 @@ public class HistoricalJourneyModel {
         private int tripNo;         //行程编号
         private String routeName;   //线路名称
         private String startName;   //起点站名称
-        private int status;         //行程状态 1完成 2取消
+        private int status;         //行程状态 0待进行 1已完成
         public String getDate() {
             return date;
         }

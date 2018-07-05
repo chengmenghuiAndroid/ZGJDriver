@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.base.BaseXActivity;
+import com.lty.zgj.driver.core.tool.AppUtils;
 import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.zhy.autolayout.AutoRelativeLayout;
 
@@ -33,7 +34,8 @@ public class AboutActivity extends BaseXActivity {
     AutoRelativeLayout versionIntroduction;
     @BindView(R.id.version_check)
     AutoRelativeLayout versionCheck;
-
+    @BindView(R.id.tv_versionName)
+    TextView tvVersionName;
 
     /**
      * @param v
@@ -70,6 +72,7 @@ public class AboutActivity extends BaseXActivity {
                 .init();
         title.setText("关于坐公交");
         getUiDelegate().visible(true, navButton);
+        tvVersionName.setText(AppUtils.getAppName(context)+"_2");
     }
 
     @Override

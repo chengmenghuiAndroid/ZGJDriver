@@ -52,6 +52,7 @@ import com.lty.zgj.driver.core.tool.TimeUtils;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
+import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
@@ -117,6 +118,7 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
     private float mapZoom;
     private LatLng mapTarget;
     private Polyline mPolyline;
+    private Polyline mPolylineWalk;
     private AMap aMap;
 
 
@@ -138,7 +140,7 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
     private MyLocationStyle myLocationStyle;
     private DepartAdapter departAdapter;
     private ViewGroup.LayoutParams layoutParams;
-    private String THIS_FILE = "DepartFragment";
+    private String THIS_FILE = "PendingTripActivity";
     private double latitude;
     private double longitude;
     private String city;
@@ -166,13 +168,16 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
     @Override
     public void initData(Bundle savedInstanceState) {
         mapView.onCreate(savedInstanceState);// 此方法必须重写
+        StatusBarUtils.with(this)
+                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
+                .init();
         title.setText("待出行任务");
         getUiDelegate().visible(true, navButton);
         checkPermissionsLocation();
         initRv();
-        initGaodeMap();
         String itemId = getIntent().getStringExtra("itemId");
         fetchDepartDetailData(itemId);
+        initGaodeMap();
 
 //        layoutParams = autoLinearLayout.getLayoutParams();
 //        addPolylineInPlayGround(coords);
@@ -202,7 +207,7 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
 
             dateTime = date;
 
-            tvDepartTime.setText("今天" + TimeUtils.getMD(dateTime));
+            tvDepartTime.setText(TimeUtils.getMD(dateTime));
 
 
             //站点信息
@@ -223,7 +228,6 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
 
             // 步行终点坐标
             mEndPoint = new LatLonPoint(depart.getLat(), depart.getLon());
-
             setStation();//设置今日站点信息
 
             //辅助点信息
@@ -232,6 +236,12 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
                 coords.add(point.getLongitude());
                 coords.add(point.getLatitude());
             }
+
+            if (mPolyline != null) {
+                mPolyline.remove();
+                mPolyline = null;
+            }
+
             addPolylineInPlayGround(coords); //绘制辅助线
 
 
@@ -338,29 +348,29 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
      * 设置一些amap的属性
      */
     private void setUpMap() {
-        //设置地图的放缩级别
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
         // 设置定位监听
         aMap.setLocationSource(this);
+        //设置地图的放缩级别
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
         // 设置定位的类型为定位模式，有定位、跟随或地图根据面向方向旋转几种
         aMap.getUiSettings().setTiltGesturesEnabled(false);//设置地图是否可以倾斜
-        aMap.getUiSettings().setRotateGesturesEnabled(false);//设置地图是否可以旋转
+        aMap.getUiSettings().setRotateGesturesEnabled(true);//设置地图是否可以旋转
         aMap.getUiSettings().setZoomControlsEnabled(false);
-        //蓝点初始化
-        myLocationStyle = new MyLocationStyle();
-        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        //初始化定位蓝点样式类
+
         setupLocationStyle();
-
-        aMap.getUiSettings().setMyLocationButtonEnabled(false); //设置默认定位按钮是否显示，非必需设置。
-        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
-
-        myLocationStyle.showMyLocation(true);
 
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
                 //从location对象中获取经纬度信息，地址描述信息，建议拿到位置之后调用逆地理编码接口获取
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                Log.e(THIS_FILE, "小蓝点定位经纬度-------" + "latitude----" + latitude
+                        + "........." + "longitude--" + longitude);
             }
         });
     }
@@ -369,15 +379,24 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
      * 设置自定义定位蓝点
      */
     private void setupLocationStyle() {
+        myLocationStyle = new MyLocationStyle();
+        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        //LOCATION_TYPE_LOCATION_ROTATE
+        //连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+        //显示小蓝点
+        myLocationStyle.showMyLocation(true);
         // 自定义定位蓝点图标
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.mipmap.icon_coordinate_point));
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_coordinate_point));
         // 自定义精度范围的圆形边框颜色
-        myLocationStyle.strokeColor(STROKE_COLOR);
+//        myLocationStyle.strokeColor(STROKE_COLOR);
+        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
         //自定义精度范围的圆形边框宽度
         myLocationStyle.strokeWidth(5);
+
+//        myLocationStyle.radiusFillColor(FILL_COLOR);
+        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
         // 设置圆形的填充颜色
-        myLocationStyle.radiusFillColor(FILL_COLOR);
         // 将自定义的 myLocationStyle 对象添加到地图上
         aMap.setMyLocationStyle(myLocationStyle);
     }
@@ -432,16 +451,16 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
 
                     latitude = amapLocation.getLatitude();
                     longitude = amapLocation.getLongitude();
+                    //点击定位按钮 能够将地图的中心移动到定位点
+                    mListener.onLocationChanged(amapLocation);
+
                     if (isFirstLoc) {
-                        //将地图移动到定位点
-                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
-                        //点击定位按钮 能够将地图的中心移动到定位点
-                        mListener.onLocationChanged(amapLocation);
+//                        //将地图移动到定位点
+//                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
                         //添加图钉
 //                    aMap.addMarker(getMarkerOptions(amapLocation));
                         //获取定位信息
                         isFirstLoc = false;
-
                         mStartPoint = new LatLonPoint(latitude, longitude);
                         searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);//定位成功 规划路径导航
 
@@ -494,8 +513,6 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(context);
         }
-
-
         //初始化定位参数
         initLocationOption();
         //设置定位监听
@@ -522,12 +539,8 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
         //gps定位优先
         mLocationOption.setGpsFirst(false);
         //设置定位间隔
-        mLocationOption.setInterval(3000);
+        mLocationOption.setInterval(2000);
         mLocationOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是ture
-        mLocationOption.setOnceLocation(true);//可选，设置是否单次定位。默认是false
-        mLocationOption.setOnceLocationLatest(true);//true表示获取最近3s内精度最高的一次定位结果；false表示使用默认的连续定位策略。
-        mLocationOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
-        //AMapLocationClientOption.setLocationProtocol(AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
     }
 
 
@@ -599,7 +612,7 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
         for (int i = 0; i < points.size(); i++) {//trajectorylist为轨迹集合
             newbounds.include(points.get(i));
         }
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 300));//第二个参数为四周留空宽度
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 400));//第二个参数为四周留空宽度
     }
 
 
@@ -677,10 +690,14 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
                 .setCustomTextureIndex(texIndexList)
                 .addAll(list)
                 .useGradient(true)
-                .width(20));
+                .width(18));
 
-        LatLngBounds bounds = new LatLngBounds(list.get(0), list.get(list.size() - 2));
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+
+        LatLngBounds.Builder newbounds = new LatLngBounds.Builder();
+        for (int i = 0; i < list.size(); i++) {//trajectorylist为轨迹集合
+            newbounds.include(list.get(i));
+        }
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 200));//第二个参数为四周留空宽度
 
     }
 
@@ -886,6 +903,11 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
 
                     }
 
+
+                    if (mPolylineWalk != null) {
+                        mPolylineWalk.remove();
+                        mPolylineWalk = null;
+                    }
                     addPolylineInPlayGroundWalk(coordsWalkRoute);
 
 
@@ -925,7 +947,7 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
 
         }
 
-        mPolyline = aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.shape_dotted)) //setCustomTextureList
+        mPolylineWalk = aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.shape_dotted)) //setCustomTextureList
                 // (bitmapDescriptors)
                 .setCustomTextureIndex(texIndexList)
                 .addAll(list)
@@ -935,8 +957,11 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
                 .width(18));
 
 
-        LatLngBounds bounds = new LatLngBounds(list.get(0), list.get(list.size() - 2));
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+        LatLngBounds.Builder newbounds = new LatLngBounds.Builder();
+        for (int i = 0; i < list.size(); i++) {//trajectorylist为轨迹集合
+            newbounds.include(list.get(i));
+        }
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 300));//第二个参数为四周留空宽度
 
     }
 

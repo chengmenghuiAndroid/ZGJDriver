@@ -1,7 +1,10 @@
 package com.lty.zgj.driver.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 
 import com.lty.zgj.driver.R;
@@ -19,12 +22,12 @@ import com.lty.zgj.driver.ui.activity.PendingTripActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidbase.cache.SharedPref;
 import cn.droidlover.xrecyclerview.RecyclerItemCallback;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 
 /**
@@ -35,7 +38,10 @@ import cn.droidlover.xrecyclerview.XRecyclerView;
 public class WaitGoingOutFragment extends BaseXFragment {
 
     @BindView(R.id.contentLayout)
-    XRecyclerContentLayout contentLayout;
+    XRecyclerView contentLayout;
+
+    @BindView(R.id.swiperefreshlayout)
+    SwipeRefreshLayout mSwiperefreshlayout;
 
     private WaitGoingOutItemAdapter goingOutItemAdapter; //
     private WaitGoingOutTravelAdapter waitGoingOutTravelAdapter; //未出行
@@ -45,11 +51,9 @@ public class WaitGoingOutFragment extends BaseXFragment {
     private WaitGoingOutItemAdapter surplusAdapter;
     private WaitGoingOutTravelAdapter travelAdapter;
     private int driverId;
-
-
-    public void setLayoutManager(XRecyclerView recyclerView) {
-        recyclerView.verticalLayoutManager(context);
-    }
+    private List<TripListModel.TodayListBean> list = new ArrayList<>();
+    private List<TripListModel.TodayListBean.ListBean> todayItemDates;
+    private boolean isRefresh = false;//是否刷新中
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -58,28 +62,44 @@ public class WaitGoingOutFragment extends BaseXFragment {
 
 
     private void initRv() {
-        contentLayout.getRecyclerView().setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false));
-        setLayoutManager(contentLayout.getRecyclerView());
-
-        contentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
-            @Override
-            public void onRefresh() {
-
-            }
-
-            @Override
-            public void onLoadMore(int page) {
-
-            }
-        });
-
+        contentLayout.setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false));
+        setLayoutManager(contentLayout);
 
         surplusAdapter = getSurplusAdapter();
         travelAdapter = getTravelAdapter();
 
 
+        mSwiperefreshlayout.setOnRefreshListener(refreshListener);
 
-//        contentLayout.getRecyclerView().useDefLoadMoreView();
+        mSwiperefreshlayout.setColorSchemeColors(Color.BLUE,
+                Color.GREEN,
+                Color.YELLOW,
+                Color.RED);
+
+    }
+
+    private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if (!isRefresh) {
+                isRefresh = true;
+                //模拟加载网络数据，这里设置4秒，正好能看到4色进度条
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+
+                        //显示或隐藏刷新进度条
+                        mSwiperefreshlayout.setRefreshing(false);
+                        fetchTripListData(driverId);
+                        isRefresh = false;
+                    }
+                }, 4000);
+            }
+
+        }
+    };
+
+    public void setLayoutManager(XRecyclerView recyclerView) {
+        recyclerView.verticalLayoutManager(context);
     }
 
     @Override
@@ -110,15 +130,12 @@ public class WaitGoingOutFragment extends BaseXFragment {
             public void onNext(TripListModel tripListModel) {
 
                 waitGoingOutAdapter = new WaitGoingOutAdapter(context, surplusAdapter, travelAdapter, tripListModel);
-                contentLayout.getRecyclerView().setAdapter(waitGoingOutAdapter);
+                contentLayout.setAdapter(waitGoingOutAdapter);
 
                 List<TripListModel.NoStartListBean> noStartList = tripListModel.getNoStartList();
                 List<TripListModel.TodayListBean> todayList = tripListModel.getTodayList();
 
-
-
                 getSurplusAdapter().setData(todayList);
-
                 getTravelAdapter().setData(noStartList);
 
 
@@ -132,6 +149,23 @@ public class WaitGoingOutFragment extends BaseXFragment {
         }, context),id);
 
     }
+//    private void setStation() {
+//        if (departModelList != null && departModelList.size() > 0) {
+//            if (size < 4) {
+//
+//                list.clear();
+//                list.addAll(departModelList);
+//                getAdapter().setData(list);
+//            } else {
+//                list.clear();
+//                list.add(departModelList.get(0));
+//                list.add(departModelList.get(1));
+//                list.add(departModelList.get(size - 2));
+//                list.add(departModelList.get(size - 1));
+//                getAdapter().setData(list);
+//            }
+//        }
+//    }
 
     //今日行程
     public WaitGoingOutItemAdapter getSurplusAdapter() {

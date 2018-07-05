@@ -2,6 +2,7 @@ package com.lty.zgj.driver.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,6 +33,10 @@ public class TermsOfServiceActivity extends BaseXActivity {
     TextView tvTitle;
     @BindView(R.id.tv_right)
     TextView tvRight;
+    @BindView(R.id.tv_terms_content)
+    TextView tvTermsContent;
+    @BindView(R.id.tv_terms_title)
+    TextView tvTermstitle;
 
     protected void initView() {
         StatusBarUtils.with(this)
@@ -40,26 +45,31 @@ public class TermsOfServiceActivity extends BaseXActivity {
         tvTitle.setText("软件服务条款");
         getUiDelegate().visible(true, navButton);
 
-        int driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
+        String cityCode = SharedPref.getInstance(context).getString(Constant.cityCode, null);
 
-        if(driverId != 0){
+        if (cityCode != null) {
 
-        fetchDateTicketGuide(driverId, 4);
+            fetchDateTicketGuide(cityCode, 4);
         }
     }
 
-    private void fetchDateTicketGuide(int driverId, int guideType) {
+    private void fetchDateTicketGuide(String cityCode, int guideType) {
         ObjectLoader.getInstance().getticketGuideData(new ProgressSubscriber<TicketGuideModel>(new SubscriberOnNextListener<TicketGuideModel>() {
             @Override
             public void onNext(TicketGuideModel ticketGuideModel) {
+
+                if (ticketGuideModel != null) {
+                    tvTermstitle.setText(ticketGuideModel.getTitle());
+                    tvTermsContent.setText(Html.fromHtml(ticketGuideModel.getContent()));
+                }
 
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.e("TermsOfServiceActivity", "--"+e.getMessage());
+                Log.e("TermsOfServiceActivity", "--" + e.getMessage());
             }
-        }, context), driverId, guideType);
+        }, context), cityCode, guideType);
     }
 
     public static void launch(Activity activity) {

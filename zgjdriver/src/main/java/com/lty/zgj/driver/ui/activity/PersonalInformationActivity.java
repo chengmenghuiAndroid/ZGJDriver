@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.base.BaseXActivity;
-import com.lty.zgj.driver.bean.UserInfoModel;
+import com.lty.zgj.driver.bean.LoginWebWebSocketModel;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.GsonUtils;
 import com.lty.zgj.driver.weight.StatusBarUtils;
@@ -49,11 +49,14 @@ public class PersonalInformationActivity extends BaseXActivity {
         getUiDelegate().visible(true, navButton);
         title.setText("个人信息");
         String userInfoData = SharedPref.getInstance(context).getString(Constant.USER_INFO, null);
-        UserInfoModel loginModel = GsonUtils.parserJsonToArrayBean(userInfoData, UserInfoModel.class);
+        LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(userInfoData, LoginWebWebSocketModel.class);
         String account = loginModel.getAccount();
+        String address = loginModel.getAddress();
         String name = loginModel.getName();
         tvUserName.setText(name);
         tvTelNumbers.setText(account);
+        tvAddress.setText(address);
+
     }
 
     @Override

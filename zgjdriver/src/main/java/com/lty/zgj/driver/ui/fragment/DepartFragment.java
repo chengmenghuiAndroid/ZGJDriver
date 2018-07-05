@@ -214,6 +214,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private String endName;
     private Marker marker_time;
     private String startName;
+    private boolean isUpdateGps;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -259,9 +260,12 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
             String token = loginModel.getToken();//更新token
             driverId = loginModel.getDriverId();
+            cityCode = loginModel.getCityCode();
+
             SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, token);
             SharedPref.getInstance(context).putInt(Constant.WEBSOCKT_CONT, 1);
             SharedPref.getInstance(context).putInt(Constant.DRIVER_ID, driverId); //司机Id
+            SharedPref.getInstance(context).putString(Constant.cityCode, cityCode); //司机Id
             Log.e(THIS_FILE, "token-----" + token);
             Log.e("token", "token---SharedPref----" + token + "-----" + "传gps断线重连获取token");
             Log.e(THIS_FILE, "driverId----" + driverId);
@@ -349,7 +353,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         aMap.setLocationSource(this);
         // 设置定位的类型为定位模式，有定位、跟随或地图根据面向方向旋转几种
         aMap.getUiSettings().setTiltGesturesEnabled(false);//设置地图是否可以倾斜
-        aMap.getUiSettings().setRotateGesturesEnabled(false);//设置地图是否可以旋转
+        aMap.getUiSettings().setRotateGesturesEnabled(true);//设置地图是否可以旋转
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false); //设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
@@ -360,7 +364,12 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             public void onMyLocationChange(Location location) {
                 //从location对象中获取经纬度信息，地址描述信息，建议拿到位置之后调用逆地理编码接口获取
 
-                Log.e(THIS_FILE, "location----位置改变----"+location);
+                //从location对象中获取经纬度信息，地址描述信息，建议拿到位置之后调用逆地理编码接口获取
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                Log.e(THIS_FILE, "小蓝点定位经纬度-------" + "latitude----" + latitude
+                        + "........." + "longitude--" + longitude);
             }
         });
     }
@@ -371,7 +380,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private void setupLocationStyle() {
         myLocationStyle = new MyLocationStyle();
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
         myLocationStyle.showMyLocation(true);
         // 自定义定位蓝点图标
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_coordinate_point));
@@ -466,26 +475,28 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                         mStartPoint = new LatLonPoint(latitude, longitude);
                         searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);//定位成功 规划路径导航
                         isFirstLoc = false;
-                        mlocationClient.stopLocation();
-
                     }
+
+
                     StringBuffer buffer = new StringBuffer();
                     city = amapLocation.getCity();
                     street = amapLocation.getStreet();
-
                     buffer.append(amapLocation.getCountry() + "" + amapLocation.getProvince() + "" + city + "" + amapLocation.getProvince() + "" + amapLocation.getDistrict() + "" + street + "" + amapLocation.getStreetNum());
-
 //                    Log.e(THIS_FILE, "------"+ Utils.doubleToString(latitude) +"....."+ Utils.doubleToString(longitude));
 //                    Log.e(THIS_FILE, "buffer.toString------"+buffer.toString());
 //                    Log.e(THIS_FILE, "city------"+ city);
                     Log.e(THIS_FILE, "----latitude------" + latitude + "..longitude......." + longitude);
-                    cityCode = amapLocation.getAdCode();
-                    SharedPref.getInstance(context).putString(Constant.cityCode, cityCode);
+
                     Log.e(THIS_FILE, "----cityCode------" + cityCode);
-                    Message message = handler.obtainMessage();
-                    LatLng latLng = new LatLng(latitude, longitude);
-                    message.obj = latLng;
-                    handler.sendMessage(message);
+
+                    //是否上传Gps
+                    if(isUpdateGps){
+                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
+                        Message message = handler.obtainMessage();
+                        LatLng latLng = new LatLng(latitude, longitude);
+                        message.obj = latLng;
+                        handler.sendMessage(message);
+                    }
 
                 } else {
                     String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
@@ -538,21 +549,21 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
                         float distance = AMapUtils.calculateLineDistance(latLng, latLng2);
 
-                        if (distance <= 150) {
+                        if (distance <= 50) {
                             Log.e(THIS_FILE, "latLng2-----" + latLng2);
                             Log.e(THIS_FILE, "当前定位点 lat:" + lat + "lon:" + lon + "\n目标点: lat:" + latLng2.latitude + "...." + "lon:" + latLng2.longitude + "\n距离：" + distance + "米");
-                            int tripNo = pointStation.getTripNo();//行程id
+                            int tripId= pointStation.getId();//行程id
                             int stationId = pointStation.getStationId();
                             String stationName = pointStation.getStationName();
-                            long stationTime = System.currentTimeMillis() / 1000;
-
-                            travelPathUploadData(tripNo, routeId, stationId, stationName, stationTime, busId, scheduleId);
-                            pointStation.setUploadPoint(true);
-
                             tvBtn.setText("到达" + stationName);
                             if (pointStation.getStationName().equals(endName)) {
                                 tvBtn.setText("结束");
                             }
+
+                            long stationTime = System.currentTimeMillis() / 1000;
+                            travelPathUploadData(tripId, routeId, stationId, stationName, stationTime, busId, scheduleId);
+                            pointStation.setUploadPoint(true);
+
                         }
                     }
                 }
@@ -646,7 +657,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         mLocationOption.setGpsFirst(false);
         //设置定位间隔
         mLocationOption.setInterval(2000);
-        mLocationOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是ture
     }
 
 
@@ -758,7 +768,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         for (int i = 0; i < points.size(); i++) {//trajectorylist为轨迹集合
             newbounds.include(points.get(i));
         }
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 300));//第二个参数为四周留空宽度
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 350));//第二个参数为四周留空宽度
     }
 
 
@@ -768,6 +778,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             @Override
             public void onNext(StartBustModel startBustModel) {
                 tvBtn.setText("到达" + startName);
+                isUpdateGps  = true;
                 handlerExecuteTimerTask(true);
                 CLICK_STATUS = END_BTN;
             }
@@ -785,10 +796,12 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             @Override
             public void onNext(EndBusModel endBusModel) {
                 mycircleHandler.removeCallbacks(runnable);
+                isUpdateGps  = false;
                 handlerExecuteTimerTask(false);
                 deactivate();
                 aMap.clear();
                 DepartOverActivity.launch(context, scheduleId, mdepartModel);
+                CLICK_STATUS = DEPAR_BTN;
             }
 
             @Override
@@ -968,7 +981,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         for (int i = 0; i < list.size(); i++) {//trajectorylist为轨迹集合
             newbounds.include(list.get(i));
         }
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 300));//第二个参数为四周留空宽度
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 200));//第二个参数为四周留空宽度
 
     }
 
@@ -1118,7 +1131,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             status = departModel.getStatus();
             endName = departModel.getEndName();
             startName = departModel.getStartName();
-
             String date = departModel.getDate();
 
             if (status == 1) {
@@ -1319,7 +1331,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     public void ononMoonStickyEvent(ReceiveDateEvent receiveDateEvent) {
         int tag = receiveDateEvent.getTag();
 
-//        isFirstLoc = true;
+        isFirstLoc = true;
 
         switch (tag) {
             case Constant.CLICK_DEPART_TAB:
@@ -1457,8 +1469,11 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 .width(18));
 
 
-        LatLngBounds bounds = new LatLngBounds(list.get(0), list.get(list.size() - 2));
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+        LatLngBounds.Builder newbounds = new LatLngBounds.Builder();
+        for (int i = 0; i < list.size(); i++) {//trajectorylist为轨迹集合
+            newbounds.include(list.get(i));
+        }
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 200));//第二个参数为四周留空宽度
 
     }
 
@@ -1473,7 +1488,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         public void onItemClick(int position, DepartModel.ListBean model, int tag, DepartAdapter.ViewHolder holder) {
             super.onItemClick(position, model, tag, holder);
             onMapLoaded(model.getLat(), model.getLon());
-            setPlanTimeMarker(model);
+//            setPlanTimeMarker(model);
         }
     };
 
@@ -1483,7 +1498,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         public void onItemClick(int position, DepartModel.ListBean model, int tag, DepartFullAdapter.ViewHolder holder) {
             super.onItemClick(position, model, tag, holder);
 
-            setPlanTimeMarker(model);
+//            setPlanTimeMarker(model);
         }
     };
 

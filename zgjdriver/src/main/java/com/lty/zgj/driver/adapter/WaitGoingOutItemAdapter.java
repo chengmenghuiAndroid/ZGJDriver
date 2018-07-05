@@ -3,10 +3,12 @@ package com.lty.zgj.driver.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.bean.TripListModel;
+import com.zhy.autolayout.AutoRelativeLayout;
 import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.List;
@@ -43,9 +45,33 @@ public class WaitGoingOutItemAdapter extends SimpleRecAdapter<TripListModel.Toda
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final TripListModel.TodayListBean todayListModel = data.get(position);
+        holder.tvPlateNumbers.setText(todayListModel.getBusPlateNumber());
         List<TripListModel.TodayListBean.ListBean> beanList = todayListModel.getList();
+        int size = beanList.size();
 
-        setStationInfo(holder, beanList);
+        if(beanList != null){
+            if(size >= 4){
+                setStationInfo(holder, beanList);
+            }else if (size == 3){
+                holder.au_ar_2.setVisibility(View.GONE);
+                holder.dashed_3.setVisibility(View.GONE);
+                setStationInfo(holder, beanList);
+            }else if(size == 2){
+                holder.au_ar_1.setVisibility(View.GONE);
+                holder.au_ar_2.setVisibility(View.GONE);
+                holder.dashed_2.setVisibility(View.GONE);
+                holder.dashed_3.setVisibility(View.GONE);
+                setStationInfo(holder, beanList);
+            }else if(size == 1){
+                holder.dashed_2.setVisibility(View.GONE);
+                holder.dashed_3.setVisibility(View.GONE);
+                holder.au_ar_1.setVisibility(View.GONE);
+                holder.au_ar_2.setVisibility(View.GONE);
+                holder.au_ar_3.setVisibility(View.GONE);
+            }
+        }
+
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +142,21 @@ public class WaitGoingOutItemAdapter extends SimpleRecAdapter<TripListModel.Toda
         TextView surplusTime4;
         @BindView(R.id.surplus_station_4)
         TextView surplusStation4;
+        @BindView(R.id.au_ar_1)
+        AutoRelativeLayout au_ar_1;
+        @BindView(R.id.au_ar_2)
+        AutoRelativeLayout au_ar_2;
+        @BindView(R.id.au_ar_3)
+        AutoRelativeLayout au_ar_3;
+        @BindView(R.id.dashed_1)
+        ImageView dashed_1;
+        @BindView(R.id.dashed_2)
+        ImageView dashed_2;
+        @BindView(R.id.dashed_3)
+        ImageView dashed_3;
+        @BindView(R.id.tv_plate_numbers)
+        TextView tvPlateNumbers;
+
         public ViewHolder(View itemView) {
             super(itemView);
             KnifeKit.bind(this, itemView);

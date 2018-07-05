@@ -34,7 +34,7 @@
             android:textColor="#FF02CF97"
             android:layout_below="@id/oval_get_on"
             android:layout_centerHorizontal="true"
-            />
+            android:visibility="invisible"/>
 
     </com.zhy.autolayout.AutoRelativeLayout>
 

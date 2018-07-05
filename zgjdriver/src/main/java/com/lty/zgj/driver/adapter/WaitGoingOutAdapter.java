@@ -99,20 +99,16 @@ public class WaitGoingOutAdapter extends RecyclerAdapter<String, RecyclerView.Vi
             ((ViewSurplusHolder) holder).surplusRe.setNestedScrollingEnabled(false);
             setLayoutManager(((ViewSurplusHolder) holder).surplusRe);
             ((ViewSurplusHolder) holder).surplusRe.setAdapter(mSurplusAdapter);
-            if(todayList != null && todayList.size() >0){
-                ((ViewSurplusHolder) holder).tvSurplus.setText("今日"+(getSysTime())+"行程    "+todayList.size()+"趟");
-            }else {
-                ((ViewSurplusHolder) holder).tvSurplus.setText("今日"+(getSysTime())+"行程    "+todayList.size()+"趟");
-            }
-
-
-            //今日(05月08日)行程  1趟
+//            if(todayList != null && todayList.size() >0){
+                ((ViewSurplusHolder) holder).tvSurplus.setText("今日"+"("+getSysTime()+")"+"行程    "+todayList.size()+"趟");
+//            }else {
+//                ((ViewSurplusHolder) holder).tvSurplus.setText("今日"+"("+getSysTime()+")"+"行程    "+0+"趟");
+//            }
 
         } else if(holder instanceof ViewTravelHolder) {
-            ((ViewTravelHolder) holder).travelRe.setNestedScrollingEnabled(false);
             setLayoutManager(((ViewTravelHolder) holder).travelRe);
             ((ViewTravelHolder) holder).travelRe.setAdapter(mTravelAdapter);
-            ((ViewTravelHolder) holder).tvTravel.setText("其余未出行    "+noStartList.size()+"趟");
+            ((ViewTravelHolder) holder).tvTravel.setText("其余未出行行程   "+noStartList.size()+"趟");
         }
     }
 

@@ -24,7 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="30px"
-            android:textColor="#FF02CF97"/>
+            android:textColor="#FF02CF97"
+            android:visibility="invisible"/>
 
     </com.zhy.autolayout.AutoLinearLayout>
 

@@ -12,6 +12,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_plate_numbers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="鄂A·X3396"
@@ -24,7 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30px"
-            android:layout_marginTop="20px">
+            android:layout_marginTop="20px"
+            android:id="@+id/au_ar_0">
 
             <TextView
                 android:id="@+id/surplus_time_1"
@@ -60,9 +62,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/dashed"
-            android:layout_marginLeft="135px"/>
+            android:layout_marginLeft="135px"
+            android:id="@+id/dashed_1"/>
 
         <com.zhy.autolayout.AutoRelativeLayout
+            android:id="@+id/au_ar_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30px">
@@ -101,12 +105,14 @@
             android:layout_width="wrap_content"
             android:layout_height="75px"
             android:src="@mipmap/dotted_line"
-            android:layout_marginLeft="135px"/>
+            android:layout_marginLeft="135px"
+            android:id="@+id/dashed_2"/>
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30px">
+            android:layout_marginLeft="30px"
+            android:id="@+id/au_ar_2">
 
             <TextView
                 android:id="@+id/surplus_time_3"
@@ -139,6 +145,7 @@
         </com.zhy.autolayout.AutoRelativeLayout>
 
         <ImageView
+            android:id="@+id/dashed_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/dashed"
@@ -147,7 +154,8 @@
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30px">
+            android:layout_marginLeft="30px"
+            android:id="@+id/au_ar_3">
 
             <TextView
                 android:id="@+id/surplus_time_4"

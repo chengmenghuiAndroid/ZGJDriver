@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,6 @@ import com.lty.zgj.driver.core.tool.TimeUtils;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
-import com.lty.zgj.driver.weight.ReboundScrollView;
 import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoLinearLayout;
@@ -103,8 +101,8 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     ImageView tvUnfoldRvUp;
     @BindView(R.id.map)
     TextureMapView mapView;
-    @BindView(R.id.s_reboundScrollView)
-    ReboundScrollView sReboundScrollView;
+//    @BindView(R.id.s_reboundScrollView)
+//    ReboundScrollView sReboundScrollView;
 
     private HistoricalJourneyDetailAdapter detailAdapter;
 
@@ -124,7 +122,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
 
 
     private ViewGroup.LayoutParams layoutParams;
-    private String THIS_FILE = "DepartFragment";
+    private String THIS_FILE = "HistoricalJourneyDetailActivity";
     private View mHeader;
     private List<HistoricalJourneyDetailModel.StationsBean> stations;
     private int size;
@@ -165,8 +163,8 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         int status = getIntent().getIntExtra("status", 0);
         if (status == 1) {
             tvStatus.setText("已完成");
-        } else if (status == 2) {
-            tvStatus.setText("已取消");
+        } else if (status == 0) {
+            tvStatus.setText("待进行");
         }
         Log.e(THIS_FILE, "status----" + status);
     }
@@ -443,10 +441,15 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                     tvTime.setText(TimeUtils.getYMD(dateTime));
 
                     int status = historicalJourneyDetailModel.getStatus();
-                    if (status == 1) {
-                        tvStatus.setText("已完成");
-                    } else if (status == 2) {
-                        tvStatus.setText("已取消");
+
+                    if (status == 0) {
+                        tvStatus.setText("未开始");
+                    } else if (status == 1) {
+                        tvStatus.setText("进行中");
+                    }else if (status == 2) {
+                        tvStatus.setText("已结束");
+                    }else if (status == 3) {
+                        tvStatus.setText("取消");
                     }
 
                     //计划辅助点信息
@@ -737,7 +740,6 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
 //                      aMap.addMarker(getMarkerOptions(amapLocation));
                         //获取定位信息
                         isFirstLoc = false;
-                        mlocationClient.stopLocation();
                     }
                     StringBuffer buffer = new StringBuffer();
 

@@ -7,13 +7,13 @@
 
     <include layout="@layout/custom_layout"/>
 
-    <com.lty.zgj.driver.weight.ReboundScrollView
-        android:id="@+id/s_reboundScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+    <!--<com.lty.zgj.driver.weight.ReboundScrollView-->
+        <!--android:id="@+id/s_reboundScrollView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:fillViewport="true"-->
+        <!--android:overScrollMode="never"-->
+        <!--android:scrollbars="none">-->
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
@@ -35,7 +35,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="2018年06月20日"
                         android:textColor="#FF02CF97"
                         android:layout_marginLeft="30px"/>
                     <TextView
@@ -43,7 +42,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20px"
-                        android:text="已完成"
                         android:textColor="#FF02CF97"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="30px"/>
@@ -55,7 +53,6 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="20px"
                         android:layout_below="@id/tv_status"
-                        android:text="鄂A·X3396"
                         android:layout_centerHorizontal="true"
                         android:textColor="#FF56556A"/>
 
@@ -75,7 +72,6 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="30px"
-                            android:text="光谷广场(公交站)"
                             android:textColor="#FF292835"
                             android:textSize="30px"/>
 
@@ -95,7 +91,6 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20px"
                             android:layout_toRightOf="@id/icon_arrowhead"
-                            android:text="工程大学(公交站)"
                             android:textColor="#FF292835"
                             android:textSize="30px"/>
 
@@ -158,7 +153,8 @@
                             android:text="共计：28km"
                             android:textColor="#FF02CF97"
                             android:textSize="26px"
-                            android:layout_marginLeft="60px"/>
+                            android:layout_marginLeft="60px"
+                            android:visibility="gone"/>
 
 
                     </com.zhy.autolayout.AutoLinearLayout>
@@ -183,7 +179,8 @@
                             android:text="发车时间准"
                             android:textSize="12dp"
                             android:textColor="#FFFF3E9E"
-                            android:layout_marginLeft="30px"/>
+                            android:layout_marginLeft="30px"
+                            android:visibility="gone"/>
 
 
                         <com.zhy.autolayout.AutoRelativeLayout
@@ -249,7 +246,7 @@
 
         </com.zhy.autolayout.AutoLinearLayout>
 
-    </com.lty.zgj.driver.weight.ReboundScrollView>
+    <!--</com.lty.zgj.driver.weight.ReboundScrollView>-->
 </com.zhy.autolayout.AutoLinearLayout>
 
 

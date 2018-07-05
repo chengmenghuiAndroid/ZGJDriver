@@ -60,9 +60,9 @@
         </activity>
         <activity
             android:name=".ui.activity.LoginActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:launchMode="singleTask">
+            android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
             android:name=".ui.activity.SetActivity"
@@ -70,7 +70,7 @@
             android:windowSoftInputMode="adjustPan">
 
             <intent-filter>
-                <action android:name="action_main" />
+                <action android:name="action_main"/>
             </intent-filter>
         </activity>
         <activity
@@ -95,18 +95,38 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".ui.activity.MessageActivity"
-                  android:launchMode="singleTop"
-                  android:screenOrientation="portrait"
-                  android:windowSoftInputMode="adjustPan">
+        <activity
+            android:name=".ui.activity.MessageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
 
         </activity>
-        <activity android:name=".ui.activity.HistoricalJourneyActivity"/>
-        <activity android:name=".ui.activity.DepartOverActivity"/>
-        <activity android:name=".ui.activity.HistoricalJourneyDetailActivity"/>
-        <activity android:name=".ui.activity.MessageDetailActivity"/>
-        <activity android:name=".ui.activity.PendingTripActivity"/>
-
+        <activity
+            android:name=".ui.activity.HistoricalJourneyActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.activity.DepartOverActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.activity.HistoricalJourneyDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.activity.MessageDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.activity.PendingTripActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
@@ -133,7 +153,7 @@
             <!-- intent过滤器,指定可以匹配哪些intent, 一般需要定义action 可以是自定义的也可是系统的 -->
             <intent-filter>
                 <!--action-->
-                <action android:name="com.lty.zgj.drivert" />
+                <action android:name="com.lty.zgj.drivert"/>
             </intent-filter>
         </receiver>
     </application>

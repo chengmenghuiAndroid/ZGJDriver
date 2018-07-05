@@ -106,7 +106,7 @@ public interface ZGJDService {
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
-    @GET("/driverNoticeInfo/search/{driverId}/{page}")
+    @GET("/driver/driverNoticeInfo/search/{driverId}/{page}")
     Observable<HttpResult<DriverNoticeInfoModel>> driverNoticeInfo(@Path("driverId") int driverId,
                                                                    @Path("page") int page);
 
@@ -116,19 +116,19 @@ public interface ZGJDService {
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
-    @GET("/driverNoticeInfo/getNotice/{noticeId}")
+    @GET("/driver/driverNoticeInfo/getNotice/{noticeId}")
     Observable<HttpResult<DriverNoticeInfoDetailModel>> driverNoticeInfoDetail(@Path("noticeId") int noticeId);
 
 
     /**
      *
-     * @param driverId
-     * @param guideType  使用条款  3 帮助说明4
+     * @param cityCode
+     * @param guideType  使用条款 4 帮助说明3
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL__CQJ_NAME})
-    @GET("/get/{driverId}/{guideType}")
-    Observable<HttpResult<TicketGuideModel>> ticketGuide(@Path("driverId") int driverId,
+    @GET("/ticketGuide/get/{cityCode}/{guideType}")
+    Observable<HttpResult<TicketGuideModel>> ticketGuide(@Path("cityCode") String cityCode,
                                                          @Path("guideType") int guideType);
 
 

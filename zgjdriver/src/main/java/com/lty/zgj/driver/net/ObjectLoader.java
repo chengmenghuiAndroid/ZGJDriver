@@ -178,8 +178,8 @@ public class ObjectLoader {
     }
 
 
-    public void getticketGuideData(Subscriber<TicketGuideModel> ticketGuideModelSubscriber, int driverId, int guideType){
-        Observable<TicketGuideModel> modelObservable = Api.getGankService().ticketGuide(driverId, guideType).map(new
+    public void getticketGuideData(Subscriber<TicketGuideModel> ticketGuideModelSubscriber, String cityCode, int guideType){
+        Observable<TicketGuideModel> modelObservable = Api.getGankService().ticketGuide(cityCode, guideType).map(new
                 HttpResultFunc<TicketGuideModel>());
         toSubscribe(modelObservable, ticketGuideModelSubscriber);
     }

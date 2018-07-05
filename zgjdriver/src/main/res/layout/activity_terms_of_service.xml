@@ -20,6 +20,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_terms_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -29,13 +30,13 @@
                 android:textSize="32px"/>
 
             <TextView
+                android:id="@+id/tv_terms_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
                 android:textColor="#FF56556A"
                 android:textSize="28px"
-                android:text="@string/tv_terms"
                 tools:ignore="HardcodedText"
                 android:layout_marginBottom="60px"
                 android:layout_marginTop="20px"/>

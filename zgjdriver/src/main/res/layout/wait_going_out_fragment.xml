@@ -10,47 +10,53 @@
         android:layout_width="579px"
         android:layout_height="66px"
         android:layout_gravity="center_horizontal"
-        android:background="@mipmap/rectangle"
-        android:layout_marginTop="12px">
+        android:layout_marginTop="12px"
+        android:background="@mipmap/rectangle">
 
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/icon_remind"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/icon_remind"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10px"
                 android:text="请提前确定好车辆位置，按时间出发到达~"
                 android:textColor="#FFFF3E9E"
-                android:textSize="26px"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10px"/>
+                android:textSize="26px"/>
 
         </com.zhy.autolayout.AutoLinearLayout>
 
 
     </com.zhy.autolayout.AutoRelativeLayout>
 
-
-    <cn.droidlover.xrecyclerview.XRecyclerContentLayout
-        android:id="@+id/contentLayout"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefreshlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:focusableInTouchMode="true"
-        android:focusable="true"
-        android:layout_marginTop="106px"
-        android:background="#FFEEEEF8">
+        android:layout_height="match_parent">
 
-    </cn.droidlover.xrecyclerview.XRecyclerContentLayout>
+        <cn.droidlover.xrecyclerview.XRecyclerView
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="106px"
+            android:background="#FFEEEEF8"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+        </cn.droidlover.xrecyclerview.XRecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 </com.zhy.autolayout.AutoFrameLayout>

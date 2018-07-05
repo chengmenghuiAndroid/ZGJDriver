@@ -26,11 +26,11 @@
         android:textSize="36px"/>
 
     <TextView
+        android:id="@+id/tv_versionName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20px"
-        android:text="v1.4.0.8"
         android:textColor="#FF9897B8"
         android:textSize="26px"/>
 

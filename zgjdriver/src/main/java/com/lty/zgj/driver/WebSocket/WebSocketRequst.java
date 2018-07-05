@@ -74,7 +74,6 @@ public class WebSocketRequst {
      * @param stationId 站点id
      * @param stationName 站点名称
      * @param stationTime 站点时间
-     * @param scheduleDate 班次时间
      * @param busId 车辆id
      * @param scheduleTripId 行程id
      * @return

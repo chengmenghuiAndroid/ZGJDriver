@@ -42,11 +42,16 @@ public class HistoricalJourneyAdapter extends SimpleRecAdapter<HistoricalJourney
         final HistoricalJourneyModel.RecordsBean recordsBean = data.get(position);
         int status = recordsBean.getStatus();
 
-        if(status == 1){
-            holder.tvStatus.setText("已完成");
-        }else if(status == 2){
-            holder.tvStatus.setText("已取消");
+        if (status == 0) {
+            holder.tvStatus.setText("未开始");
+        } else if (status == 1) {
+            holder.tvStatus.setText("进行中");
+        } else if (status == 2) {
+            holder.tvStatus.setText("已结束");
+        } else if (status == 3) {
+            holder.tvStatus.setText("取消");
         }
+
 
         holder.tvPlateNumbers.setText(recordsBean.getBusNum());
         String dateTime = recordsBean.getDate();
@@ -83,7 +88,7 @@ public class HistoricalJourneyAdapter extends SimpleRecAdapter<HistoricalJourney
         String year = dateTime.substring(0, 4);
         String month = dateTime.substring(4, 6);
         String day = dateTime.substring(6, dateTime.length());
-        return year +"年"+ month+"月"+ day+"日";
+        return year + "年" + month + "月" + day + "日";
     }
 
 
