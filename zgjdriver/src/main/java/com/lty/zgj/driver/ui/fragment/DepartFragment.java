@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -408,6 +409,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         closeRoundProgressDialog();
         //刷新今日行程
         if (isLoadDataOnResume) {
+            driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
             fetchDepartData(driverId);
         }
 
@@ -490,7 +492,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                     Log.e(THIS_FILE, "----cityCode------" + cityCode);
 
                     //是否上传Gps
-                    if(isUpdateGps){
+                    if (isUpdateGps) {
                         aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
                         Message message = handler.obtainMessage();
                         LatLng latLng = new LatLng(latitude, longitude);
@@ -524,6 +526,10 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
+
+        private float distance;
+        private float distance_next;
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -538,40 +544,55 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
              * */
 
             if (departModelList != null && departModelList.size() > 0) {
-                for (DepartModel.ListBean pointStation : departModelList) {
 
-                    boolean uploadPoint = pointStation.isUploadPoint();
+                for (int i = 0; i < departModelList.size(); i++) {
+
+                    boolean uploadPoint = departModelList.get(i).isUploadPoint();
 
                     if (!uploadPoint) {
-                        double lon1 = pointStation.getLon();
-                        double lat1 = pointStation.getLat();
-                        LatLng latLng2 = new LatLng(lat1, lon1);
+                        //当前位置 到下一站的距离
+                        LatLng latLng2 = getLatLng(i);
+                        distance = AMapUtils.calculateLineDistance(latLng, latLng2);
 
-                        float distance = AMapUtils.calculateLineDistance(latLng, latLng2);
+                        //当前位置 到下下一站的距离
+//                        if (i + 1 < departModelList.size()) {
+//                            LatLng latLng3 = getLatLng(i + 1);
+//                            distance_next = AMapUtils.calculateLineDistance(latLng, latLng3);
+//                        }
+//                        distance > distance_next
 
                         if (distance <= 50) {
                             Log.e(THIS_FILE, "latLng2-----" + latLng2);
                             Log.e(THIS_FILE, "当前定位点 lat:" + lat + "lon:" + lon + "\n目标点: lat:" + latLng2.latitude + "...." + "lon:" + latLng2.longitude + "\n距离：" + distance + "米");
-                            int tripId= pointStation.getId();//行程id
-                            int stationId = pointStation.getStationId();
-                            String stationName = pointStation.getStationName();
+                            int tripId = departModelList.get(i).getId();//行程id
+                            int stationId = departModelList.get(i).getStationId();
+
+                            String stationName = departModelList.get(i).getStationName();
                             tvBtn.setText("到达" + stationName);
-                            if (pointStation.getStationName().equals(endName)) {
+                            if (departModelList.get(i).getStationName().equals(endName)) {
                                 tvBtn.setText("结束");
                             }
 
                             long stationTime = System.currentTimeMillis() / 1000;
                             travelPathUploadData(tripId, routeId, stationId, stationName, stationTime, busId, scheduleId);
-                            pointStation.setUploadPoint(true);
+                            departModelList.get(i).setUploadPoint(true);
 
                         }
                     }
+
                 }
 
             }
 
         }
     };
+
+    @NonNull
+    private LatLng getLatLng(int i) {
+        double lon1 = departModelList.get(i).getLon();
+        double lat1 = departModelList.get(i).getLat();
+        return new LatLng(lat1, lon1);
+    }
 
     /**
      * 行程轨迹上传
@@ -778,7 +799,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             @Override
             public void onNext(StartBustModel startBustModel) {
                 tvBtn.setText("到达" + startName);
-                isUpdateGps  = true;
+                isUpdateGps = true;
                 handlerExecuteTimerTask(true);
                 CLICK_STATUS = END_BTN;
             }
@@ -796,7 +817,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             @Override
             public void onNext(EndBusModel endBusModel) {
                 mycircleHandler.removeCallbacks(runnable);
-                isUpdateGps  = false;
+                isUpdateGps = false;
                 handlerExecuteTimerTask(false);
                 deactivate();
                 aMap.clear();
@@ -806,7 +827,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
             @Override
             public void onError(Throwable e) {
-
+                Log.e("TAG", "Throwable----" + e.getMessage());
             }
         }, context), scheduleId);
     }
@@ -1330,9 +1351,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
     public void ononMoonStickyEvent(ReceiveDateEvent receiveDateEvent) {
         int tag = receiveDateEvent.getTag();
-
+        driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
         isFirstLoc = true;
-
         switch (tag) {
             case Constant.CLICK_DEPART_TAB:
                 //点击 发车tab 加载数据
@@ -1492,7 +1512,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         }
     };
 
-    private RecyclerItemCallback<DepartModel.ListBean,DepartFullAdapter.ViewHolder> RecItemFull = new RecyclerItemCallback<DepartModel.ListBean, DepartFullAdapter.ViewHolder>() {
+    private RecyclerItemCallback<DepartModel.ListBean, DepartFullAdapter.ViewHolder> RecItemFull = new RecyclerItemCallback<DepartModel.ListBean, DepartFullAdapter.ViewHolder>() {
 
         @Override
         public void onItemClick(int position, DepartModel.ListBean model, int tag, DepartFullAdapter.ViewHolder holder) {

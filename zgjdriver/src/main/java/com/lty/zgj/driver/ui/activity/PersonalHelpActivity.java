@@ -50,7 +50,7 @@ public class PersonalHelpActivity extends BaseXActivity {
 
         if (cityCode != null) {
 
-            fetchDateTicketGuide(cityCode, 4);
+            fetchDateTicketGuide(cityCode, 3);
         }
     }
 

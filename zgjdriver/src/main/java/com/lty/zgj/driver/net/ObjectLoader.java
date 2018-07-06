@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import com.lty.zgj.driver.bean.AppVersionModel;
 import com.lty.zgj.driver.bean.DepartModel;
 import com.lty.zgj.driver.bean.DriverNoticeInfoDetailModel;
 import com.lty.zgj.driver.bean.DriverNoticeInfoModel;
@@ -184,6 +185,10 @@ public class ObjectLoader {
         toSubscribe(modelObservable, ticketGuideModelSubscriber);
     }
 
-
+    public void getFndLatestVersionDate(Subscriber<AppVersionModel> appVersionModelSubscriber, String cityCode){
+        Observable<AppVersionModel> modelObservable = Api.getGankService().findLatestVersion(cityCode).map(new
+                HttpResultFunc<AppVersionModel>());
+        toSubscribe(modelObservable, appVersionModelSubscriber);
+    }
 
 }

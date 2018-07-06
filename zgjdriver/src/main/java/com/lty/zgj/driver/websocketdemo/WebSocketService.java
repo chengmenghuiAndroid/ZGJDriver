@@ -32,6 +32,7 @@ public class WebSocketService extends AbsBaseWebSocketService {
     @Override
     protected String getConnectUrl() {
         return "ws://116.205.13.132:18089/diverSocket";
+//        return "ws://192.168.2.131:18089/diverSocket";
     }
 
     @Override
@@ -42,7 +43,6 @@ public class WebSocketService extends AbsBaseWebSocketService {
             Log.e("WebSocketService", "textResponse-----"+textResponse);
             String substring = textResponse.substring(1, textResponse.length() - 16);
             CommonResponse<String> response = JSON.parseObject(substring, new TypeReference<CommonResponse<String>>() {});
-
 
 
             Log.e("WebSocketService", "substring-----"+substring);

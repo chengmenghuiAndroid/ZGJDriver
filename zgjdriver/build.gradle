@@ -9,8 +9,8 @@ android {
         applicationId "com.lty.zgj.driver"
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,6 +42,10 @@ android {
     }
 
     useLibrary 'org.apache.http.legacy'
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -51,6 +55,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation project(':library')
     implementation project(':expandablelinearlayout')
+    implementation project(':checkversion')
 
     compile rootProject.ext.dependencies["multidex"]
     //Android屏幕适配方案，直接填写设计图上的像素尺寸即可完成适配。

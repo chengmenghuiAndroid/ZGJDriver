@@ -2,6 +2,7 @@ package com.lty.zgj.driver.net;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.lty.zgj.driver.bean.AppVersionModel;
 import com.lty.zgj.driver.bean.DepartModel;
 import com.lty.zgj.driver.bean.DriverNoticeInfoDetailModel;
 import com.lty.zgj.driver.bean.DriverNoticeInfoModel;
@@ -39,7 +40,7 @@ public interface ZGJDService {
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
-    @GET("/trip/{driverId}/{page}")
+    @GET("/driver/trip/{driverId}/{page}")
     Observable<HttpResult<HistoricalJourneyModel>> getTrip(@Path("driverId") int driverId, @Path("page") int page);
 
 
@@ -49,7 +50,7 @@ public interface ZGJDService {
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
-    @GET("/trip/info/{scheduleId}")
+    @GET("/driver/trip/info/{scheduleId}")
     Observable<HttpResult<HistoricalJourneyDetailModel>> getTripDetail(@Path("scheduleId") String scheduleId);
 
 
@@ -59,7 +60,7 @@ public interface ZGJDService {
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
-    @POST("/trip/today/{driverId}")
+    @POST("/driver/trip/today/{driverId}")
     Observable<HttpResult<DepartModel>> getDepartModel(@Path("driverId") int driverId);
 
 
@@ -69,7 +70,7 @@ public interface ZGJDService {
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
-    @POST("/trip/detail/{itemId}")
+    @POST("/driver/trip/detail/{itemId}")
     Observable<HttpResult<DepartModel>> getDepartDetailModel(@Path("itemId") String itemId);
 
 
@@ -79,7 +80,7 @@ public interface ZGJDService {
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
-    @POST("/trip/getTripList/{driverId}")
+    @POST("/driver/trip/getTripList/{driverId}")
     Observable<HttpResult<TripListModel>> getTripListModel(@Path("driverId") int driverId);
 
     /**
@@ -88,7 +89,7 @@ public interface ZGJDService {
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
-    @POST("/trip/startBus/{scheduleId}")
+    @POST("/driver/trip/startBus/{scheduleId}")
     Observable<HttpResult<StartBustModel>> startBus(@Path("scheduleId") String scheduleId);
 
     /**
@@ -97,7 +98,7 @@ public interface ZGJDService {
      * @return
      */
     @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
-    @POST("/trip/endBus/{scheduleId}")
+    @POST("/driver/trip/endBus/{scheduleId}")
     Observable<HttpResult<EndBusModel>> endBus(@Path("scheduleId") String scheduleId);
 
     /**
@@ -126,11 +127,19 @@ public interface ZGJDService {
      * @param guideType  使用条款 4 帮助说明3
      * @return
      */
-    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL__CQJ_NAME})
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
     @GET("/ticketGuide/get/{cityCode}/{guideType}")
     Observable<HttpResult<TicketGuideModel>> ticketGuide(@Path("cityCode") String cityCode,
                                                          @Path("guideType") int guideType);
 
 
+    /**
+     * 版本更新
+     * @param cityCode
+     * @return
+     */
+    @Headers({DOMAIN_NAME_HEADER + UrlKit.URL_YD_NAME})
+    @POST("/appVersion/findLatestVersion/{cityCode}")
+    Observable<HttpResult<AppVersionModel>> findLatestVersion(@Path("cityCode") String cityCode);
 }
 

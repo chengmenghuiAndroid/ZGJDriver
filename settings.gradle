@@ -1,1 +1,1 @@
-include ':zgjdriver',':library', ':expandablelinearlayout'
+include ':zgjdriver',':library', ':expandablelinearlayout',':checkversion'

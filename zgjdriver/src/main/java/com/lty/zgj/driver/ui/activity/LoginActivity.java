@@ -111,8 +111,8 @@ public class LoginActivity extends BaseXActivity {
             case R.id.logo_icon:
 //                etPhoneNumber.setText("13995534205");
 //                et_pws.setText("534205");
-                etPhoneNumber.setText("15629088908");
-                et_pws.setText("088908");
+//                etPhoneNumber.setText("15629088908");
+//                et_pws.setText("088908");
                 break;
         }
     }

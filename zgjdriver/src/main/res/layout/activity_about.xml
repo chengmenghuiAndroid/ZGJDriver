@@ -77,7 +77,8 @@
         <com.zhy.autolayout.AutoRelativeLayout
             android:id="@+id/version_introduction"
             android:layout_width="match_parent"
-            android:layout_height="88px">
+            android:layout_height="88px"
+            android:visibility="gone">
 
 
             <TextView
@@ -127,18 +128,21 @@
                 />
 
             <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/au_versionName_tip"
                 android:layout_width="184px"
                 android:layout_height="44px"
                 android:background="@drawable/semi_round_backgroud"
                 android:gravity="center"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="62px">
+                android:layout_marginRight="62px"
+                android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/tv_versionName_tip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="有版本可用"
+                    android:text="有新版本可用"
                     android:textColor="#FFFFFFFF"
                     />
 

@@ -3,7 +3,6 @@ package com.lty.zgj.driver.core.tool;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -64,9 +63,6 @@ public class AppUtils {
 
      */
     public static int compareVersion(String version1, String version2) {
-        if (TextUtils.isEmpty(version1)||TextUtils.isEmpty(version2)){
-            return 0;
-        }
         if (version1.equals(version2)) {
             return 0;
         }

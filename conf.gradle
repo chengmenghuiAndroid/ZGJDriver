@@ -24,7 +24,7 @@ ext {
             "picasso"                    : "com.squareup.picasso:picasso:2.5.2",
             "okhttp3"                    : "com.squareup.okhttp3:okhttp:3.9.1",
             "gson"                       : "com.google.code.gson:gson:2.6.2",
-            "eventbus"                   : "org.greenrobot:eventbus:3.0.0",
+            "eventbus"                   : "org.greenrobot:eventbus:3.1.1",
             "xrecyclerview"              : "com.github.limedroid:ARecyclerView:v1.1.5",
             "okhttputils"                : "com.zhy:okhttputils:2.6.2",
             "canary-debug"               : "com.squareup.leakcanary:leakcanary-android:1.4-beta2",
