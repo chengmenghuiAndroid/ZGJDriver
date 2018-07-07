@@ -100,6 +100,10 @@ public class DepartAdapter extends RecyclerAdapter<DepartModel.ListBean, DepartA
                 setGone(holder.dashed_icon_1);
             }
 
+            if(data.size() == 2){
+                mIconView.setVisibility(View.GONE);
+            }
+
             String stationTime = setArriveStationTime(departModel);
             holder.tvDepartTime.setText(stationTime);
             holder.tvStation.setText(departModel.getStationName());

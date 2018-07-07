@@ -251,27 +251,32 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         closeRoundProgressDialog();//关闭加载对话框
         CommonResponse.BodyBean body = response.getBody();
         int code = body.getStateCode();
+        int msgId = response.getHeaderPacket().getMsgId();
+        Log.e(THIS_FILE, "msgId----"+msgId);
         //token过期 去登录界面
         if (code == 104) {
             LoginActivity.launch(context);
             context.finish();
         } else {
             String data = body.getData();
-            SharedPref.getInstance(context).putString(Constant.USER_INFO, data);
-            LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
-            String token = loginModel.getToken();//更新token
-            driverId = loginModel.getDriverId();
-            cityCode = loginModel.getCityCode();
+            if(data != null){
+                SharedPref.getInstance(context).putString(Constant.USER_INFO, data);
+                LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
+                String token = loginModel.getToken();//更新token
+                driverId = loginModel.getDriverId();
+                cityCode = loginModel.getCityCode();
 
-            SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, token);
-            SharedPref.getInstance(context).putInt(Constant.WEBSOCKT_CONT, 1);
-            SharedPref.getInstance(context).putInt(Constant.DRIVER_ID, driverId); //司机Id
-            SharedPref.getInstance(context).putString(Constant.cityCode, cityCode); //司机Id
-            Log.e(THIS_FILE, "token-----" + token);
-            Log.e("token", "token---SharedPref----" + token + "-----" + "传gps断线重连获取token");
-            Log.e(THIS_FILE, "driverId----" + driverId);
+                SharedPref.getInstance(context).putString(Constant.DRIVER_CUSTOM_TOKEN, token);
+                SharedPref.getInstance(context).putInt(Constant.WEBSOCKT_CONT, 1);
+                SharedPref.getInstance(context).putInt(Constant.DRIVER_ID, driverId); //司机Id
+                SharedPref.getInstance(context).putString(Constant.cityCode, cityCode); //司机Id
+                Log.e(THIS_FILE, "token-----" + token);
+                Log.e("token", "token---SharedPref----" + token + "-----" + "传gps断线重连获取token");
+                Log.e(THIS_FILE, "driverId----" + driverId);
 
-            fetchDepartData(driverId);//获取今日发车数据
+                fetchDepartData(driverId);//获取今日发车数据
+            }
+
         }
     }
 
@@ -555,13 +560,12 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                         distance = AMapUtils.calculateLineDistance(latLng, latLng2);
 
                         //当前位置 到下下一站的距离
-//                        if (i + 1 < departModelList.size()) {
-//                            LatLng latLng3 = getLatLng(i + 1);
-//                            distance_next = AMapUtils.calculateLineDistance(latLng, latLng3);
-//                        }
-//                        distance > distance_next
+                        if (i + 1 < departModelList.size()) {
+                            LatLng latLng3 = getLatLng(i + 1);
+                            distance_next = AMapUtils.calculateLineDistance(latLng, latLng3);
+                        }
 
-                        if (distance <= 50) {
+                        if (distance <= 50 || distance > distance_next) {
                             Log.e(THIS_FILE, "latLng2-----" + latLng2);
                             Log.e(THIS_FILE, "当前定位点 lat:" + lat + "lon:" + lon + "\n目标点: lat:" + latLng2.latitude + "...." + "lon:" + latLng2.longitude + "\n距离：" + distance + "米");
                             int tripId = departModelList.get(i).getId();//行程id
@@ -1157,6 +1161,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             if (status == 1) {
                 alBtn.setVisibility(View.VISIBLE);
                 tvBtn.setText("到达" + startName);
+                isUpdateGps = true;
                 handlerExecuteTimerTask(true);
                 CLICK_STATUS = END_BTN;
             } else if (status == 0) {
