@@ -429,6 +429,15 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                     stations = historicalJourneyDetailModel.getStations();
                     relStations = historicalJourneyDetailModel.getRelStations();
                     size = stations.size();
+
+                    //把计划到站时间 替换 成实际到站时间
+                    for (HistoricalJourneyDetailModel.RelStationsBean relStation : relStations) {
+                        for (HistoricalJourneyDetailModel.StationsBean station: stations){
+                            if(relStation.getStationId() == station.getStationId()){
+                                station.setPlanTime(relStation.getRealTime());
+                            }
+                        }
+                    }
                     setStation();
 
                     tvPlateNumbers.setText(historicalJourneyDetailModel.getBusNum());//车牌号
@@ -677,6 +686,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     }
 
     private void setStation() {
+
         if (size < 4) {
             list.clear();
             list.addAll(stations);

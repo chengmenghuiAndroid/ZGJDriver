@@ -138,8 +138,15 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
                     relStations = historicalJourneyDetailModel.getRelStations();
                     size = stations.size();
 
+                    //把计划到站时间 替换 成实际到站时间
+                    for (HistoricalJourneyDetailModel.RelStationsBean relStation : relStations) {
+                        for (HistoricalJourneyDetailModel.StationsBean station: stations){
+                            if(relStation.getStationId() == station.getStationId()){
+                                station.setPlanTime(relStation.getRealTime());
+                            }
+                        }
+                    }
                     setStation();
-
                     //计划辅助点信息
                     List<HistoricalJourneyDetailModel.AssitsBean> assits = historicalJourneyDetailModel.getAssits();
                     //辅助点信息
@@ -185,13 +192,20 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
         mHeader = View.inflate(context, R.layout.depart_over_icon, null);
         getAdapter().setIconView(mHeader);
         xrecyclerview.setAdapter(getAdapter());
-
-        setStation();
     }
 
     private void setStation() {
         if (stations != null && stations.size() > 0) {
             int size = stations.size();
+
+            //把计划到站时间 替换 成实际到站时间
+            for (HistoricalJourneyDetailModel.RelStationsBean relStation : relStations) {
+                for (HistoricalJourneyDetailModel.StationsBean station: stations){
+                    if(relStation.getStationId() == station.getStationId()){
+                        station.setPlanTime(relStation.getRealTime());
+                    }
+                }
+            }
 
             if (size < 4) {
                 list.clear();

@@ -84,6 +84,11 @@ public class HistoricalJourneyDetailAdapter extends RecyclerAdapter<HistoricalJo
                 setGone(holder.dashed_icon_1);
             }
 
+
+            if(data.size() == 2){
+                mIconView.setVisibility(View.GONE);
+            }
+
             String stationTime = setArriveStationTime(stationsBean);
             holder.tvDepartTime.setText(stationTime);
             holder.tvStation.setText(stationsBean.getStationName());

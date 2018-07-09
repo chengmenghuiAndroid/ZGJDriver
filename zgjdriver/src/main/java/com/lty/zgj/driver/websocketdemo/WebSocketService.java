@@ -54,8 +54,9 @@ public class WebSocketService extends AbsBaseWebSocketService {
             if(msgId == 0x301){ //
                 JSONObject body = mJsonObject.getJSONObject("body");
                 JSONObject data = body.getJSONObject("data");
-                String bodyDate = data.getString("bodyDate");
-                onReceiveMessageData(BaseApplication.getContext(), bodyDate);
+                String bodyDate = data.getString("bodyData");
+                int type = data.getInt("type"); // 1、坐公交信息 2、邯郸公交 3、验票码信息
+                onReceiveMessageData(BaseApplication.getContext(), bodyDate, type);
             }else {
                 //鉴权业务类型
                 EventBus.getDefault().post(response);
@@ -78,7 +79,7 @@ public class WebSocketService extends AbsBaseWebSocketService {
     }
 
 
-    public void onReceiveMessageData(Context context, String gtTransmitMessage) {
+    public void onReceiveMessageData(Context context, String gtTransmitMessage, int type) {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
@@ -96,7 +97,13 @@ public class WebSocketService extends AbsBaseWebSocketService {
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
         builder.setAutoCancel(true);
         builder.setContentText(gtTransmitMessage);
-        builder.setContentTitle("普通通知");
+        if(type ==1){
+            builder.setContentTitle("坐公交");
+        }else if(type ==2){
+            builder.setContentTitle("邯郸公交");
+        }else if(type ==3){
+            builder.setContentTitle("验票码");
+        }
         mNotificationManager.notify(1, builder.build());
 
         SharedPref.getInstance(context).putInt(Constant.DOT_KET, -1);

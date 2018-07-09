@@ -15,6 +15,7 @@ import com.lty.zgj.driver.WebSocket.WebSocketManager;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.Utils;
+import com.lty.zgj.driver.event.StopExecuteTimerTaskEvent;
 import com.lty.zgj.driver.websocketdemo.WebSocketService;
 import com.lty.zgj.driver.weight.CustomDialog;
 import com.lty.zgj.driver.weight.StatusBarUtils;
@@ -163,6 +164,7 @@ public class SetActivity extends AbsBaseWebSocketActivity {
      *退出登录
      */
     private void logOut() {
+        EventBus.getDefault().post(new StopExecuteTimerTaskEvent());
         SharedPref.getInstance(context).putBoolean(Constant.isLoginSuccess, false);
         SharedPref.getInstance(context).remove(Constant.DRIVER_CUSTOM_TOKEN);
         sendText(webSocketJson);//登录鉴权

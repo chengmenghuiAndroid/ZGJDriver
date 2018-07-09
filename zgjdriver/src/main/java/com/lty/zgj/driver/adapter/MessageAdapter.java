@@ -53,12 +53,12 @@ public class MessageAdapter extends SimpleRecAdapter<DriverNoticeInfoModel.Recor
 
         int type = Integer.parseInt(recordsBean.getType());
         switch (type){
-            case 1:
-            case 3:
+            case 1://坐公交信息
+            case 3://验票码信息
                 holder.profileImageType.setImageDrawable(context.getResources().getDrawable(R.mipmap.pic_zgj));
                 break;
 
-            case 2:
+            case 2://邯郸公交
                 holder.profileImageType.setImageDrawable(context.getResources().getDrawable(R.mipmap.pic_handan));
                 break;
         }

@@ -65,6 +65,10 @@ public class DepartOverAdapter extends RecyclerAdapter<HistoricalJourneyDetailMo
               holder.tvDepartTime.setText(stationTime);
               holder.tvStation.setText(stationsBean.getStationName());
 
+              if(data.size() == 2){
+                  mIconView.setVisibility(View.GONE);
+              }
+
           }
 
       }

@@ -12,10 +12,13 @@ import com.lty.zgj.driver.WebSocket.UI.BaseAppCompatActivity;
 import com.lty.zgj.driver.WebSocket.event.WebSocketConnectedEvent;
 import com.lty.zgj.driver.WebSocket.event.WebSocketConnectionErrorEvent;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
+import com.lty.zgj.driver.core.config.Constant;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import cn.droidlover.xdroidbase.cache.SharedPref;
 
 /**
  * Created by ZhangKe on 2017/12/12.
@@ -144,7 +147,12 @@ public abstract class AbsBaseWebSocketActivity extends BaseAppCompatActivity {
      */
     protected void onServiceBindSuccess() {
         Log.i(TAG, "onServiceBindSuccess()");
-        initView();
+        Log.i(TAG, "onServiceBindSuccess()");
+        boolean isLoginSuccess = SharedPref.getInstance(context).getBoolean(Constant.isLoginSuccess, false);
+
+        if(isLoginSuccess){
+            initView();
+        }
     }
 
     /**

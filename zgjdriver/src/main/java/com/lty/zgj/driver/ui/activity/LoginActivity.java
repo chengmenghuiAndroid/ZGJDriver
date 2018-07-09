@@ -76,8 +76,7 @@ public class LoginActivity extends BaseXActivity {
 
     @OnClick({
             R.id.ar_login_btn,
-            R.id.tv_send_code,
-            R.id.logo_icon,
+            R.id.tv_send_code
 
     })
 
@@ -107,12 +106,6 @@ public class LoginActivity extends BaseXActivity {
 
             case R.id.tv_send_code:
                 countDownTimerUtils.start();
-                break;
-            case R.id.logo_icon:
-//                etPhoneNumber.setText("13995534205");
-//                et_pws.setText("534205");
-//                etPhoneNumber.setText("15629088908");
-//                et_pws.setText("088908");
                 break;
         }
     }

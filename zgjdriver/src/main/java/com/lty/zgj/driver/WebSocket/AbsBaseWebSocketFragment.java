@@ -8,15 +8,17 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import com.lty.zgj.driver.WebSocket.UI.BaseFragment;
 import com.lty.zgj.driver.WebSocket.event.WebSocketConnectedEvent;
 import com.lty.zgj.driver.WebSocket.event.WebSocketConnectionErrorEvent;
 import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
+import com.lty.zgj.driver.core.config.Constant;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import cn.droidlover.xdroidbase.cache.SharedPref;
 
 /**
  * 简化了 WebSocket 相关操作的 Fragment 基类
@@ -138,7 +140,11 @@ public abstract class AbsBaseWebSocketFragment extends BaseFragment {
      */
     protected void onServiceBindSuccess() {
         Log.i(TAG, "onServiceBindSuccess()");
-        initView();
+        boolean isLoginSuccess = SharedPref.getInstance(context).getBoolean(Constant.isLoginSuccess, false);
+
+        if(isLoginSuccess){
+            initView();
+        }
     }
 
     /**
