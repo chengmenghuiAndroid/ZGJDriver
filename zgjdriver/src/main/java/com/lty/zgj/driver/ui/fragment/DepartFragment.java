@@ -219,6 +219,9 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private boolean isUpdateGps;
     private boolean isPolylineWalk = true;
 
+    private float distance;
+    private float distance_next;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
@@ -243,7 +246,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
     private void webSocketConnectLogin() {
         String token = SharedPref.getInstance(context).getString(Constant.DRIVER_CUSTOM_TOKEN, null);
-        if(!TextUtils.isEmpty(token)){
+        if (!TextUtils.isEmpty(token)) {
             Log.e("token", "token---SharedPref----" + token + "-----" + "登录鉴权传的token");
             webSocketJson = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x102, token, null);
             sendText(webSocketJson);//登录鉴权
@@ -256,14 +259,14 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         CommonResponse.BodyBean body = response.getBody();
         int code = body.getStateCode();
         int msgId = response.getHeaderPacket().getMsgId();
-        Log.e(THIS_FILE, "msgId----"+msgId);
+        Log.e(THIS_FILE, "msgId----" + msgId);
         //token过期 去登录界面
         if (code == 104) {
             LoginActivity.launch(context);
             context.finish();
         } else {
             String data = body.getData();
-            if(data != null){
+            if (data != null) {
                 SharedPref.getInstance(context).putString(Constant.USER_INFO, data);
                 LoginWebWebSocketModel loginModel = GsonUtils.parserJsonToArrayBean(data, LoginWebWebSocketModel.class);
                 String token = loginModel.getToken();//更新token
@@ -373,8 +376,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             @Override
             public void onMyLocationChange(Location location) {
                 //从location对象中获取经纬度信息，地址描述信息，建议拿到位置之后调用逆地理编码接口获取
-
-                //从location对象中获取经纬度信息，地址描述信息，建议拿到位置之后调用逆地理编码接口获取
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
 
@@ -481,7 +482,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 //                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
                         //添加图钉
 //                      aMap.addMarker(getMarkerOptions(amapLocation));
-                        if(isPolylineWalk){
+                        if (isPolylineWalk) {
                             // 步行终点坐标
                             // 步行起点坐标
                             mStartPoint = new LatLonPoint(latitude, longitude);
@@ -524,9 +525,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
 
-        private float distance;
-        private float distance_next;
-
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -534,60 +532,72 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             double lat = latLng.latitude;
             double lon = latLng.longitude;
 
-                sendGps(latitude, longitude); //发送gps
+            sendGps(latitude, longitude); //发送gps
 
-                /**
-                 * 计算当前定位点和目标点的距离，并显示，单位为米
-                 *
-                 * */
+            /**
+             * 计算当前定位点和目标点的距离，并显示，单位为米
+             *
+             * */
 
-                if (departModelList != null && departModelList.size() > 0) {
+            DepartModel.ListBean stationModel = getStationModel(latLng);
+            //当前位置 到下一站的距离
+            if (distance <= 50 || distance > distance_next) {
+                Log.e(THIS_FILE, "distance-----" + distance);
+                Log.e(THIS_FILE, "distance_next-----" + distance_next);
+                int tripId = stationModel.getId();//行程id
+                int stationId = stationModel.getStationId();
 
-                    for (int i = 0; i < departModelList.size(); i++) {
+                String stationName = stationModel.getStationName();
+                tvBtn.setText("到达" + stationName);
+                if (stationModel.getStationName().equals(endName)) {
+                    tvBtn.setText("结束");
 
-                        boolean uploadPoint = departModelList.get(i).isUploadPoint();
-
-                        if (!uploadPoint) {
-                            //当前位置 到下一站的距离
-                            LatLng latLng2 = getLatLng(i);
-                            distance = AMapUtils.calculateLineDistance(latLng, latLng2);
-
-                            //当前位置 到下下一站的距离
-                            if (i + 1 < departModelList.size()) {
-                                LatLng latLng3 = getLatLng(i + 1);
-                                distance_next = AMapUtils.calculateLineDistance(latLng, latLng3);
-                            }
-
-                            if (distance <= 50 ) {
-                                updatePoint(lat, lon, i, latLng2);
-                            }else if(distance > distance_next){
-                                updatePoint(lat, lon, i, latLng2);
-                            }
-                        }
-
-                    }
-
+                    //到达最后一站 结束上传gps
+                    mycircleHandler.removeCallbacks(runnable);
+                    isUpdateGps = false;
+                    handlerExecuteTimerTask(false);
+                    Log.e(THIS_FILE, "停止上传gps");
                 }
+
+                long stationTime = System.currentTimeMillis() / 1000;
+                travelPathUploadData(tripId, routeId, stationId, stationName, stationTime, busId, scheduleId);
+                stationModel.setUploadPoint(true);
+
             }
+        }
+    };
 
-        private void updatePoint(double lat, double lon, int i, LatLng latLng2) {
-            Log.e(THIS_FILE, "latLng2-----" + latLng2);
-            Log.e(THIS_FILE, "当前定位点 lat:" + lat + "lon:" + lon + "\n目标点: lat:" + latLng2.latitude + "...." + "lon:" + latLng2.longitude + "\n距离：" + distance + "米");
-            int tripId = departModelList.get(i).getId();//行程id
-            int stationId = departModelList.get(i).getStationId();
 
-            String stationName = departModelList.get(i).getStationName();
-            tvBtn.setText("到达" + stationName);
-            if (departModelList.get(i).getStationName().equals(endName)) {
-                tvBtn.setText("结束");
+    private DepartModel.ListBean getStationModel(LatLng latLng) {
+
+        if (departModelList != null && departModelList.size() > 0) {
+
+            for (int i = 0; i < departModelList.size(); i++) {
+
+                DepartModel.ListBean model = departModelList.get(i);
+
+                //判断站点是否上传 没上传 就上传
+                if (!model.isUploadPoint()) {
+                    LatLng latLng2 = getLatLng(i);
+                    distance = AMapUtils.calculateLineDistance(latLng, latLng2);
+                    //当前位置 到下下一站的距离
+                    if (i + 1 < departModelList.size()) {
+                        LatLng latLng3 = getLatLng(i + 1);
+                        distance_next = AMapUtils.calculateLineDistance(latLng, latLng3);
+                    } else {
+                        distance_next = 100000000;
+                    }
+                    Log.e(THIS_FILE, "获取当前站点的model");
+                    return model;
+                }
+
             }
-
-            long stationTime = System.currentTimeMillis() / 1000;
-            travelPathUploadData(tripId, routeId, stationId, stationName, stationTime, busId, scheduleId);
-            departModelList.get(i).setUploadPoint(true);
         }
 
-    };
+        return null;
+
+    }
+
 
     @NonNull
     private LatLng getLatLng(int i) {
@@ -595,7 +605,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         double lat1 = departModelList.get(i).getLat();
         return new LatLng(lat1, lon1);
     }
-
 
 
     private void handlerExecuteTimerTask(boolean isRun) {
@@ -627,7 +636,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void messageEventBus(StopExecuteTimerTaskEvent event){
+    public void messageEventBus(StopExecuteTimerTaskEvent event) {
 //        handlerExecuteTimerTask(false);
     }
 
@@ -642,7 +651,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 stationName, stationTime, busId, scheduleId);
         String socketJsonTravelPath = WebSocketManager.getInstance(context).sendWebSocketJson(context, 0x202, token, travelPathUpload);
         sendText(socketJsonTravelPath);
-        Log.e(THIS_FILE, "stationTime----" + stationTime);
+        Log.e(THIS_FILE, "上传站点时间----" + stationTime);
         Log.e(THIS_FILE, "token---SharedPref----" + token);
         Log.e(THIS_FILE, "socketJsonTravelPath====================" + socketJsonTravelPath);
     }
@@ -1127,7 +1136,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             //webSocket 断开后重新鉴权
             webSocketConnectLogin();
         }
-        Log.e(THIS_FILE, "gpsTime------" + gpsTime);
+        Log.e(THIS_FILE, "上传gps点时间------" + gpsTime);
         Log.e(THIS_FILE, "token---SharedPref----" + token);
         Log.e(THIS_FILE, "socketJsonGps----" + socketJsonGps);
 
@@ -1155,6 +1164,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     }
 
     private void getDepartDetailModel(DepartModel departModel) {
+
         if (departModel != null) {
             auArLoading.setVisibility(View.GONE);
             RavelItinerary.setVisibility(View.VISIBLE);
@@ -1226,7 +1236,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             DepartModel.ListBean depart = departModelList.get(0);
 
 
-            if(isPolylineWalk){
+            if (isPolylineWalk) {
                 // 步行终点坐标
                 mEndPoint = new LatLonPoint(depart.getLat(), depart.getLon());
                 mStartPoint = new LatLonPoint(latitude, longitude);
@@ -1371,11 +1381,11 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
             case Constant.CLICK_DEPART_TAB:
                 //点击 发车tab 加载数据
 
-                if (isLoadData) {
+//                if (isLoadData) {
                     fetchDepartData(driverId);
-                }
+//                }
 
-                isLoadData = true;
+//                isLoadData = true;
                 break;
 
             case Constant.CLICK_ITEM:

@@ -743,7 +743,6 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                     mListener.onLocationChanged(amapLocation);
                     //点击定位按钮 能够将地图的中心移动到定位点
                     if (isFirstLoc) {
-
                         //将地图移动到定位点
 //                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
                         //添加图钉
