@@ -65,6 +65,8 @@ import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.core.tool.GsonUtils;
 import com.lty.zgj.driver.core.tool.TimeUtils;
 import com.lty.zgj.driver.event.ReceiveDateEvent;
+import com.lty.zgj.driver.event.ReceiveDateItemEvent;
+import com.lty.zgj.driver.event.StartLocationEvent;
 import com.lty.zgj.driver.event.StopExecuteTimerTaskEvent;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
@@ -191,8 +193,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private boolean isLoadData;
     private String scheduleId;
     private DepartModel mdepartModel;
-    private Handler mycircleHandler;
-    private Runnable runnable;
+    //    private static Handler mycircleHandler;
+//    private static Runnable runnable;
     private int driverId;
 
 
@@ -216,8 +218,9 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private String endName;
     private Marker marker_time;
     private String startName;
-    private boolean isUpdateGps;
+    private boolean isUpdateGps = false; //将地图移动到定位点
     private boolean isPolylineWalk = true;
+    private boolean isSendGps = false;
 
     private float distance;
     private float distance_next;
@@ -494,7 +497,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
                     Log.e(THIS_FILE, "----latitude------" + latitude + "..longitude......." + longitude);
 
-                    //是否上传Gps
                     if (isUpdateGps) {
                         aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
                     }
@@ -534,11 +536,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
             sendGps(latitude, longitude); //发送gps
 
-            /**
-             * 计算当前定位点和目标点的距离，并显示，单位为米
-             *
-             * */
-
             DepartModel.ListBean stationModel = getStationModel(latLng);
             //当前位置 到下一站的距离
             if (distance <= 50 || distance > distance_next) {
@@ -551,14 +548,13 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 tvBtn.setText("到达" + stationName);
                 if (stationModel.getStationName().equals(endName)) {
                     tvBtn.setText("结束");
-
                     //到达最后一站 结束上传gps
+                    mlocationClient.stopLocation();
+                    isSendGps = false;
                     mycircleHandler.removeCallbacks(runnable);
                     isUpdateGps = false;
-                    handlerExecuteTimerTask(false);
                     Log.e(THIS_FILE, "停止上传gps");
                 }
-
                 long stationTime = System.currentTimeMillis() / 1000;
                 travelPathUploadData(tripId, routeId, stationId, stationName, stationTime, busId, scheduleId);
                 stationModel.setUploadPoint(true);
@@ -567,7 +563,10 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         }
     };
 
-
+    /**
+     * 计算当前定位点和目标点的距离，并显示，单位为米
+     *
+     * */
     private DepartModel.ListBean getStationModel(LatLng latLng) {
 
         if (departModelList != null && departModelList.size() > 0) {
@@ -607,37 +606,32 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     }
 
 
-    private void handlerExecuteTimerTask(boolean isRun) {
+    /**
+     * 定时器 5秒执行一次
+     */
+    Handler mycircleHandler = new Handler();
+    Runnable runnable = new Runnable() {
+        @Override
 
-
-        mycircleHandler = new Handler();
-
-        runnable = new Runnable() {
-            @Override
-
-            public void run() {
-                if (isRun) {
-                    //要做的事情，这里再次调用此Runnable对象，以实现每两秒实现一次的定时器操作
-                    startLocationClient();
-                    Message message = handler.obtainMessage();
-                    LatLng latLng = new LatLng(latitude, longitude);
-                    message.obj = latLng;
-                    handler.sendMessage(message);
-                    mycircleHandler.postDelayed(this, 5000);
-                }
-
-
+        public void run() {
+            //要做的事情，这里再次调用此Runnable对象，以实现每两秒实现一次的定时器操作
+            if(isSendGps){
+                mlocationClient.startLocation();
+                Message message = handler.obtainMessage();
+                LatLng latLng = new LatLng(latitude, longitude);
+                message.obj = latLng;
+                handler.sendMessage(message);
+                mycircleHandler.postDelayed(this, 5000);
             }
+        }
 
-        };
-
-        mycircleHandler.postDelayed(runnable, 5000);
-
-    }
+    };
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void messageEventBus(StopExecuteTimerTaskEvent event) {
-//        handlerExecuteTimerTask(false);
+    public void stopExecuteTimerTask(StopExecuteTimerTaskEvent event) {
+        //退出登陆后关闭定时器 以及停止定位
+        mlocationClient.stopLocation();
+        mycircleHandler.removeCallbacks(runnable);
     }
 
     /**
@@ -681,7 +675,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         // 在定位结束后，在合适的生命周期调用onDestroy()方法
         // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
         mlocationClient.startLocation();
-
     }
 
     private void initLocationOption() {
@@ -808,7 +801,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         for (int i = 0; i < points.size(); i++) {//trajectorylist为轨迹集合
             newbounds.include(points.get(i));
         }
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 350));//第二个参数为四周留空宽度
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 260));//第二个参数为四周留空宽度
     }
 
 
@@ -825,7 +818,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                     mPolylineWalk.remove();
                     mPolylineWalk = null;
                 }
-                handlerExecuteTimerTask(true);
+                isSendGps = true;
+                mycircleHandler.postDelayed(runnable, 5000);
                 CLICK_STATUS = END_BTN;
             }
 
@@ -841,11 +835,12 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         ObjectLoader.getInstance().getEndBusModelData(new ProgressSubscriber<EndBusModel>(new SubscriberOnNextListener<EndBusModel>() {
             @Override
             public void onNext(EndBusModel endBusModel) {
+                mlocationClient.stopLocation();
                 mycircleHandler.removeCallbacks(runnable);
+                isSendGps = false;
                 isUpdateGps = false;
-                handlerExecuteTimerTask(false);
-                deactivate();
-                aMap.clear();
+                isPolylineWalk = true;
+//                aMap.clear();
                 DepartOverActivity.launch(context, scheduleId, mdepartModel);
                 CLICK_STATUS = DEPAR_BTN;
             }
@@ -1166,6 +1161,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     private void getDepartDetailModel(DepartModel departModel) {
 
         if (departModel != null) {
+            mdepartModel = departModel;
             auArLoading.setVisibility(View.GONE);
             RavelItinerary.setVisibility(View.VISIBLE);
             status = departModel.getStatus();
@@ -1178,10 +1174,10 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 tvBtn.setText("到达" + startName);
                 isUpdateGps = true;
                 isPolylineWalk = false;
-                handlerExecuteTimerTask(true);
+                isSendGps = true;
+                mycircleHandler.postDelayed(runnable, 5000);
                 CLICK_STATUS = END_BTN;
             } else if (status == 0) {
-//                stopLocationClient();
                 String dateTime = TimeUtils.getYMD_(date);
                 //获取今日时间
                 String dateToDay = TimeUtils.dateToStr(TimeUtils.getNow());
@@ -1199,7 +1195,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
             RavelItinerary.setVisibility(View.VISIBLE);
             RavelItineraryNull.setVisibility(View.GONE);
-            mdepartModel = departModel;
 
 
             tvCarPai.setText(departModel.getBusPlateNumber());
@@ -1257,7 +1252,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 mPolyline = null;
             }
             addPolylineInPlayGround(coords); //绘制辅助线
-
 
         } else {
             RavelItinerary.setVisibility(View.GONE);
@@ -1368,7 +1362,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     @Override
     protected void onFragmentVisible() {
         super.onFragmentFirstVisible();
-
     }
 
 
@@ -1380,24 +1373,29 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         switch (tag) {
             case Constant.CLICK_DEPART_TAB:
                 //点击 发车tab 加载数据
-
-//                if (isLoadData) {
-                    fetchDepartData(driverId);
-//                }
-
-//                isLoadData = true;
+                fetchDepartData(driverId);
                 break;
 
-            case Constant.CLICK_ITEM:
-                aMap.clear();
-                startLocationClient();
-                //点击 待发车 item 获取待发车详情
-                String itemId = receiveDateEvent.getItemId();
-                fetchDepartDetailData(itemId);
-                Log.e(THIS_FILE, "receiveDateEvent-----" + itemId);
-                break;
+//            case Constant.CLICK_ITEM:
+//                aMap.clear();
+//                mlocationClient.startLocation();
+////                startLocationClient();
+//                //点击 待发车 item 获取待发车详情
+//                String itemId = receiveDateEvent.getItemId();
+//                fetchDepartDetailData(itemId);
+//                Log.e(THIS_FILE, "receiveDateEvent-----" + itemId);
+//                break;
         }
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void receiveDateItemEvent(ReceiveDateItemEvent event) {
+        aMap.clear();
+        //点击 待发车 item 获取待发车详情
+        String itemId = event.getItemId();
+        fetchDepartDetailData(itemId);
+        Log.e(THIS_FILE, "receiveDateEvent-----" + itemId);
     }
 
 
@@ -1514,7 +1512,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
 
         LatLngBounds.Builder newbounds = new LatLngBounds.Builder();
-        for (int i = 0; i < list.size(); i++) {//trajectorylist为轨迹集合
+        for (int i = 0; i < list.size(); i++) {
             newbounds.include(list.get(i));
         }
         aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 200));//第二个参数为四周留空宽度
@@ -1567,14 +1565,18 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         marker_time = aMap.addMarker(timeMarker);
     }
 
-    /**
-     * 监听amap地图加载成功事件回调
-     */
 
     public void onMapLoaded(double latitude, double longitude) {
         LatLng marker1 = new LatLng(latitude, longitude);
         //设置中心点和缩放比例
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(marker1));
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void mainThread(StartLocationEvent event) {
+        ShowDialogRelative.toastDialog(context, "开启定位");
+        aMap.clear();
+        mlocationClient.startLocation();
     }
 }

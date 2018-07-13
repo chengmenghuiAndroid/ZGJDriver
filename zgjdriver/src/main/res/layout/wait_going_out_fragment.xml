@@ -1,62 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.autolayout.AutoFrameLayout
+<com.zhy.autolayout.AutoLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/au_ar_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFEEEEF8"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <com.zhy.autolayout.AutoRelativeLayout
-        android:layout_width="579px"
-        android:layout_height="66px"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12px"
-        android:background="@mipmap/rectangle">
 
-
-        <com.zhy.autolayout.AutoLinearLayout
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal">
+            android:layout_marginTop="100px"
+            android:src="@mipmap/icon_loading"
+            />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@mipmap/icon_remind"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60px"
+            android:text="加载中..."
+            android:textColor="#FF9897B8"
+            android:textSize="28px"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10px"
-                android:text="请提前确定好车辆位置，按时间出发到达~"
-                android:textColor="#FFFF3E9E"
-                android:textSize="26px"/>
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-
-    </com.zhy.autolayout.AutoRelativeLayout>
+    </com.zhy.autolayout.AutoLinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <cn.droidlover.xrecyclerview.XRecyclerView
-            android:id="@+id/contentLayout"
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/au_autoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="106px"
-            android:background="#FFEEEEF8"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        </cn.droidlover.xrecyclerview.XRecyclerView>
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="579px"
+                android:layout_height="66px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20px"
+                android:background="@mipmap/rectangle">
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/icon_remind"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10px"
+                        android:text="请提前确定好车辆位置，按时间出发到达~"
+                        android:textColor="#FFFF3E9E"
+                        android:textSize="26px"/>
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+            <cn.droidlover.xrecyclerview.XRecyclerView
+                android:id="@+id/contentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20px"
+                android:background="#FFEEEEF8"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+            </cn.droidlover.xrecyclerview.XRecyclerView>
+
+        </com.zhy.autolayout.AutoLinearLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+</com.zhy.autolayout.AutoLinearLayout>
 
-</com.zhy.autolayout.AutoFrameLayout>

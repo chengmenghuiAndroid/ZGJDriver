@@ -2,26 +2,19 @@ package com.lty.zgj.driver.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lty.zgj.driver.R;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketActivity;
-import com.lty.zgj.driver.WebSocket.AbsBaseWebSocketService;
-import com.lty.zgj.driver.WebSocket.CommonResponse;
-import com.lty.zgj.driver.WebSocket.event.WebSocketSendDataErrorEvent;
 import com.lty.zgj.driver.adapter.MessageAdapter;
+import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.bean.DriverNoticeInfoModel;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
-import com.lty.zgj.driver.websocketdemo.WebSocketService;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -36,7 +29,7 @@ import cn.droidlover.xrecyclerview.XRecyclerView;
  * Created by Administrator on 2018/6/14.
  */
 
-public class MessageActivity extends AbsBaseWebSocketActivity{
+public class MessageActivity extends BaseXActivity{
 
 
     @BindView(R.id.tv_title)
@@ -49,26 +42,17 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
     private int driverId;
 
     @Override
-    protected int getLayoutResId() {
-        return R.layout.activity_mssage;
-    }
-
-    @Override
-    protected void initView() {
-
-    }
-
-    @Override
-    protected void initView(@Nullable Bundle savedInstanceState) {
-        super.initView(savedInstanceState);
-
+    public void initData(Bundle savedInstanceState) {
         title.setText("消息");
         navButton.setVisibility(View.VISIBLE);
-        EventBus.getDefault().register(this);
-        closeRoundProgressDialog();//关闭加载对话框
         initRv();
         driverId = SharedPref.getInstance(context).getInt(Constant.DRIVER_ID, 0);
         fetchDriverNoticeInfoData(driverId, 0);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_mssage;
     }
 
 
@@ -123,8 +107,6 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
 
     }
 
-
-
     private MessageAdapter getAdapter() {
         if(messageAdapter == null){
             messageAdapter = new MessageAdapter(context);
@@ -139,21 +121,6 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
 
     public void setLayoutManager(XRecyclerView recyclerView) {
         recyclerView.verticalLayoutManager(context);
-    }
-
-    @Override
-    protected Class<? extends AbsBaseWebSocketService> getWebSocketClass() {
-        return WebSocketService.class;
-    }
-
-    @Override
-    protected void onCommonResponse(CommonResponse<String> response) {
-        closeRoundProgressDialog();//关闭加载对话框
-    }
-
-    @Override
-    protected void onErrorResponse(WebSocketSendDataErrorEvent response) {
-        closeRoundProgressDialog();//关闭加载对话框
     }
 
     public static void launch(Activity activity) {
@@ -176,6 +143,5 @@ public class MessageActivity extends AbsBaseWebSocketActivity{
     public void back(View view) {
         finish();
     }
-
 
 }

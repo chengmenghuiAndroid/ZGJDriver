@@ -37,12 +37,15 @@ import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.bean.DepartModel;
 import com.lty.zgj.driver.bean.HistoricalJourneyDetailModel;
 import com.lty.zgj.driver.core.tool.TimeUtils;
+import com.lty.zgj.driver.event.StartLocationEvent;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
 import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoRelativeLayout;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -292,21 +295,12 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
         aMap.getUiSettings().setTiltGesturesEnabled(false);//设置地图是否可以倾斜
         aMap.getUiSettings().setRotateGesturesEnabled(false);//设置地图是否可以旋转
-        aMap.getUiSettings().setRotateGesturesEnabled(false);//设置地图是否可以旋转
         aMap.getUiSettings().setZoomControlsEnabled(false);//隐藏进度尺
-
-        //蓝点初始化
-        //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle = new MyLocationStyle();
-        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-        setupLocationStyle();
         aMap.getUiSettings().setMyLocationButtonEnabled(false); //设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
 
-        myLocationStyle.showMyLocation(false);
-
+        //蓝点初始化
+        setupLocationStyle();
 
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
@@ -320,15 +314,25 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
      * 设置自定义定位蓝点
      */
     private void setupLocationStyle() {
+
+        myLocationStyle = new MyLocationStyle();
+        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        //LOCATION_TYPE_LOCATION_ROTATE
+        //连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+        //显示小蓝点
+        myLocationStyle.showMyLocation(true);
         // 自定义定位蓝点图标
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.mipmap.icon_location));
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_coordinate_point));
         // 自定义精度范围的圆形边框颜色
-        myLocationStyle.strokeColor(STROKE_COLOR);
+//        myLocationStyle.strokeColor(STROKE_COLOR);
+        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
         //自定义精度范围的圆形边框宽度
         myLocationStyle.strokeWidth(5);
+
+//        myLocationStyle.radiusFillColor(FILL_COLOR);
+        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
         // 设置圆形的填充颜色
-        myLocationStyle.radiusFillColor(FILL_COLOR);
         // 将自定义的 myLocationStyle 对象添加到地图上
         aMap.setMyLocationStyle(myLocationStyle);
     }
@@ -383,6 +387,8 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
             mlocationClient.setLocationListener(this);
             //设置为高精度定位模式
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置是否只定位一次,默认为false
+            mLocationOption.setOnceLocation(true);
             //是指定位间隔
             mLocationOption.setInterval(2000);
             //设置定位参数
@@ -414,13 +420,11 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
         if (mListener != null && amapLocation != null) {
             if (mListener != null && amapLocation != null) {
                 if (amapLocation != null && amapLocation.getErrorCode() == 0) {
-
-
+                    //点击定位按钮 能够将地图的中心移动到定位点
+                    mListener.onLocationChanged(amapLocation);
                     if (isFirstLoc) {
                         //将地图移动到定位点
 //                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
-                        //点击定位按钮 能够将地图的中心移动到定位点
-                        mListener.onLocationChanged(amapLocation);
                         //添加图钉
 //                    aMap.addMarker(getMarkerOptions(amapLocation));
                         //获取定位信息
@@ -485,6 +489,7 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
                 break;
 
             case R.id.al_btn_complete:
+                EventBus.getDefault().post(new StartLocationEvent());
                 finish();
                 break;
 
@@ -660,7 +665,7 @@ public class DepartOverActivity extends BaseXActivity implements AMapLocationLis
         for (int i = 0; i < list.size(); i++) {//trajectorylist为轨迹集合
             newbounds.include(list.get(i));
         }
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 300));//第二个参数为四周留空宽度
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 200));//第二个参数为四周留空宽度
 
     }
 

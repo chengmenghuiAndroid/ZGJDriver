@@ -13,6 +13,7 @@ import com.lty.zgj.driver.core.tool.TimeUtils;
 import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
+import com.lty.zgj.driver.weight.StatusBarUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import butterknife.BindView;
@@ -48,6 +49,9 @@ public class MessageDetailActivity extends BaseXActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        StatusBarUtils.with(this)
+                .setDrawable(getResources().getDrawable(R.mipmap.bg_status_bar))
+                .init();
         tvTitle.setText("通知/提醒");
         getUiDelegate().visible(true, navButton);
         int itemId = getIntent().getIntExtra("itemId", 0);

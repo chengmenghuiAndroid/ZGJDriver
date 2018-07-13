@@ -47,7 +47,7 @@ public class HistoricalJourneyAdapter extends SimpleRecAdapter<HistoricalJourney
         } else if (status == 1) {
             holder.tvStatus.setText("进行中");
         } else if (status == 2) {
-            holder.tvStatus.setText("已结束");
+            holder.tvStatus.setText("已完成");
         } else if (status == 3) {
             holder.tvStatus.setText("取消");
         }

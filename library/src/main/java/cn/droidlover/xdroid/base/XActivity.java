@@ -44,7 +44,7 @@ public abstract class XActivity extends AppCompatActivity implements UiCallback{
     protected void onStart() {
         super.onStart();
         if (useEventBus()) {
-            BusFactory.getBus().register(this);
+
         }
     }
 

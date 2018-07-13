@@ -1,4 +1,4 @@
-package com.lty.zgj.driver.jupsh;
+package com.lty.zgj.driver.broadcast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

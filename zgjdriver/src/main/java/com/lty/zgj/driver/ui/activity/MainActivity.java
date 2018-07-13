@@ -17,7 +17,8 @@ import com.lty.zgj.driver.base.BaseXActivity;
 import com.lty.zgj.driver.core.config.Constant;
 import com.lty.zgj.driver.event.MessageEvent;
 import com.lty.zgj.driver.event.ReceiveDateEvent;
-import com.lty.zgj.driver.jupsh.MyDotReceiver;
+import com.lty.zgj.driver.broadcast.MyDotReceiver;
+import com.lty.zgj.driver.event.ReceiveDateItemEvent;
 import com.lty.zgj.driver.ui.fragment.DepartFragment;
 import com.lty.zgj.driver.ui.fragment.WaitGoingOutFragment;
 import com.lty.zgj.driver.weight.CustomViewPager;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.droidlover.xdroid.dialog.ShowDialogRelative;
+import cn.droidlover.xdroid.event.BusFactory;
 import cn.droidlover.xdroidbase.cache.SharedPref;
 import cn.droidlover.xdroidbase.router.Router;
 
@@ -92,8 +94,10 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener ,
 
             }
         });
-        useEventBus();
 
+        if (useEventBus()) {
+            BusFactory.getBus().register(this);
+        }
     }
 
     @Override
@@ -209,13 +213,14 @@ public class MainActivity extends BaseXActivity implements OnTabSelectListener ,
         unregisterReceiver(myDotReceiver);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void mainThread(MessageEvent messageEvent) {
         tabLayout.setCurrentTab(0);
-        EventBus.getDefault().postSticky(new ReceiveDateEvent(messageEvent.getItemId(), Constant.CLICK_ITEM));
+//        EventBus.getDefault().postSticky(new ReceiveDateEvent(messageEvent.getItemId(), Constant.CLICK_ITEM));
+        EventBus.getDefault().postSticky(new ReceiveDateItemEvent(messageEvent.getItemId()));
     }
 
-    @Override
+
     public boolean useEventBus() {
         boolean registered = EventBus.getDefault().isRegistered(this);
 

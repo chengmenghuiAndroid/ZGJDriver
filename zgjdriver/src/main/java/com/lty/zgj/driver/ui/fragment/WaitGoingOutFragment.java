@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.view.View;
 
 import com.lty.zgj.driver.R;
 import com.lty.zgj.driver.adapter.WaitGoingOutAdapter;
@@ -19,6 +20,7 @@ import com.lty.zgj.driver.net.ObjectLoader;
 import com.lty.zgj.driver.subscribers.ProgressSubscriber;
 import com.lty.zgj.driver.subscribers.SubscriberOnNextListener;
 import com.lty.zgj.driver.ui.activity.PendingTripActivity;
+import com.zhy.autolayout.AutoLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -39,9 +41,12 @@ public class WaitGoingOutFragment extends BaseXFragment {
 
     @BindView(R.id.contentLayout)
     XRecyclerView contentLayout;
-
     @BindView(R.id.swiperefreshlayout)
     SwipeRefreshLayout mSwiperefreshlayout;
+    @BindView(R.id.au_ar_loading)
+    AutoLinearLayout auLLoading;
+    @BindView(R.id.au_autoLinearLayout)
+    AutoLinearLayout auAutoLinearLayout;
 
     private WaitGoingOutItemAdapter goingOutItemAdapter; //
     private WaitGoingOutTravelAdapter waitGoingOutTravelAdapter; //未出行
@@ -129,17 +134,19 @@ public class WaitGoingOutFragment extends BaseXFragment {
             @Override
             public void onNext(TripListModel tripListModel) {
 
-                waitGoingOutAdapter = new WaitGoingOutAdapter(context, surplusAdapter, travelAdapter, tripListModel);
-                contentLayout.setAdapter(waitGoingOutAdapter);
+                if(tripListModel != null){
+                    auLLoading.setVisibility(View.GONE);
+                    auAutoLinearLayout.setVisibility(View.VISIBLE);
 
-                List<TripListModel.NoStartListBean> noStartList = tripListModel.getNoStartList();
-                List<TripListModel.TodayListBean> todayList = tripListModel.getTodayList();
+                    waitGoingOutAdapter = new WaitGoingOutAdapter(context, surplusAdapter, travelAdapter, tripListModel);
+                    contentLayout.setAdapter(waitGoingOutAdapter);
 
-                getSurplusAdapter().setData(todayList);
-                getTravelAdapter().setData(noStartList);
+                    List<TripListModel.NoStartListBean> noStartList = tripListModel.getNoStartList();
+                    List<TripListModel.TodayListBean> todayList = tripListModel.getTodayList();
 
-
-
+                    getSurplusAdapter().setData(todayList);
+                    getTravelAdapter().setData(noStartList);
+                }
             }
 
             @Override

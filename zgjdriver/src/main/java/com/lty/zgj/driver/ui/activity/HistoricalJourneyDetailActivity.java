@@ -101,8 +101,11 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     ImageView tvUnfoldRvUp;
     @BindView(R.id.map)
     TextureMapView mapView;
-//    @BindView(R.id.s_reboundScrollView)
-//    ReboundScrollView sReboundScrollView;
+    @BindView(R.id.au_ar_loading)
+    AutoLinearLayout auALLoading;
+    @BindView(R.id.au_autoLinearLayout)
+    AutoLinearLayout auAutoLinearLayout;
+
 
     private HistoricalJourneyDetailAdapter detailAdapter;
 
@@ -119,6 +122,8 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     private AMapLocationClientOption mLocationOption;
     private boolean isFirstLoc = true;
     private String webSocketJson;
+    private double latitude;
+    private double longitude;
 
 
     private ViewGroup.LayoutParams layoutParams;
@@ -161,11 +166,18 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         fetchTripDetailData(id);
 
         int status = getIntent().getIntExtra("status", 0);
-        if (status == 1) {
+
+
+        if (status == 0) {
+            tvStatus.setText("未开始");
+        } else if (status == 1) {
+            tvStatus.setText("进行中");
+        } else if (status == 2) {
             tvStatus.setText("已完成");
-        } else if (status == 0) {
-            tvStatus.setText("待进行");
+        } else if (status == 3) {
+            tvStatus.setText("取消");
         }
+
         Log.e(THIS_FILE, "status----" + status);
     }
 
@@ -300,43 +312,30 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
     @Override
     public void activate(OnLocationChangedListener listener) {
         mListener = listener;
-        startLocationClient();
-    }
-
-    private void startLocationClient() {
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(context);
-        }
-        //初始化定位参数
-        initLocationOption();
-        //设置定位监听
-        mlocationClient.setLocationListener(this);
-        //设置定位参数
-        mlocationClient.setLocationOption(mLocationOption);
-        // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-        // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-        // 在定位结束后，在合适的生命周期调用onDestroy()方法
-        // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-        mlocationClient.startLocation();
-
-    }
-
-    private void initLocationOption() {
-
-        if (mLocationOption == null) {
             mLocationOption = new AMapLocationClientOption();
+            //设置定位监听
+            mlocationClient.setLocationListener(this);
+            //设置为高精度定位模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //是指定位间隔
+            mLocationOption.setInterval(2000);
+            //设置是否只定位一次,默认为false
+            mLocationOption.setOnceLocation(true);
+            //设置定位缓存策略
+            mLocationOption.setLocationCacheEnable(false);
+            //gps定位优先
+            mLocationOption.setGpsFirst(false);
+            //设置定位参数
+            mlocationClient.setLocationOption(mLocationOption);
+            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+            mlocationClient.startLocation();
         }
-        //定位精度:高精度模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        //设置定位缓存策略
-        mLocationOption.setLocationCacheEnable(false);
-        //gps定位优先
-        mLocationOption.setGpsFirst(false);
-        //设置定位间隔
-        mLocationOption.setInterval(2000);
-        mLocationOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是ture
     }
-
     /**
      * 停止定位
      */
@@ -426,6 +425,9 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
             public void onNext(HistoricalJourneyDetailModel historicalJourneyDetailModel) {
 
                 if (historicalJourneyDetailModel != null) {
+                    auALLoading.setVisibility(View.GONE);
+                    auAutoLinearLayout.setVisibility(View.VISIBLE);
+
                     stations = historicalJourneyDetailModel.getStations();
                     relStations = historicalJourneyDetailModel.getRelStations();
                     size = stations.size();
@@ -456,7 +458,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                     } else if (status == 1) {
                         tvStatus.setText("进行中");
                     }else if (status == 2) {
-                        tvStatus.setText("已结束");
+                        tvStatus.setText("已完成");
                     }else if (status == 3) {
                         tvStatus.setText("取消");
                     }
@@ -544,7 +546,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         //设置market 点击事件// 定义 Marker 点击事件监听
         aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             // marker 对象被点击时回调的接口
-// 返回 true 则表示接口已响应事件，否则返回false
+        // 返回 true 则表示接口已响应事件，否则返回false
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //markerList即为添加到地图上返回的marker集合
@@ -664,10 +666,10 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
 
 
         LatLngBounds.Builder newbounds = new LatLngBounds.Builder();
-        for (int i = 0; i < list.size(); i++) {//trajectorylist为轨迹集合
+        for (int i = 0; i < list.size(); i++) {
             newbounds.include(list.get(i));
         }
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 300));//第二个参数为四周留空宽度
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(newbounds.build(), 200));//第二个参数为四周留空宽度
     }
 
 
@@ -740,8 +742,10 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
         if (mListener != null && amapLocation != null) {
             if (mListener != null && amapLocation != null) {
                 if (amapLocation != null && amapLocation.getErrorCode() == 0) {
-                    mListener.onLocationChanged(amapLocation);
+                    latitude = amapLocation.getLatitude();
+                    longitude = amapLocation.getLongitude();
                     //点击定位按钮 能够将地图的中心移动到定位点
+                    mListener.onLocationChanged(amapLocation);
                     if (isFirstLoc) {
                         //将地图移动到定位点
 //                        aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
@@ -750,12 +754,7 @@ public class HistoricalJourneyDetailActivity extends BaseXActivity implements AM
                         //获取定位信息
                         isFirstLoc = false;
                     }
-                    StringBuffer buffer = new StringBuffer();
 
-//                    Log.e(THIS_FILE, "----latitude------"+ latitude +"..longitude......."+ longitude);
-//                    Log.e(THIS_FILE, "------"+ Utils.doubleToString(latitude) +"....."+ Utils.doubleToString(longitude));
-//                    Log.e(THIS_FILE, "buffer.toString------"+buffer.toString());
-//                    Log.e(THIS_FILE, "city------"+ city);
                 } else {
                     String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                     Log.e("定位AmapErr", errText);
