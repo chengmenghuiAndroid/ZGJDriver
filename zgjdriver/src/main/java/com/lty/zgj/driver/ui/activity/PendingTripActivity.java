@@ -228,6 +228,7 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
 
             // 步行终点坐标
             mEndPoint = new LatLonPoint(depart.getLat(), depart.getLon());
+            searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);//定位成功 规划路径导航
             setStation();//设置今日站点信息
 
             //辅助点信息
@@ -409,7 +410,6 @@ public class PendingTripActivity extends BaseXActivity implements LocationSource
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        isFirstLoc = true;
     }
 
 

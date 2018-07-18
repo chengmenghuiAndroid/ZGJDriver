@@ -105,7 +105,7 @@ public class AboutActivity extends BaseXActivity {
                 .init();
         title.setText("关于坐公交");
         getUiDelegate().visible(true, navButton);
-        tvVersionName.setText("V"+AppUtils.getVersionName(context)+"_3");
+        tvVersionName.setText("V"+AppUtils.getVersionName(context));
         versionName = AppUtils.getVersionName(context);
         auVersionNameTip.setEnabled(false);
         String cityCode = SharedPref.getInstance(context).getString(Constant.cityCode, null);

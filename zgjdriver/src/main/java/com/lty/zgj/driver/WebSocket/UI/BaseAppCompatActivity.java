@@ -143,6 +143,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(mRecevier);
         super.onDestroy();
     }
 

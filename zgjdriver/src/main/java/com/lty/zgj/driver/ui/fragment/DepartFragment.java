@@ -545,14 +545,14 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 int stationId = stationModel.getStationId();
 
                 String stationName = stationModel.getStationName();
-                tvBtn.setText("到达" + stationName);
+//                tvBtn.setText("到达" + stationName);
                 if (stationModel.getStationName().equals(endName)) {
                     tvBtn.setText("结束");
                     //到达最后一站 结束上传gps
                     mlocationClient.stopLocation();
                     isSendGps = false;
-                    mycircleHandler.removeCallbacks(runnable);
                     isUpdateGps = false;
+                    mycircleHandler.removeCallbacks(runnable);
                     Log.e(THIS_FILE, "停止上传gps");
                 }
                 long stationTime = System.currentTimeMillis() / 1000;
@@ -775,13 +775,12 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
     }
 
     private void depart() {
-        mDialog = new CustomDialog(context, R.layout.custom_dialog_login_out_layout, "提醒", "你是否确定结束发车?",
+        mDialog = new CustomDialog(context, R.layout.custom_dialog_login_out_layout, "提示", "你是否确定结束发车?",
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mDialog.dismiss();
                         fetchEndBusData(scheduleId);                     //发车中
-
                     }
                 }, new View.OnClickListener() {
 
@@ -810,7 +809,8 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
         ObjectLoader.getInstance().getStartBuslData(new ProgressSubscriber<StartBustModel>(new SubscriberOnNextListener<StartBustModel>() {
             @Override
             public void onNext(StartBustModel startBustModel) {
-                tvBtn.setText("到达" + startName);
+//                tvBtn.setText("到达" + startName);
+                tvBtn.setText("进行中...");
                 isUpdateGps = true;
                 isPolylineWalk = false;
                 //发车之后移除步行辅助线
@@ -819,6 +819,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                     mPolylineWalk = null;
                 }
                 isSendGps = true;
+                mycircleHandler.removeCallbacks(runnable);
                 mycircleHandler.postDelayed(runnable, 5000);
                 CLICK_STATUS = END_BTN;
             }
@@ -1171,10 +1172,12 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
 
             if (status == 1) {
                 alBtn.setVisibility(View.VISIBLE);
-                tvBtn.setText("到达" + startName);
+//                tvBtn.setText("到达" + startName);
+                tvBtn.setText("进行中...");
                 isUpdateGps = true;
                 isPolylineWalk = false;
                 isSendGps = true;
+                mycircleHandler.removeCallbacks(runnable);
                 mycircleHandler.postDelayed(runnable, 5000);
                 CLICK_STATUS = END_BTN;
             } else if (status == 0) {

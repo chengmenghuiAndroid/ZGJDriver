@@ -141,7 +141,7 @@ public class SetActivity extends AbsBaseWebSocketActivity {
 
 
     private void loginOutDialog() {
-        mDialog = new CustomDialog(this, R.layout.custom_dialog_login_out_layout,"提醒", "你是否确定退出登录?",
+        mDialog = new CustomDialog(this, R.layout.custom_dialog_login_out_layout,"提示", "你是否确定退出登录?",
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

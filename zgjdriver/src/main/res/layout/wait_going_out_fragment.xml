@@ -41,6 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:visibility="gone">
 
             <com.zhy.autolayout.AutoRelativeLayout
@@ -81,9 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20px"
-                android:background="#FFEEEEF8"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+                android:background="#FFEEEEF8">
 
             </cn.droidlover.xrecyclerview.XRecyclerView>
 
