@@ -547,7 +547,7 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 String stationName = stationModel.getStationName();
 //                tvBtn.setText("到达" + stationName);
                 if (stationModel.getStationName().equals(endName)) {
-                    tvBtn.setText("结束");
+                    tvBtn.setText("已到终点站");
                     //到达最后一站 结束上传gps
                     mlocationClient.stopLocation();
                     isSendGps = false;
