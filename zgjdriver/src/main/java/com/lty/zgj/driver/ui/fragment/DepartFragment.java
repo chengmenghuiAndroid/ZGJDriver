@@ -1513,7 +1513,6 @@ public class DepartFragment extends AbsBaseWebSocketFragment implements Location
                 .setDottedLine(true)
                 .width(18));
 
-
         LatLngBounds.Builder newbounds = new LatLngBounds.Builder();
         for (int i = 0; i < list.size(); i++) {
             newbounds.include(list.get(i));

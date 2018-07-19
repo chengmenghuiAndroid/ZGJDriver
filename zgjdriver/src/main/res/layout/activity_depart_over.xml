@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:layout_below="@id/map"
-                android:layout_above="@id/al_btn"
+                android:layout_above="@id/al_btn_complete"
                 android:layout_marginBottom="30px">
 
                 <com.zhy.autolayout.AutoLinearLayout
@@ -153,7 +153,7 @@
                android:layout_width="match_parent"
                android:layout_height="1px"
                android:background="#FFE1E0FB"
-               android:layout_above="@id/al_btn"
+               android:layout_above="@id/al_btn_complete"
                android:layout_marginBottom="30px"/>
 
             <com.zhy.autolayout.AutoLinearLayout
